@@ -37,6 +37,8 @@ const App = () => {
             bgcolor: 'background.default',
             paddingTop: '80px',
             height: '100vh',
+            maxWidth: '1280px',
+            margin: '0 auto',
           }}
         >
           <Header toggleTheme={toggleTheme} mode={mode} />
