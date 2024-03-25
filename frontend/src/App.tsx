@@ -7,6 +7,7 @@ import { createTheme, CssBaseline, Box } from '@mui/material';
 import Header from './components/Header';
 
 import { routes } from './routes/routes';
+import Login from './pages/Login';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
@@ -44,7 +45,7 @@ const App = () => {
           <Header toggleTheme={toggleTheme} mode={mode} />
           <Routes>
             <Route path={routes.main} element={<></>} />
-            <Route path={routes.login} element={<></>} />
+            <Route path={routes.login} element={<Login />} />
             <Route path={routes.stand} element={<></>} />
             <Route path="*" element={<></>} />
           </Routes>
