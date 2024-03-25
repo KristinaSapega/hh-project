@@ -1,3 +1,5 @@
+import { FormEvent, FunctionComponent } from 'react';
+
 import { LockOutlined } from '@mui/icons-material';
 import {
   Box,
@@ -7,7 +9,6 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { FormEvent, FunctionComponent } from 'react';
 
 interface SignupFormProps {
   formSwitch: () => void;

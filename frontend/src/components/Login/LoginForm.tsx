@@ -1,6 +1,7 @@
+import { FormEvent, FunctionComponent } from 'react';
+
 import { LockOutlined } from '@mui/icons-material';
 import { Box, Avatar, Typography, TextField, Button, Grid } from '@mui/material';
-import { FormEvent, FunctionComponent } from 'react';
 
 interface LoginFormProps {
   formSwitch: () => void;

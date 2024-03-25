@@ -5,9 +5,9 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, CssBaseline, Box } from '@mui/material';
 
 import Header from './components/Header';
+import Login from './pages/Login';
 
 import { routes } from './routes/routes';
-import Login from './pages/Login';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
