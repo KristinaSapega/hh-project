@@ -5,6 +5,7 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, CssBaseline, Box } from '@mui/material';
 
 import Header from './components/Header';
+import Login from './pages/Login';
 
 import { routes } from './routes/routes';
 
@@ -44,7 +45,7 @@ const App = () => {
           <Header toggleTheme={toggleTheme} mode={mode} />
           <Routes>
             <Route path={routes.main} element={<></>} />
-            <Route path={routes.login} element={<></>} />
+            <Route path={routes.login} element={<Login />} />
             <Route path={routes.stand} element={<></>} />
             <Route path="*" element={<></>} />
           </Routes>
