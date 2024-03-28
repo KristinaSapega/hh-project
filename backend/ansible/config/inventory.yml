@@ -1,0 +1,16 @@
+stands:
+  hosts:
+    dummy.1:
+      ansible_ssh_private_key_file: /some/path
+    dummy.2:
+      ansible_ssh_private_key_file: /some/path
+    dummy.3:
+      ansible_ssh_private_key_file: /some/path
+    dummy.4:
+      ansible_ssh_private_key_file: /some/path
+    dummy.5:
+      ansible_ssh_private_key_file: /some/path
+    dummy.6:
+      ansible_ssh_private_key_file: /some/path
+    dummy.7:
+      ansible_ssh_private_key_file: /some/path
