@@ -3,16 +3,12 @@ package com.example.crab.controller.stands;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.crab.controller.stands.transport.StandDto;
-import com.example.crab.domain.Stand;
+import com.example.crab.controller.stands.transport.StandListDto;
+import com.example.crab.exceptions.controller.ResourceNotFoundException;
 import com.example.crab.persistence.InventoryFileStandRepository;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 public class StandsController {
@@ -22,17 +18,20 @@ public class StandsController {
   public StandsController(InventoryFileStandRepository standRepository) {
     this.standRepository = standRepository;
   }
-  
+
   @GetMapping("/api/stands")
-  List<StandDto> getAllStands() {
-    List<Stand> allStands;
-    try {
-      allStands = standRepository.findAll();
-    } catch (IOException e) {
-      throw new RuntimeException("IOException on reading inventory file", e);
-    }
-    return IntStream.range(0, allStands.size())
-      .mapToObj(i -> new StandDto(Long.valueOf(i + 1), allStands.get(i).getHost(), "ok", Instant.now()))
-      .toList();
+  StandListDto getAllStands() {
+    var stands = standRepository.findAll();
+    var dtoStands = stands.stream()
+        .map(StandDto::fromEntity)
+        .toList();
+    return new StandListDto(dtoStands);
+  }
+
+  @GetMapping("/api/stands/{standId}")
+  StandDto getStand(@PathVariable long standId) {
+    return standRepository.findById(standId)
+      .map(StandDto::fromEntity)
+      .orElseThrow(() -> {throw new ResourceNotFoundException();});
   }
 }
