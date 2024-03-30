@@ -1,7 +1,9 @@
 package com.example.crab.domain;
 
 public enum StandState {
-  RUNNING("running"), MAINTAINING("maintaining"), STOPPED("stopped");
+  RUNNING("running"),
+  MAINTAINING("maintaining"),
+  STOPPED("stopped");
 
   private String stringValue;
 
