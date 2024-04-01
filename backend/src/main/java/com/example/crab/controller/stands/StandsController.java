@@ -20,7 +20,7 @@ public class StandsController {
   }
 
   @GetMapping("/api/stands")
-  StandListDto getAllStands() {
+  public StandListDto getAllStands() {
     var stands = standRepository.findAll();
     var dtoStands = stands.stream()
         .map(StandDto::fromEntity)
@@ -29,9 +29,11 @@ public class StandsController {
   }
 
   @GetMapping("/api/stands/{standId}")
-  StandDto getStand(@PathVariable long standId) {
+  public StandDto getStand(@PathVariable long standId) {
     return standRepository.findById(standId)
-      .map(StandDto::fromEntity)
-      .orElseThrow(() -> {throw new ResourceNotFoundException();});
+        .map(StandDto::fromEntity)
+        .orElseThrow(() -> {
+          throw new ResourceNotFoundException();
+        });
   }
 }
