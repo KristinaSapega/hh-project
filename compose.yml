@@ -1,0 +1,14 @@
+services:
+  backend:
+    container_name: crab-back
+    build: /backend
+    ports:
+      - 8080:8080
+
+  frontend:
+    container_name: crab-front
+    build: /frontend
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
