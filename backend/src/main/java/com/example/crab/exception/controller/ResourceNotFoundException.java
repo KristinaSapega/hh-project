@@ -1,4 +1,4 @@
-package com.example.crab.exceptions.controller;
+package com.example.crab.exception.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

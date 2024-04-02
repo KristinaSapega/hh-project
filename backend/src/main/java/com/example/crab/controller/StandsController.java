@@ -1,14 +1,13 @@
-package com.example.crab.controller.stands;
-
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.crab.controller.stands.transport.StandDto;
-import com.example.crab.controller.stands.transport.StandListDto;
-import com.example.crab.exceptions.controller.ResourceNotFoundException;
-import com.example.crab.persistence.InventoryFileStandRepository;
+package com.example.crab.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.crab.exception.controller.ResourceNotFoundException;
+import com.example.crab.persistence.InventoryFileStandRepository;
+import com.example.crab.transport.StandDto;
+import com.example.crab.transport.StandListDto;
 
 @RestController
 public class StandsController {

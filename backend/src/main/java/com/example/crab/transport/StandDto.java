@@ -1,6 +1,6 @@
-package com.example.crab.controller.stands.transport;
+package com.example.crab.transport;
 
-import com.example.crab.domain.Stand;
+import com.example.crab.entity.Stand;
 
 public record StandDto(Long id, String host, String status, String takenBy) {
 

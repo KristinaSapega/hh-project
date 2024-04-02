@@ -1,4 +1,4 @@
-package com.example.crab.controller.stands.transport;
+package com.example.crab.transport;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public record StandListDto(List<StandDto> stands) {
   public StandListDto(@JsonProperty("stands") List<StandDto> stands) {
     this.stands = stands;
   }
-  
+
 }

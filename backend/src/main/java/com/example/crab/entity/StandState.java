@@ -1,4 +1,4 @@
-package com.example.crab.domain;
+package com.example.crab.entity;
 
 public enum StandState {
   RUNNING("running"),
