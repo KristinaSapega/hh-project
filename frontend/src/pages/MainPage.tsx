@@ -9,14 +9,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
 
-
 const columns: GridColDef[] = [
-
   {
     field: 'checkbox',
-    headerName: '', width: 100,
+    headerName: '',
+    width: 100,
     renderCell: (params: GridCellParams) => {
-      
       const isDisabled = params.row.Status !== 'running';
       const [checked, setChecked] = useState(false);
       const handleChange = () => {
@@ -106,11 +104,10 @@ const rows = [
 ];
 
 
-
-
 const MainPage: FC  = () => {
   const [, setAnchorEl] = useState<null | HTMLElement>(null);
   const [standMenuAnchorEl, setStandMenuAnchorEl] = useState<null | HTMLElement>(null);
+ 
 
   const handleAddStandClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setStandMenuAnchorEl(event.currentTarget);
@@ -153,7 +150,7 @@ const MainPage: FC  = () => {
         </Menu>
       </div>
       <div style={{ height: '600px', width: '100%', overflow: '', paddingTop: '10px', paddingBottom: '200px' }}>
-        <DataGrid
+        {<DataGrid
           rows={rows}
           columns={columns}
           initialState={{
@@ -163,7 +160,7 @@ const MainPage: FC  = () => {
           }}
           pageSizeOptions={[5, 10]}
         
-        />
+        />}
       </div>
 
     </div>
