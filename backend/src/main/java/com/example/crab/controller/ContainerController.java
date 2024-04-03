@@ -1,6 +1,7 @@
-package com.example.crab.controller.containers;
+package com.example.crab.controller;
 
-import com.example.crab.dto.ContainersListDto;
+import com.example.crab.transport.ContainerDto;
+import com.example.crab.transport.ContainersListDto;
 import com.example.crab.service.ContainerServiceImpl;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class ContainerController {
   }
 
   @GetMapping("/api/stands/{standId}/containers/{containersId}")
-  public ContainersListDto getContainersById(@PathVariable long standId,@PathVariable String containersId) {
-    return new ContainersListDto(Arrays.asList(dockerAPIService.getContainersById(standId, containersId)));
+  public ContainerDto getContainersById(@PathVariable long standId,@PathVariable String containersId) {
+    return dockerAPIService.getContainerById(standId, containersId);
   }
 }

@@ -1,4 +1,4 @@
-package com.example.crab.dto;
+package com.example.crab.transport;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,12 +10,12 @@ import java.util.List;
 public class ContainerDto implements Serializable {
 
   private String id;
-  private List<ContainerNamesDto> names;
+  private List<ContainerNameDto> name;
   private String state;
 
   @Override
   public String toString(){
-    return id +" "+ names +" "+ state;
+    return id +" "+ name +" "+ state;
   }
 
   @JsonGetter("id")
@@ -38,13 +38,13 @@ public class ContainerDto implements Serializable {
     this.state = state;
   }
 
-  @JsonGetter("names")
-  public String getNames() {
-    return names.get(0).getNames();
+  @JsonGetter("name")
+  public String getName() {
+    return name.get(0).getName();
   }
 
   @JsonSetter("Names")
-  public void setNames(List<ContainerNamesDto> names) {
-    this.names = names;
+  public void setName(List<ContainerNameDto> name) {
+    this.name = name;
   }
 }

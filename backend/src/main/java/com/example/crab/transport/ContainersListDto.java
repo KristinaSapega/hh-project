@@ -1,4 +1,4 @@
-package com.example.crab.dto;
+package com.example.crab.transport;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
