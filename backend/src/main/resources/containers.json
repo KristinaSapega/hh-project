@@ -1,0 +1,164 @@
+[
+  {
+    "Id": "755d78638ca436d254545b453d9ca80dad8251cf4ec71b04e1445e54ac207342",
+    "Names": [
+      "/remote-host"
+    ],
+    "Image": "remote-host",
+    "ImageID": "sha256:83c053c71bf09e2cee80c99663fc11a2e3e5df2edd31728b3bbd4b6ed79865de",
+    "Command": "/bin/sh -c '/usr/sbin/sshd -D'",
+    "Created": 1708250658,
+    "Ports": [],
+    "Labels": {
+      "com.docker.compose.config-hash": "5d28a4679189012c78f475ab2fcedb912f993af93fc4f3354e396d48f6b785d1",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "",
+      "com.docker.compose.image": "sha256:83c053c71bf09e2cee80c99663fc11a2e3e5df2edd31728b3bbd4b6ed79865de",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "jenkins",
+      "com.docker.compose.project.config_files": "/home/jenkinsadmin/jenkins/docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/jenkinsadmin/jenkins",
+      "com.docker.compose.replace": "f2e53761b9b5a98aca52d2072a8aaabcc00817e6572299074aafb668de3b169d",
+      "com.docker.compose.service": "remote_host",
+      "com.docker.compose.version": "2.24.2",
+      "org.label-schema.build-date": "20210915",
+      "org.label-schema.license": "GPLv2",
+      "org.label-schema.name": "CentOS Base Image",
+      "org.label-schema.schema-version": "1.0",
+      "org.label-schema.vendor": "CentOS"
+    },
+    "State": "running",
+    "Status": "Up 21 minutes",
+    "HostConfig": {
+      "NetworkMode": "jenkins_default"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "jenkins_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "MacAddress": "02:42:ac:12:00:03",
+          "NetworkID": "1fb8aad20d88a977c6348fe768b61599fc145e1a31153e7f5215c821278ae006",
+          "EndpointID": "703ce2c0c931e0cda4b5c7069cf0eae8f2d1f4fe840dab0d8db6a19409101b38",
+          "Gateway": "172.18.0.1",
+          "IPAddress": "172.18.0.3",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "DriverOpts": null,
+          "DNSNames": null
+        }
+      }
+    },
+    "Mounts": []
+  },
+  {
+    "Id": "efe59171bac793c33f2d2c2d1a2ac8869a810c54f042d57d8703d246a40fe0dc",
+    "Names": [
+      "/jenkins-lts"
+    ],
+    "Image": "jenkins/jenkins:lts",
+    "ImageID": "sha256:b29eae45bb8cbffa7dc578306ffbda7ced1d80857c8ed69f2f7b19043f01541f",
+    "Command": "/usr/bin/tini -- /usr/local/bin/jenkins.sh",
+    "Created": 1706432406,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 50000,
+        "PublicPort": 50000,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 50000,
+        "PublicPort": 50000,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8080,
+        "PublicPort": 8080,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8080,
+        "PublicPort": 8080,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "2a7743bc64455c3e312e632e1b9a52b3de92312f9a961514ba7d2d72835cbcbf",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "",
+      "com.docker.compose.image": "sha256:b29eae45bb8cbffa7dc578306ffbda7ced1d80857c8ed69f2f7b19043f01541f",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "jenkins",
+      "com.docker.compose.project.config_files": "/home/jenkinsadmin/jenkins/docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/jenkinsadmin/jenkins",
+      "com.docker.compose.service": "jenkins",
+      "com.docker.compose.version": "2.24.2",
+      "org.opencontainers.image.description": "The Jenkins Continuous Integration and Delivery server",
+      "org.opencontainers.image.licenses": "MIT",
+      "org.opencontainers.image.revision": "dce06c5638bd54d3c10f5aebff84d039d4211853",
+      "org.opencontainers.image.source": "https://github.com/jenkinsci/docker",
+      "org.opencontainers.image.title": "Official Jenkins Docker image",
+      "org.opencontainers.image.url": "https://www.jenkins.io/",
+      "org.opencontainers.image.vendor": "Jenkins project",
+      "org.opencontainers.image.version": "2.426.3"
+    },
+    "State": "running",
+    "Status": "Up 21 minutes",
+    "HostConfig": {
+      "NetworkMode": "jenkins_default"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "jenkins_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "MacAddress": "02:42:ac:12:00:02",
+          "NetworkID": "1fb8aad20d88a977c6348fe768b61599fc145e1a31153e7f5215c821278ae006",
+          "EndpointID": "b92bce8d5e37857730b153c8d5e4f04f080d12fc373952941b895e10b4137668",
+          "Gateway": "172.18.0.1",
+          "IPAddress": "172.18.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "DriverOpts": null,
+          "DNSNames": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/var/run/docker.sock",
+        "Destination": "/var/run/docker.sock",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/usr/local/bin/docker",
+        "Destination": "/usr/local/bin/docker",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/jenkinsadmin/jenkins_home",
+        "Destination": "/var/jenkins_home",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ]
+  }
+]
