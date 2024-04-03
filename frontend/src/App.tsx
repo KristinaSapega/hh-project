@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 
 import { routes } from './routes/routes';
+import Stand from './pages/Stand';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
@@ -47,7 +48,7 @@ const App = () => {
           <Routes>
             <Route path={routes.main} element={<MainPage/>} />
             <Route path={routes.login} element={<Login />} />
-            <Route path={routes.stand} element={<></>} />
+            <Route path={routes.stand} element={<Stand />} />
             <Route path="*" element={<></>} />
           </Routes>
         </Box>
