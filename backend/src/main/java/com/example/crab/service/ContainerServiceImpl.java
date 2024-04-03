@@ -10,10 +10,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ContainerServiceImpl implements ContainerService {
+  private final ObjectMapper mapper;
+
+  public ContainerServiceImpl(ObjectMapper objectMapper) {
+    this.mapper = objectMapper;
+  }
+
 
   public List<ContainerDto> getContainers(long id) {
     try {
-      ObjectMapper mapper = new ObjectMapper();
       Path json = Paths.get("src/main/resources/containers.json");
       List<ContainerDto> containers = mapper.readValue(json.toFile(), new TypeReference<List<ContainerDto>>() {
       });
