@@ -1,17 +1,44 @@
-import { FormEvent, FunctionComponent } from 'react';
+import { ChangeEvent, FormEvent, FunctionComponent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { LockOutlined } from '@mui/icons-material';
 import { Box, Avatar, Typography, TextField, Button, Grid } from '@mui/material';
+import { LockOutlined } from '@mui/icons-material';
+
+import { useAuthContext } from '../../hooks/useAuthContext';
+
+import { routes } from '../../routes/routes';
 
 interface LoginFormProps {
   formSwitch: () => void;
 }
 
 const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [formData, setFormData] = useState<{ login: string, password: string }>({ login: '', password: '' });
+  
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const {value, name } = event.target;
+    
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
+  const { user, login } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    login('BASE64CONVERTEDSTRING');
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate(routes.main);
+    }
+  }, [user, navigate]);
   return (
     <Box
       sx={{
@@ -40,6 +67,8 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
           name="login"
           autoComplete="login"
           autoFocus
+          value={formData.login}
+          onChange={handleChange}
         />
         <TextField
           margin="normal"
@@ -50,6 +79,8 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
           type="password"
           id="password"
           autoComplete="current-password"
+          value={formData.password}
+          onChange={handleChange}
         />
         <Button
           type="submit"
