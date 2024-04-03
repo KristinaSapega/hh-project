@@ -45,6 +45,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
   };
 
   const validate = async (): Promise<ValidationErrors | undefined> => {
+    // нативная функция конвертации в base64 не поддерживает кириллицу
     const isCyrillic = (str: string): boolean => {
       return /[а-яА-Я]/g.test(str);
     };
