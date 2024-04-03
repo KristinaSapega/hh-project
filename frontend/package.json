@@ -35,7 +35,9 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",
-    "vite": "^5.2.7"
+    "vite": "^5.2.7",
+    "final-form": "^4.20.10",
+    "react-final-form": "^6.5.9"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
