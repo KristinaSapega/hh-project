@@ -37,10 +37,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.jackson.dataformat</groupId>
-          <artifactId>jackson-dataformat-yaml</artifactId>
-          <version>2.17.0</version>
-      </dependency>      
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.17.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -49,7 +56,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                  <mainClass>com.example.crab.CrabApplication</mainClass>
+                    <mainClass>com.example.crab.CrabApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
