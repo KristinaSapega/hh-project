@@ -18,8 +18,8 @@ const getRow = (option: string, value: string): Row => ({ option, value });
 
 const rows: Row[] = [
   getRow('Хост', 'Василий'),
-  getRow('Адрес', '192.168.1.1'),
   getRow('Статус', 'Running'),
+  getRow('Пользователь', 'Пользователь'),
 ];
 
 const StandInfo = () => {

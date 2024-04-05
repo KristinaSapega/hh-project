@@ -9,7 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import { Button } from '@mui/material';
 
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
@@ -18,20 +17,17 @@ export interface Data {
   id: number;
   name: string;
   status: JSX.Element;
-  logs: JSX.Element;
 }
 
 function createData(
   id: number,
   name: string,
   status: JSX.Element,
-  logs: JSX.Element,
 ): Data {
   return {
     id,
     name,
     status,
-    logs,
   };
 }
 
@@ -84,65 +80,41 @@ const initialRows = [
     1,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     2,
     getRandomName(),
     getStatusElement(Status.Stopped),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     3,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     4,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     5,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     6,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     7,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
   createData(
     8,
     getRandomName(),
     getStatusElement(Status.Running),
-    <Button size="small" variant="outlined" color="secondary">
-      Открыть
-    </Button>,
   ),
 ];
 
@@ -287,17 +259,15 @@ const EnhancedTable: FunctionComponent = () => {
                       id={labelId}
                       scope="row"
                       align="right"
+                      sx={{ width: '30%' }}
                     >
                       {row.id}
                     </TableCell>
-                    <TableCell sx={{ width: '20%' }} align="right">
+                    <TableCell sx={{ width: '30%' }} align="right">
                       {row.name}
                     </TableCell>
-                    <TableCell sx={{ width: '20%' }} align="right">
+                    <TableCell sx={{ width: '30%' }} align="right">
                       {row.status}
-                    </TableCell>
-                    <TableCell sx={{ width: '20%' }} align="right">
-                      {row.logs}
                     </TableCell>
                   </TableRow>
                 );

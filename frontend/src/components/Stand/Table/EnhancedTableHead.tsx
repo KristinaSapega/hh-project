@@ -52,12 +52,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Статус',
   },
-  {
-    id: 'logs',
-    numeric: true,
-    disablePadding: false,
-    label: 'Логи',
-  },
 ];
 
 const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
@@ -95,7 +89,7 @@ const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            {headCell.id !== 'logs' && <TableSortLabel
+            <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
@@ -106,7 +100,7 @@ const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
-            </TableSortLabel>}
+            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>
