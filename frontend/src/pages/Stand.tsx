@@ -7,14 +7,14 @@ import StandInfo from '../components/Stand/StandInfo';
 
 const Stand = () => {
   const params = useParams();
-  console.log(params.id);
+  const { id } = params;
 
   // TODO: если переходим на страницу стенда
   // с каким-то рандомным id вручную, пересылать на 404
 
   return (
     <Box>
-      <StandInfo />
+      <StandInfo id={Number(id)} />
       <StandTable />
     </Box>
   );
