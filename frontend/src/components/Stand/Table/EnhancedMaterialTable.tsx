@@ -12,58 +12,21 @@ import Checkbox from '@mui/material/Checkbox';
 
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
+import ElementStatus from '../../ElementStatus';
 
 export interface Data {
   id: number;
   name: string;
-  status: JSX.Element;
+  status: string;
 }
 
-function createData(
-  id: number,
-  name: string,
-  status: JSX.Element,
-): Data {
+function createData(id: number, name: string, status: string): Data {
   return {
     id,
     name,
     status,
   };
 }
-
-enum Status {
-  Stopped = 'stopped',
-  Running = 'running',
-  Pause = 'pause',
-}
-
-interface StatusColorMap {
-  [key: string]: string;
-}
-
-const statusColorMap: StatusColorMap = {
-  [Status.Stopped]: 'red',
-  [Status.Running]: 'green',
-  [Status.Pause]: 'orange',
-};
-
-const getStatusElement = (status: Status): JSX.Element => {
-  return (
-    <>
-      <Box
-        sx={{
-          display: 'inline-block',
-          width: '10px',
-          height: '10px',
-          mr: '10px',
-          backgroundColor: `${statusColorMap[status]}`,
-          borderRadius: '50%',
-        }}
-      ></Box>
-      {status}
-    </>
-  );
-};
 
 const getRandomName = (): string => {
   return Array(8)
@@ -76,46 +39,14 @@ const getRandomName = (): string => {
 };
 
 const initialRows = [
-  createData(
-    1,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    2,
-    getRandomName(),
-    getStatusElement(Status.Stopped),
-  ),
-  createData(
-    3,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    4,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    5,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    6,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    7,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
-  createData(
-    8,
-    getRandomName(),
-    getStatusElement(Status.Running),
-  ),
+  createData(1, getRandomName(), 'stopped'),
+  createData(2, getRandomName(), 'running'),
+  createData(3, getRandomName(), 'stopped'),
+  createData(4, getRandomName(), 'stopped'),
+  createData(5, getRandomName(), 'stopped'),
+  createData(6, getRandomName(), 'stopped'),
+  createData(7, getRandomName(), 'stopped'),
+  createData(8, getRandomName(), 'stopped'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -267,7 +198,7 @@ const EnhancedTable: FunctionComponent = () => {
                       {row.name}
                     </TableCell>
                     <TableCell sx={{ width: '30%' }} align="right">
-                      {row.status}
+                      <ElementStatus status={row.status} />
                     </TableCell>
                   </TableRow>
                 );
