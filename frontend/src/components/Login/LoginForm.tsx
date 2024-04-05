@@ -68,7 +68,12 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
   };
 
   const handleSubmit = () => {
-    login('BASE64CONVERTEDSTRING');
+    try {
+      const convertUserData = btoa(`${formData.login}:${formData.password}`);
+      login(convertUserData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
