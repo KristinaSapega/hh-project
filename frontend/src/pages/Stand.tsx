@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 
-import EnhancedMaterialTable from '../components/Stand/Table/EnhancedMaterialTable';
+import StandTable from '../components/Stand/Table/StandTable';
 import StandInfo from '../components/Stand/StandInfo';
 
 const Stand = () => {
@@ -15,7 +15,7 @@ const Stand = () => {
   return (
     <Box>
       <StandInfo />
-      <EnhancedMaterialTable />
+      <StandTable />
     </Box>
   );
 };

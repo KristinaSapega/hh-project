@@ -10,8 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 
-import EnhancedTableHead from './EnhancedTableHead';
-import EnhancedTableToolbar from './EnhancedTableToolbar';
+import EnhancedTableHead from './StabdTableHeader';
+import EnhancedTableToolbar from './StandTableToolbar';
 import ElementStatus from '../../ElementStatus';
 
 export interface Data {

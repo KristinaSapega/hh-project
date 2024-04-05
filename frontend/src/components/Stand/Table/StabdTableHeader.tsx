@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
-import { Data } from './EnhancedMaterialTable';
+import { Data } from './StandTable';
 
 type Order = 'asc' | 'desc';
 

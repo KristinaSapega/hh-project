@@ -2,7 +2,7 @@ import { Dispatch, FunctionComponent, SetStateAction } from 'react';
 
 import { Toolbar, alpha, Typography } from '@mui/material';
 
-import { Data } from './EnhancedMaterialTable';
+import { Data } from './StandTable';
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
