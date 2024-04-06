@@ -19,27 +19,32 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 @Repository
 public class InventoryFileStandRepository {
 
-  private Map<Long, Stand> stands;
+  private final Map<Long, Stand> stands;
+
+  public InventoryFileStandRepository() {
+    stands = load(Path.of("ansible", "config", "inventory.yml"));
+  }
 
   public List<Stand> findAll() {
-    if (stands == null) {
-      Map<String, Map<String, Map<String, Map<String, String>>>> inventoryData;
-      try {
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        inventoryData = mapper.readValue(Path.of("ansible", "config", "inventory.yml").toFile(), Map.class);
-      } catch (IOException e) {
-        throw new RuntimeException("IOException on read inventory", e);
-      }
-      var hosts = new ArrayList<>(inventoryData.get("stands").get("hosts").keySet());
-      stands = IntStream.range(0, hosts.size())
-          .mapToObj(i -> new Stand(Long.valueOf(i + 1L), hosts.get(i), StandState.RUNNING, Optional.empty()))
-          .collect(Collectors.toMap(Stand::getId, stand -> stand));
-    }
     return new ArrayList<>(stands.values());
   }
 
-  public Optional<Stand> findById(Long id) {
+  public Optional<Stand> findById(long id) {
     return Optional.ofNullable(stands.get(id));
+  }
+
+  private Map<Long, Stand> load(Path inventoryFile) {
+    Map<String, Map<String, Map<String, Map<String, String>>>> inventoryData;
+    try {
+      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+      inventoryData = mapper.readValue(inventoryFile.toFile(), Map.class);
+    } catch (IOException e) {
+      throw new RuntimeException("IOException on read inventory", e);
+    }
+    var hosts = new ArrayList<>(inventoryData.get("stands").get("hosts").keySet());
+    return IntStream.range(0, hosts.size())
+        .mapToObj(i -> new Stand(Long.valueOf(i + 1L), hosts.get(i), StandState.RUNNING, Optional.empty()))
+        .collect(Collectors.toMap(Stand::getId, stand -> stand));
   }
 
 }

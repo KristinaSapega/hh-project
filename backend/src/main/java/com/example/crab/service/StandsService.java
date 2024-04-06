@@ -1,7 +1,6 @@
 package com.example.crab.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.crab.exception.controller.ResourceNotFoundException;
 import com.example.crab.persistence.InventoryFileStandRepository;
@@ -25,7 +24,7 @@ public class StandsService {
     return new StandListDto(dtoStands);
   }
 
-  public StandDto getStand(@PathVariable long standId) {
+  public StandDto getStand(long standId) {
     return standRepository.findById(standId)
         .map(StandDto::fromEntity)
         .orElseThrow(() -> {
