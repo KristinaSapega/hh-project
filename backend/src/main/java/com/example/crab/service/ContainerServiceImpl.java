@@ -3,8 +3,7 @@ package com.example.crab.service;
 import com.example.crab.transport.ContainerDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,17 @@ public class ContainerServiceImpl implements ContainerService {
   }
 
 
-  public List<ContainerDto> getContainers(long id) {
+  public List<ContainerDto> getContainers(long standId) {
+    List<ContainerDto> containers;
     try {
-      Path json = Paths.get("src/main/resources/containers.json");
-      List<ContainerDto> containers = mapper.readValue(json.toFile(), new TypeReference<List<ContainerDto>>() {
-      });
+      try (InputStream inputStream = ContainerServiceImpl.class.getResourceAsStream("/containers.json")) {
+        containers = mapper.readValue(inputStream, new TypeReference<>() {
+        });
+      }
       return containers;
     } catch (Exception ex) {
-      ex.printStackTrace();
+      throw new RuntimeException(ex);
     }
-    return null;
   }
 
   public ContainerDto getContainerById(long standId, String containerId) {
