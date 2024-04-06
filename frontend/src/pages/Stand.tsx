@@ -15,7 +15,7 @@ const Stand = () => {
   return (
     <Box>
       <StandInfo id={Number(id)} />
-      <StandTable />
+      <StandTable id={Number(id)} />
     </Box>
   );
 };
