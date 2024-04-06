@@ -18,15 +18,13 @@ public class ContainerServiceImpl implements ContainerService {
 
   public List<ContainerDto> getContainers(long standId) {
     List<ContainerDto> containers;
-    try {
-      try (InputStream inputStream = ContainerServiceImpl.class.getResourceAsStream("/containers.json")) {
-        containers = mapper.readValue(inputStream, new TypeReference<>() {
-        });
-      }
-      return containers;
+    try (InputStream inputStream = ContainerServiceImpl.class.getResourceAsStream("/containers.json")) {
+      containers = mapper.readValue(inputStream, new TypeReference<>() {
+      });
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+    return containers;
   }
 
   public ContainerDto getContainerById(long standId, String containerId) {
