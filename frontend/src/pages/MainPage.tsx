@@ -46,17 +46,17 @@ const columns: GridColDef[] = [
       );
     }
   },
-  { field: 'Name', headerName: 'Имя', width: 195 },
-  { field: 'Address', headerName: 'Адрес', width: 195 },
+//   { field: 'Name', headerName: 'Имя', width: 195 },
+  { field: 'Address', headerName: 'Адрес', width: 250 },
   {
-    field: 'Status', headerName: 'Статус', width: 195,
+    field: 'Status', headerName: 'Статус', width: 250,
     renderCell: (params: GridCellParams) => (
       <span style={{ color: params.value === 'running' ? 'green' : 'red' }}>
         {params.value ? params.value.toString() : ''}
       </span>
     )
   },
-  {field: 'Status2', headerName: 'Пользователь', width: 195,
+  {field: 'Status2', headerName: 'Пользователь', width: 300,
     renderCell: (params: GridCellParams) => (
       <span style={{ color: params.value === '' ? 'green' : 'red' }}>
         {params.value ? params.value.toString() : ''}
