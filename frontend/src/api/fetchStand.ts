@@ -9,7 +9,7 @@ interface Stand {
 
 export default async (user: string, id: number): Promise<Stand> => {
   try {
-    const response = await fetch(`${BASE_BACKEND_URL}${routes.api.stands}${id}`, {
+    const response = await fetch(`${BASE_BACKEND_URL}${routes.api.stand(id)}`, {
       headers: {
         'Authorization': `Basic ${user}`,
         'X-Requested-With': 'XMLHttpRequest',

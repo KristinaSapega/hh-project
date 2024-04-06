@@ -24,60 +24,39 @@ interface Stand {
   takenBy: string;
 }
 
-// const getRow = (option: string, value: string): Row => ({ option, value });
-
-// const options = {
-//   host: 'Хост',
-//   status: 'Статус',
-//   takenBy: 'Пользователь',
-// };
-
-// const rows: Row[] = [
-//   getRow('Хост', 'Василий'),
-//   getRow('Статус', 'Running'),
-//   getRow('Пользователь', 'Пользователь'),
-// ];
-
 const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
   const [stand, setStand] = useState<Stand | null>(null);
   const [rows, setRows] = useState<Row[]>([]);
 
-  const { user, logout } = useAuthContext();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const getStand = async () => {
-      try {
         const stand = await api.fetchStand(user ?? '', id);
         setStand(stand);
-      } catch (error) {
-        console.log(error);
-      }
     };
 
-    if (user) {
-      console.log(user, id);
-      getStand();
-    } else {
-      logout();
-    }
-  }, [user]);
+    getStand();
+  }, []);
 
-  if (stand) {
-    setRows([
-      {
-        option: 'Хост',
-        value: stand.host,
-      },
-      {
-        option: 'Статус',
-        value: stand.status,
-      },
-      {
-        option: 'Пользователь',
-        value: stand.takenBy,
-      },
-    ]);
-  }
+  useEffect(() => {
+    if (stand) {
+      setRows([
+        {
+          option: 'Хост',
+          value: stand.host,
+        },
+        {
+          option: 'Статус',
+          value: stand.status,
+        },
+        {
+          option: 'Пользователь',
+          value: stand.takenBy,
+        },
+      ]);
+    }
+  }, [stand]);
 
   return (
     <Paper sx={{ mt: 2, mb: 2, p: 2 }}>
