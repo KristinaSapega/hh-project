@@ -1,5 +1,11 @@
 package com.example.crab.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.Arrays;
@@ -23,6 +29,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@OpenAPIDefinition(info = @Info(title = "Crab 2.0 Api", version = "v1"))
+@SecurityScheme(
+    name = "basicAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "basic"
+)
 public class SecurityConfig {
 
   @Bean
@@ -45,9 +57,10 @@ public class SecurityConfig {
     http
         .cors(withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests((auth) -> auth
+        .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers("/api/login").permitAll()
+            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
             .anyRequest().authenticated())
         .httpBasic(withDefaults());
 
