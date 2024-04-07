@@ -99,18 +99,6 @@ const columns: GridColDef[] = [
 
 ];
 
-// const rows = [
-//   { id: 1, Status: 'running', Name: 'Name1', Status2: '' },
-//   { id: 2, Status: 'stopped', Name: 'Name2', Status2: 'userAddress' },
-//   { id: 3, Status: 'running', Name: 'Name3', Status2: '' },
-//   { id: 4, Status: 'running', Name: 'Name4', Status2: '' },
-//   { id: 5, Status: 'running', Name: 'Name5', Status2: '' },
-//   { id: 6, Status: 'running', Name: 'Name6', Status2: '' },
-//   { id: 7, Status: 'stopped', Name: 'Name7', Status2: 'userAddress' },
-//   { id: 8, Status: 'running', Name: 'Name8', Status2: '' },
-//   { id: 9, Status: 'running', Name: 'Name9', Status2: '' },
-// ];
-
 
 const MainPage: FC = () => {
   const { user } = useAuthContext();
