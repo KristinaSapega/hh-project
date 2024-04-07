@@ -71,6 +71,7 @@ const columns: GridColDef[] = [
     const theme = useTheme();
     const buttonColor = theme.palette.mode === 'light' ? 'white' : 'black';
     const standId = params.row.id;
+    
       return (
       <Link to={`/stand/${standId}`}>
         <Button
