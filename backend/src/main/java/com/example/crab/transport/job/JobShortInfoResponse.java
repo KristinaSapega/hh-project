@@ -1,5 +1,12 @@
 package com.example.crab.transport.job;
 
 
-public record JobShortInfoResponse(Long jobId) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record JobShortInfoResponse(
+    @Schema(
+        description = "Идентификатор ansible-задачи",
+        example = "12"
+    )
+    Long jobId) {
 }
