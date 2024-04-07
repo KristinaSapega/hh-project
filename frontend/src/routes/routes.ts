@@ -5,7 +5,7 @@ const routes = {
   login: '/login',
   stand: '/stand/:id',
   api: {
-    stands: '/api/stands/',
+    stands: '/api/stands',
     stand: (id: number) => `/api/stands/${id}`,
     containers: (id: number) => `/api/stands/${id}/containers`,
     container: (standId: number, id: number) =>
