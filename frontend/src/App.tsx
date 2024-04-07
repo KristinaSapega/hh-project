@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider } from '@emotion/react';
 import { createTheme, CssBaseline, Box } from '@mui/material';
+import { ruRU } from '@mui/material/locale';
 
 import Header from './components/Header';
 import Login from './pages/Login';
@@ -24,7 +25,7 @@ const App = () => {
         main: '#9a9a9a',
       },
     },
-  });
+  }, ruRU);
 
   // функция для переключения темы, передаем пропсом в хедер
   const toggleTheme = () => {
