@@ -5,7 +5,7 @@ const routes = {
   login: '/login',
   stand: '/stand/:id',
   api: {
-    stands: '/api/stands/',
+    stands: '/api/stands',
   }
 };
 
