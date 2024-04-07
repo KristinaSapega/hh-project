@@ -67,11 +67,12 @@ const columns: GridColDef[] = [
     field: 'Connect',
     headerName: 'Подключиться',
     width: 195,
-    renderCell: () => {
+    renderCell: (params: GridCellParams) => {
     const theme = useTheme();
     const buttonColor = theme.palette.mode === 'light' ? 'white' : 'black';
+    const standId = params.row.id;
       return (
-      <Link to="/target-page">
+      <Link to={`/stand/${standId}`}>
         <Button
           style={{
             backgroundColor: buttonColor,
