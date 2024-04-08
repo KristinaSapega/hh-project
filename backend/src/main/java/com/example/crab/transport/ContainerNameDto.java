@@ -1,6 +1,12 @@
 package com.example.crab.transport;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ContainerNameDto {
+  @Schema(
+      description = "Имя контейнера",
+      example = "service1"
+  )
   public String name;
 
   public ContainerNameDto() {

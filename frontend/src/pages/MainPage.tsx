@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridCellParams } from '@mui/x-data-grid';
 import Tooltip from '@mui/material/Tooltip';
@@ -7,6 +7,11 @@ import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { fetchStands } from '../api/fetchStands';
+import { Stands } from '../api/fetchStands';
+import { useAuthContext } from "../hooks/useAuthContext";
+
+
 
 
 const columns: GridColDef[] = [
@@ -46,17 +51,18 @@ const columns: GridColDef[] = [
       );
     }
   },
-  { field: 'Name', headerName: 'Имя', width: 195 },
-  { field: 'Address', headerName: 'Адрес', width: 195 },
+  //   { field: 'Name', headerName: 'Имя', width: 195 },
+  { field: 'host', headerName: 'Адрес', width: 250 },
   {
-    field: 'Status', headerName: 'Статус', width: 195,
+    field: 'status', headerName: 'Статус', width: 250,
     renderCell: (params: GridCellParams) => (
       <span style={{ color: params.value === 'running' ? 'green' : 'red' }}>
         {params.value ? params.value.toString() : ''}
       </span>
     )
   },
-  {field: 'Status2', headerName: 'Пользователь', width: 195,
+  {
+    field: 'takenBy', headerName: 'Пользователь', width: 300,
     renderCell: (params: GridCellParams) => (
       <span style={{ color: params.value === '' ? 'green' : 'red' }}>
         {params.value ? params.value.toString() : ''}
@@ -67,47 +73,38 @@ const columns: GridColDef[] = [
     field: 'Connect',
     headerName: 'Подключиться',
     width: 195,
-    renderCell: () => {
-    const theme = useTheme();
-    const buttonColor = theme.palette.mode === 'light' ? 'white' : 'black';
+    renderCell: (params: GridCellParams) => {
+      const theme = useTheme();
+      const buttonColor = theme.palette.mode === 'light' ? 'white' : 'black';
+      const standId = params.row.id;
+
       return (
-      <Link to="/target-page">
-        <Button
-          style={{
-            backgroundColor: buttonColor,
-            color: theme.palette.mode === 'light' ? 'black' : 'white',
-            borderRadius: '10px',
-            border: '1px solid lightgrey',
-            width: '120px',
-            height: '36px',
-          }}
-        >
-          Connect
-        </Button>
-      </Link>
-    );
+        <Link to={`/stand/${standId}`}>
+          <Button
+            style={{
+              backgroundColor: buttonColor,
+              color: theme.palette.mode === 'light' ? 'black' : 'white',
+              borderRadius: '10px',
+              border: '1px solid lightgrey',
+              width: '120px',
+              height: '36px',
+            }}
+          >
+            Connect
+          </Button>
+        </Link>
+      );
+    },
   },
-},
 
 ];
 
-const rows = [
-  { id: 1, Status: 'running', Name: 'Name1', Status2: ''},
-  { id: 2, Status: 'stopped', Name: 'Name2', Status2: 'userAddress'},
-  { id: 3, Status: 'running', Name: 'Name3', Status2: ''},
-  { id: 4, Status: 'running', Name: 'Name4', Status2: ''},
-  { id: 5, Status: 'running', Name: 'Name5', Status2: ''},
-  { id: 6, Status: 'running', Name: 'Name6', Status2: ''},
-  { id: 7, Status: 'stopped', Name: 'Name7', Status2: 'userAddress'},
-  { id: 8, Status: 'running', Name: 'Name8', Status2: ''},
-  { id: 9, Status: 'running', Name: 'Name9', Status2: ''},
-];
 
-
-const MainPage: FC  = () => {
+const MainPage: FC = () => {
+  const { user } = useAuthContext();
   const [, setAnchorEl] = useState<null | HTMLElement>(null);
   const [standMenuAnchorEl, setStandMenuAnchorEl] = useState<null | HTMLElement>(null);
- 
+
 
   const handleAddStandClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setStandMenuAnchorEl(event.currentTarget);
@@ -119,6 +116,15 @@ const MainPage: FC  = () => {
   };
 
   const theme = useTheme();
+
+  const [stands, setStands] = useState<Stands[] | null>(null);
+  useEffect(() => {
+    (async () => {
+      const fetchedStands: Stands[] = await fetchStands(user!);
+      setStands(fetchedStands);
+    })();
+  }, []);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '90px' }}>
@@ -150,8 +156,8 @@ const MainPage: FC  = () => {
         </Menu>
       </div>
       <div style={{ height: '600px', width: '100%', overflow: '', paddingTop: '10px', paddingBottom: '200px' }}>
-        {<DataGrid
-          rows={rows}
+        {stands && <DataGrid
+          rows={stands}
           columns={columns}
           initialState={{
             pagination: {
@@ -159,7 +165,7 @@ const MainPage: FC  = () => {
             },
           }}
           pageSizeOptions={[5, 10]}
-        
+
         />}
       </div>
 
