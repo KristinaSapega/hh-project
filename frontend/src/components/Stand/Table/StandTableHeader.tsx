@@ -1,12 +1,12 @@
 import { FunctionComponent } from 'react';
 
 import {
+  Box,
+  Checkbox,
+  TableCell,
   TableHead,
   TableRow,
-  TableCell,
-  Checkbox,
   TableSortLabel,
-  Box,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 

@@ -1,4 +1,4 @@
-import { BASE_BACKEND_URL, routes } from "../routes/routes";
+import { BASE_BACKEND_URL, routes } from '../routes/routes';
 
 interface Stand {
   id: number;
@@ -11,7 +11,7 @@ export default async (user: string, id: number): Promise<Stand> => {
   try {
     const response = await fetch(`${BASE_BACKEND_URL}${routes.api.stand(id)}`, {
       headers: {
-        'Authorization': `Basic ${user}`,
+        Authorization: `Basic ${user}`,
         'X-Requested-With': 'XMLHttpRequest',
       },
     });

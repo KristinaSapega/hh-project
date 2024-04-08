@@ -1,3 +1,5 @@
+import { FunctionComponent, useEffect, useState } from 'react';
+
 import {
   Box,
   Paper,
@@ -8,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { FunctionComponent, useEffect, useState } from 'react';
+
 import api from '../../api';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
@@ -32,12 +34,12 @@ const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
 
   useEffect(() => {
     const getStand = async () => {
-        const stand = await api.fetchStand(user ?? '', id);
-        setStand(stand);
+      const stand = await api.fetchStand(user ?? '', id);
+      setStand(stand);
     };
 
     getStand();
-  }, []);
+  }, [user, id]);
 
   useEffect(() => {
     if (stand) {

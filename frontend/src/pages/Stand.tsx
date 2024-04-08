@@ -2,8 +2,8 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 
-import StandTable from '../components/Stand/Table/StandTable';
 import StandInfo from '../components/Stand/StandInfo';
+import StandTable from '../components/Stand/Table/StandTable';
 
 const Stand = () => {
   const params = useParams();

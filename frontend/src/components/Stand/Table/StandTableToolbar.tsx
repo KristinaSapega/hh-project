@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import { Toolbar, alpha, Typography } from '@mui/material';
+import { Toolbar, Typography, alpha } from '@mui/material';
 
 interface EnhancedTableToolbarProps {
   numSelected: number;

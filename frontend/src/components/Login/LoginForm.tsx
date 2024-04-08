@@ -1,21 +1,19 @@
+import { ValidationErrors } from 'final-form';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
+import { Field, Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Form, Field } from 'react-final-form';
-import { ValidationErrors } from 'final-form';
-
+import { LockOutlined } from '@mui/icons-material';
 import {
-  Box,
   Avatar,
-  Typography,
-  TextField,
+  Box,
   Button,
   Grid,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { LockOutlined } from '@mui/icons-material';
 
 import { useAuthContext } from '../../hooks/useAuthContext';
-
 import { routes } from '../../routes/routes';
 
 interface LoginFormProps {
