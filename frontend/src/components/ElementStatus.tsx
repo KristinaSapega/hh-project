@@ -1,5 +1,6 @@
-import { Box } from "@mui/system";
-import { FunctionComponent } from "react";
+import { FunctionComponent } from 'react';
+
+import { Box } from '@mui/system';
 
 enum Status {
   Stopped = 'stopped',
@@ -17,7 +18,7 @@ const statusColorMap: StatusColorMap = {
   [Status.Pause]: 'orange',
 };
 
-const ElementStatus: FunctionComponent<{status: string}> = ({ status }) => {
+const ElementStatus: FunctionComponent<{ status: string }> = ({ status }) => {
   return (
     <>
       <Box

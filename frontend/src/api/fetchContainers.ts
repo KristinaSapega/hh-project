@@ -1,4 +1,4 @@
-import { BASE_BACKEND_URL, routes } from "../routes/routes";
+import { BASE_BACKEND_URL, routes } from '../routes/routes';
 
 interface Container {
   id: string;
@@ -6,14 +6,20 @@ interface Container {
   state: string;
 }
 
-export default async (user: string, id: number): Promise<{ containers: Container[] }> => {
+export default async (
+  user: string,
+  id: number,
+): Promise<{ containers: Container[] }> => {
   try {
-    const response = await fetch(`${BASE_BACKEND_URL}${routes.api.containers(id)}`, {
-      headers: {
-        'Authorization': `Basic ${user}`,
-        'X-Requested-With': 'XMLHttpRequest',
+    const response = await fetch(
+      `${BASE_BACKEND_URL}${routes.api.containers(id)}`,
+      {
+        headers: {
+          Authorization: `Basic ${user}`,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       throw Error(response.statusText);

@@ -2,12 +2,12 @@ import { FormEvent, FunctionComponent } from 'react';
 
 import { LockOutlined } from '@mui/icons-material';
 import {
-  Box,
   Avatar,
-  Typography,
+  Box,
+  Button,
   Grid,
   TextField,
-  Button,
+  Typography,
 } from '@mui/material';
 
 interface SignupFormProps {

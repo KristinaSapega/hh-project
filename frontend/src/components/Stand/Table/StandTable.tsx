@@ -1,20 +1,20 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 
+import api from '../../../api';
+import { useAuthContext } from '../../../hooks/useAuthContext';
+import ElementStatus from '../../ElementStatus';
 import StandTableHeader from './StandTableHeader';
 import StandTableToolbar from './StandTableToolbar';
-import ElementStatus from '../../ElementStatus';
-import { useAuthContext } from '../../../hooks/useAuthContext';
-import api from '../../../api';
 
 export interface Container {
   id: string;
@@ -66,7 +66,7 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
     };
 
     getStandContainer();
-  }, []);
+  }, [user, id]);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
