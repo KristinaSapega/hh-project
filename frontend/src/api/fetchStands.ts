@@ -4,7 +4,7 @@ export interface Stands {
     id: number;
     host: string;
     status: string;
-    takengBy: string;
+    takenBy: string;
 }
 
 export const fetchStands = async (user: string): Promise<Stands[]> => {
