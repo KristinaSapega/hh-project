@@ -12,15 +12,10 @@ import TableRow from '@mui/material/TableRow';
 
 import api from '../../../api';
 import { useAuthContext } from '../../../hooks/useAuthContext';
+import { Container } from '../../../types';
 import ElementStatus from '../../ElementStatus';
 import StandTableHeader from './StandTableHeader';
 import StandTableToolbar from './StandTableToolbar';
-
-export interface Container {
-  id: string;
-  name: string;
-  state: string;
-}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {

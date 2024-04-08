@@ -1,13 +1,7 @@
 import { BASE_BACKEND_URL, routes } from '../routes/routes';
+import { Stand } from '../types';
 
-export interface Stands {
-  id: number;
-  host: string;
-  status: string;
-  takenBy: string;
-}
-
-export const fetchStands = async (user: string): Promise<Stands[]> => {
+export const fetchStands = async (user: string): Promise<Stand[]> => {
   const response = await fetch(`${BASE_BACKEND_URL}${routes.api.stands}`, {
     method: 'GET',
     headers: {
@@ -21,7 +15,7 @@ export const fetchStands = async (user: string): Promise<Stands[]> => {
     );
   }
 
-  const data: Stands[] = (await response.json()).stands;
+  const data: Stand[] = (await response.json()).stands;
   return data;
 };
 

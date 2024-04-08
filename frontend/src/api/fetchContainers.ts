@@ -1,10 +1,5 @@
 import { BASE_BACKEND_URL, routes } from '../routes/routes';
-
-interface Container {
-  id: string;
-  name: string;
-  state: string;
-}
+import { Container } from '../types';
 
 export default async (
   user: string,
