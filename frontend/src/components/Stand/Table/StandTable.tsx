@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -10,44 +10,17 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 
-import EnhancedTableHead from './StabdTableHeader';
-import EnhancedTableToolbar from './StandTableToolbar';
+import StandTableHeader from './StandTableHeader';
+import StandTableToolbar from './StandTableToolbar';
 import ElementStatus from '../../ElementStatus';
+import { useAuthContext } from '../../../hooks/useAuthContext';
+import api from '../../../api';
 
-export interface Data {
-  id: number;
+export interface Container {
+  id: string;
   name: string;
-  status: string;
+  state: string;
 }
-
-function createData(id: number, name: string, status: string): Data {
-  return {
-    id,
-    name,
-    status,
-  };
-}
-
-const getRandomName = (): string => {
-  return Array(8)
-    .fill(0)
-    .map(() => {
-      const rndAscii = Math.ceil(Math.random() * 130);
-      return String.fromCharCode(rndAscii);
-    })
-    .join('');
-};
-
-const initialRows = [
-  createData(1, getRandomName(), 'stopped'),
-  createData(2, getRandomName(), 'running'),
-  createData(3, getRandomName(), 'stopped'),
-  createData(4, getRandomName(), 'stopped'),
-  createData(5, getRandomName(), 'stopped'),
-  createData(6, getRandomName(), 'stopped'),
-  createData(7, getRandomName(), 'stopped'),
-  createData(8, getRandomName(), 'stopped'),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +34,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof Data>(
+function getComparator<Key extends keyof Container>(
   order: Order,
   orderBy: Key,
 ): (
@@ -73,17 +46,31 @@ function getComparator<Key extends keyof Data>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const EnhancedTable: FunctionComponent = () => {
-  const [rows, setRows] = useState<Data[]>(initialRows);
+const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
+  const [containers, setContainers] = useState<Container[]>([]);
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Data>('id');
+  const [orderBy, setOrderBy] = useState<keyof Container>('id');
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    const getStandContainer = async () => {
+      setIsLoading(true);
+      const data = await api.fetchContainers(user ?? '', id);
+      await setContainers(data.containers);
+      setIsLoading(false);
+    };
+
+    getStandContainer();
+  }, []);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
-    property: keyof Data,
+    property: keyof Container,
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -92,7 +79,7 @@ const EnhancedTable: FunctionComponent = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = containers.map((n) => Number(n.id));
       setSelected(newSelected);
       return;
     }
@@ -133,100 +120,108 @@ const EnhancedTable: FunctionComponent = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - containers.length) : 0;
 
   const visibleRows = useMemo(
     () =>
-      rows
-        .slice()
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage, rows],
+      containers.length
+        ? containers
+            .slice()
+            .sort(getComparator(order, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : [],
+    [order, orderBy, page, rowsPerPage, containers],
   );
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar setRows={setRows} numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="medium"
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+        {!isLoading && (
+          <>
+            <StandTableToolbar numSelected={selected.length} />
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size="medium"
+              >
+                <StandTableHeader
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={containers.length}
+                />
+                <TableBody>
+                  {visibleRows.map((container, index) => {
+                    const isItemSelected = isSelected(Number(container.id));
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={(event) => handleClick(event, row.id)}
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="right"
-                      sx={{ width: '30%' }}
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={container.id}
+                        selected={isItemSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onClick={(event) =>
+                              handleClick(event, Number(container.id))
+                            }
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          id={labelId}
+                          scope="row"
+                          align="right"
+                          sx={{ width: '30%' }}
+                        >
+                          {container.id}
+                        </TableCell>
+                        <TableCell sx={{ width: '30%' }} align="right">
+                          {container.name}
+                        </TableCell>
+                        <TableCell sx={{ width: '30%' }} align="right">
+                          <ElementStatus status={container.state} />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 53 * emptyRows,
+                      }}
                     >
-                      {row.id}
-                    </TableCell>
-                    <TableCell sx={{ width: '30%' }} align="right">
-                      {row.name}
-                    </TableCell>
-                    <TableCell sx={{ width: '30%' }} align="right">
-                      <ElementStatus status={row.status} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={containers.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </Paper>
     </Box>
   );
 };
 
-export default EnhancedTable;
+export default StandTable;

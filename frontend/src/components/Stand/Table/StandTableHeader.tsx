@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
-import { Data } from './StandTable';
+import { Container } from './StandTable';
 
 type Order = 'asc' | 'desc';
 
@@ -18,7 +18,7 @@ interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data,
+    property: keyof Container,
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -28,7 +28,7 @@ interface EnhancedTableProps {
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof Container;
   label: string;
   numeric: boolean;
 }
@@ -47,7 +47,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Имя',
   },
   {
-    id: 'status',
+    id: 'state',
     numeric: true,
     disablePadding: false,
     label: 'Статус',
@@ -64,7 +64,7 @@ const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof Container) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 

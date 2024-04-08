@@ -1,12 +1,9 @@
-import { Dispatch, FunctionComponent, SetStateAction } from 'react';
+import { FunctionComponent } from 'react';
 
 import { Toolbar, alpha, Typography } from '@mui/material';
 
-import { Data } from './StandTable';
-
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  setRows: Dispatch<SetStateAction<Data[]>>;
 }
 
 const EnhancedTableToolbar: FunctionComponent<EnhancedTableToolbarProps> = ({
