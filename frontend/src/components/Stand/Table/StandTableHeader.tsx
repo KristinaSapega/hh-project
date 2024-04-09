@@ -10,28 +10,7 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
-import { Container } from './StandTable';
-
-type Order = 'asc' | 'desc';
-
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Container,
-  ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Container;
-  label: string;
-  numeric: boolean;
-}
+import { Container, HeadCell, StandTableHeaderProps } from '../../../types';
 
 const headCells: readonly HeadCell[] = [
   {
@@ -54,7 +33,7 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
+const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
   const {
     onSelectAllClick,
     order,
@@ -108,4 +87,4 @@ const EnhancedTableHead: FunctionComponent<EnhancedTableProps> = (props) => {
   );
 };
 
-export default EnhancedTableHead;
+export default StandTableHeader;

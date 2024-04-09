@@ -13,18 +13,7 @@ import {
 
 import api from '../../api';
 import { useAuthContext } from '../../hooks/useAuthContext';
-
-interface Row {
-  option: string;
-  value: string;
-}
-
-interface Stand {
-  id: number;
-  host: string;
-  status: string;
-  takenBy: string;
-}
+import { Row, Stand } from '../../types';
 
 const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
   const [stand, setStand] = useState<Stand | null>(null);

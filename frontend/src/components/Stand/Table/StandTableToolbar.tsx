@@ -2,11 +2,9 @@ import { FunctionComponent } from 'react';
 
 import { Toolbar, Typography, alpha } from '@mui/material';
 
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
+import { StandTableToolbarProps } from '../../../types';
 
-const EnhancedTableToolbar: FunctionComponent<EnhancedTableToolbarProps> = ({
+const StandeTableToolbar: FunctionComponent<StandTableToolbarProps> = ({
   numSelected,
 }) => {
   return (
@@ -46,4 +44,4 @@ const EnhancedTableToolbar: FunctionComponent<EnhancedTableToolbarProps> = ({
   );
 };
 
-export default EnhancedTableToolbar;
+export default StandeTableToolbar;

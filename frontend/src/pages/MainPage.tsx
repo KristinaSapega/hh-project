@@ -10,8 +10,8 @@ import { useTheme } from '@mui/material/styles';
 import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 
 import { fetchStands } from '../api/fetchStands';
-import { Stands } from '../api/fetchStands';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { Stand } from '../types';
 
 const RenderCheckboxCell: FC<{ params: GridCellParams }> = ({ params }) => {
   const isDisabled = params.row.Status !== 'running';
@@ -132,10 +132,10 @@ const MainPage: FC = () => {
 
   const theme = useTheme();
 
-  const [stands, setStands] = useState<Stands[] | null>(null);
+  const [stands, setStands] = useState<Stand[] | null>(null);
   useEffect(() => {
     (async () => {
-      const fetchedStands: Stands[] = await fetchStands(user!);
+      const fetchedStands: Stand[] = await fetchStands(user!);
       setStands(fetchedStands);
     })();
   }, [user]);

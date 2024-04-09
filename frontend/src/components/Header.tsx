@@ -17,11 +17,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 import { routes } from '../routes/routes';
+import { HeaderProps } from '../types';
 
-const Header: FunctionComponent<{
-  mode: 'dark' | 'light';
-  toggleTheme: () => void;
-}> = ({ toggleTheme, mode }) => {
+const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
   // Состояние для открытия меню пользователя
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 

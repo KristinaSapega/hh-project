@@ -2,15 +2,7 @@ import { FunctionComponent } from 'react';
 
 import { Box } from '@mui/system';
 
-enum Status {
-  Stopped = 'stopped',
-  Running = 'running',
-  Pause = 'pause',
-}
-
-interface StatusColorMap {
-  [key: string]: string;
-}
+import { ElementStatusProps, Status, StatusColorMap } from '../types';
 
 const statusColorMap: StatusColorMap = {
   [Status.Stopped]: 'red',
@@ -18,7 +10,7 @@ const statusColorMap: StatusColorMap = {
   [Status.Pause]: 'orange',
 };
 
-const ElementStatus: FunctionComponent<{ status: string }> = ({ status }) => {
+const ElementStatus: FunctionComponent<ElementStatusProps> = ({ status }) => {
   return (
     <>
       <Box

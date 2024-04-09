@@ -1,11 +1,5 @@
 import { BASE_BACKEND_URL, routes } from '../routes/routes';
-
-interface Stand {
-  id: number;
-  host: string;
-  status: string;
-  takenBy: string;
-}
+import { Stand } from '../types';
 
 export default async (user: string, id: number): Promise<Stand> => {
   try {

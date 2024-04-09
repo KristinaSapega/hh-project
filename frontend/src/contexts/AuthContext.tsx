@@ -1,12 +1,7 @@
 import { FunctionComponent, ReactNode, createContext } from 'react';
 
 import { useAuth } from '../hooks/useAuth';
-
-interface IAuthContext {
-  user: string | null;
-  login: (user: string) => void;
-  logout: () => void;
-}
+import { IAuthContext } from '../types';
 
 const initialContext: IAuthContext = {
   user: null,

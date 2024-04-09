@@ -15,12 +15,9 @@ import {
 
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { routes } from '../../routes/routes';
+import { FormProps, LoginFormValues } from '../../types';
 
-interface LoginFormProps {
-  formSwitch: () => void;
-}
-
-const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
+const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
   const [formData, setFormData] = useState<{ login: string; password: string }>(
     { login: '', password: '' },
   );
@@ -37,18 +34,13 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ formSwitch }) => {
   const { user, login } = useAuthContext();
   const navigate = useNavigate();
 
-  type FormValues = {
-    login?: string;
-    password?: string;
-  };
-
   const validate = async (): Promise<ValidationErrors | undefined> => {
     // нативная функция конвертации в base64 не поддерживает кириллицу
     const isCyrillic = (str: string): boolean => {
       return /[а-яА-Я]/g.test(str);
     };
 
-    const errors: FormValues = {};
+    const errors: LoginFormValues = {};
 
     if (formData.login === '') {
       errors.login = 'Поле не должно быть пустым';

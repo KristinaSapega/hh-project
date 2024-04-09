@@ -10,11 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 
-interface SignupFormProps {
-  formSwitch: () => void;
-}
+import { FormProps } from '../../types';
 
-const SignupForm: FunctionComponent<SignupFormProps> = ({ formSwitch }) => {
+const SignupForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
