@@ -7,8 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.crab.service.StandsService;
@@ -52,5 +56,24 @@ public class StandsController {
   @GetMapping("/api/stands/{standId}")
   public StandDto getStand(@PathVariable long standId) {
     return standsService.getStand(standId);
+  }
+
+  /*@PatchMapping("/api/stands/{standId}")
+  public StandDto updateStandTakenBy(@PathVariable long standId, @AuthenticationPrincipal UserDetails userDetails) {
+    return standsService.updateStandTakenBy(standId, userDetails.getUsername());
+  }*/
+
+  @Operation(
+      summary = "Обновление takenBy стенда"
+  )
+  @ApiResponse(
+      responseCode = "200",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandDto.class))}
+  )
+  @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
+  @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
+  @PatchMapping("/api/stands/{standId}")
+  public StandDto updateStandTakenBy(@PathVariable long standId, @RequestBody StandDto standDto) {
+    return standsService.updateStandTakenBy(standId, standDto.takenBy());
   }
 }
