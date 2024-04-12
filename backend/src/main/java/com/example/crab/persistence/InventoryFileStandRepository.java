@@ -33,6 +33,14 @@ public class InventoryFileStandRepository {
     return Optional.ofNullable(stands.get(id));
   }
 
+  public Stand save(Stand stand) {
+    Stand standSave = stands.get(stand.getId());
+    standSave.setHost(stand.getHost());
+    standSave.setTakenBy(stand.getTakenBy());
+    standSave.setState(stand.getState());
+    return standSave;
+  }
+
   private Map<Long, Stand> load(Path inventoryFile) {
     Map<String, Map<String, Map<String, Map<String, String>>>> inventoryData;
     try {
