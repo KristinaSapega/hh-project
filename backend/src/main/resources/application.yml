@@ -1,0 +1,12 @@
+spring:
+    application:
+        name: crab
+    datasource:
+        jdbc-url: 'jdbc:postgresql://dbpostgresql:5432/crab'
+        username: postgres
+        password: password
+        driverClassName: org.postgresql.Driver
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
