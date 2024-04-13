@@ -16,4 +16,4 @@ services:
       - 'POSTGRES_USER=postgres'
       - 'POSTGRES_DB=crab'
     volumes:
-      - ./data:/var/lib/postgresql/postgres-data
+      - ./postgres-data:/var/lib/postgresql/postgres-data
