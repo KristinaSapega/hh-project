@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: v1.0.0/cumulative-changelog.yml
+      relativeToChangelogFile: true

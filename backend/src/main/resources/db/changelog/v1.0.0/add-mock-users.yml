@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-mock-users
+      author: klive_rogen
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: 'admin@test.ru'
+              - column:
+                  name: password
+                  value: 'password'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: 'user1@test.ru'
+              - column:
+                  name: password
+                  value: 'password'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: 'user2@test.ru'
+              - column:
+                  name: password
+                  value: 'password'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: 'user3@test.ru'
+              - column:
+                  name: password
+                  value: 'password'
