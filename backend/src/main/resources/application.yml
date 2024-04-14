@@ -2,10 +2,12 @@ spring:
     application:
         name: crab
     datasource:
-        jdbc-url: 'jdbc:postgresql://dbpostgresql:5432/crab'
+        url: 'jdbc:postgresql://${DB_HOST}:${DB_PORT}/crab'
         username: postgres
         password: password
         driverClassName: org.postgresql.Driver
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yml
     jpa:
         properties:
             hibernate:

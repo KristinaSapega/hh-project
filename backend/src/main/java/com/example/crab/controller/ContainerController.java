@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @SecurityRequirement(name = "basicAuth")
 @Tag(
-    name = "API для получении информации о контейнерах"
+    name = "API для получения информации о контейнерах"
 )
 public class ContainerController {
   ContainerServiceImpl dockerAPIService;

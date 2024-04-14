@@ -20,7 +20,7 @@ import com.example.crab.transport.StandListDto;
 @RestController
 @SecurityRequirement(name = "basicAuth")
 @Tag(
-    name = "API для получении информации о стендах"
+    name = "API для получения информации о стендах"
 )
 public class StandsController {
 

@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-stands
+      author: klive_rogen
+      changes:
+        - createTable:
+            tableName: stands
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable:  false
+              - column:
+                  name: host
+                  type: VARCHAR(128)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: state
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: taken_by
+                  type: INT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_users_id
+                    references: users(id)
+        - createIndex:
+            columns:
+              - column:
+                  name: taken_by
+            indexName: idx_taken_by
+            tableName: stands
