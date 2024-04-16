@@ -51,21 +51,6 @@ public class SecurityConfig {
     return NoOpPasswordEncoder.getInstance();
   }
 
-  /*@Bean
-  public UserDetailsService users() {
-    // The builder will ensure the passwords are encoded before saving in memory
-    User.UserBuilder users = User.withDefaultPasswordEncoder();
-    UserDetails user1 = users
-        .username("user")
-        .password("password")
-        .build();
-    UserDetails user2 = users
-        .username("admin")
-        .password("password")
-        .build();
-    return new InMemoryUserDetailsManager(user1, user2);
-  }*/
-
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
