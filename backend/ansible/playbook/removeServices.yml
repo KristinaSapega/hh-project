@@ -1,0 +1,26 @@
+- name: Remove all service
+  hosts: all
+  become_user: crab-stand
+  become: yes
+  tasks:
+    - name: find services dirs
+      find:
+        paths: /home/crab-stand/services
+        file_type: directory
+      register: servicesDirs
+      changed_when: false
+
+    - name: stop and remove services
+      community.docker.docker_compose_v2:
+        project_src: "{{ item.path }}"
+        state: absent
+        remove_volumes: true
+        remove_images: all
+      loop: "{{ servicesDirs.files }}"
+      ignore_errors: true
+
+    - name: delete all services data
+      ansible.builtin.file:
+        state: absent
+        path: "{{ item.path }}"
+      loop: "{{ servicesDirs.files }}"

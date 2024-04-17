@@ -1,0 +1,29 @@
+- name: Deploy services
+  hosts: all
+  become_user: crab-stand
+  become: yes
+  vars:
+    services: "{{ services }}"
+  tasks:
+    - name: clone repositories
+      ansible.builtin.git:
+        repo: "https://github.com/{{ item.repoOwner + '/' + item.repo }}"
+        version: "{{ item.branch }}"
+        dest: "/home/crab-stand/services/{{ item.repo + '-' + item.branch }}"
+      loop: "{{ services }}"
+
+    - name: run docker-compose
+      community.docker.docker_compose_v2:
+        project_src: "/home/crab-stand/services/{{ item.repo + '-' + item.branch }}"
+        state: present 
+      loop: "{{ services }}"
+
+#{
+#    "services": [
+#      {
+#        "repo": "string",
+#        "repoOwner": "string",
+#        "branch": "string"
+#      }
+#    ]
+#}
