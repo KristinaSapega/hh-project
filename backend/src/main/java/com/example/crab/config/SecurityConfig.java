@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import javax.sql.DataSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.Arrays;
@@ -21,6 +22,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,19 +40,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 )
 public class SecurityConfig {
 
+  private DataSource dataSource;
+
+  public SecurityConfig(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
+
   @Bean
-  public UserDetailsService users() {
-    // The builder will ensure the passwords are encoded before saving in memory
-    User.UserBuilder users = User.withDefaultPasswordEncoder();
-    UserDetails user1 = users
-        .username("user")
-        .password("password")
-        .build();
-    UserDetails user2 = users
-        .username("admin")
-        .password("password")
-        .build();
-    return new InMemoryUserDetailsManager(user1, user2);
+  public PasswordEncoder passwordEncoder() {
+    return NoOpPasswordEncoder.getInstance();
   }
 
   @Bean
