@@ -7,6 +7,23 @@ export interface Stand {
   takenBy: string;
 }
 
+export interface Field {
+  name: string;
+  type: 'input' | 'checkbox' | 'select' | 'button' | 'radio';
+  placeholder?: string; // если тип input
+  value?: string; // если чекбокс, либо значение по умолчанию в input
+  options?: Array<string>; // если тип select; первым значением передаем по умолчанию
+  checked?: boolean; // если тип checkbox
+}
+
+export interface Plugin {
+  name: string;
+  description: string;
+  shortDescription?: string;
+  playbook?: string; // url к плейбук файлу
+  fields: Array<Field>;
+}
+
 export interface Container {
   id: string;
   name: string;
@@ -34,15 +51,12 @@ export interface Row {
 }
 
 export interface StandTableHeaderProps {
-  numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
     property: keyof Container,
   ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
-  rowCount: number;
 }
 
 export interface HeadCell {
@@ -90,3 +104,54 @@ export interface IAuthContext {
 // App types
 
 export type ThemeMode = 'dark' | 'light';
+
+// store reducers types
+
+// StandsReducer
+
+export interface StandsState {
+  stands: Stand[];
+}
+
+export interface StandsAction {
+  type: string;
+  payload: Stand[];
+}
+
+export interface TakeStandAction {
+  type: string;
+  payload: {
+    user: string;
+    id: number;
+  };
+}
+
+export interface LeaveStandAction {
+  type: string;
+  payload: number;
+}
+
+// PluginsReducer
+
+export interface PluginsState {
+  plugins: Plugin[];
+}
+
+export interface PluginsAction {
+  type: string;
+  payload: Plugin[];
+}
+
+// Logs
+
+export interface LogsProps {
+  isVisible: boolean;
+  setIsVisible: () => void;
+}
+
+// Modal
+
+export interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+}

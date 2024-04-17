@@ -2,7 +2,6 @@ import { FunctionComponent } from 'react';
 
 import {
   Box,
-  Checkbox,
   TableCell,
   TableHead,
   TableRow,
@@ -34,14 +33,7 @@ const headCells: readonly HeadCell[] = [
 ];
 
 const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler =
     (property: keyof Container) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -50,17 +42,6 @@ const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}

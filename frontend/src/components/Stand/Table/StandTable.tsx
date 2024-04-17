@@ -1,7 +1,6 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,7 +14,6 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import { Container } from '../../../types';
 import ElementStatus from '../../ElementStatus';
 import StandTableHeader from './StandTableHeader';
-import StandTableToolbar from './StandTableToolbar';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -45,7 +43,6 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
   const [containers, setContainers] = useState<Container[]>([]);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Container>('id');
-  const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,34 +69,6 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = containers.map((n) => Number(n.id));
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (_: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -110,8 +79,6 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -133,7 +100,7 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
       <Paper sx={{ width: '100%', mb: 2 }}>
         {!isLoading && (
           <>
-            <StandTableToolbar numSelected={selected.length} />
+            {/* <StandTableToolbar /> */}
             <TableContainer>
               <Table
                 sx={{ minWidth: 750 }}
@@ -141,39 +108,16 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
                 size="medium"
               >
                 <StandTableHeader
-                  numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={containers.length}
                 />
                 <TableBody>
                   {visibleRows.map((container, index) => {
-                    const isItemSelected = isSelected(Number(container.id));
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={container.id}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onClick={(event) =>
-                              handleClick(event, Number(container.id))
-                            }
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
+                      <TableRow hover tabIndex={-1} key={container.id}>
                         <TableCell
                           id={labelId}
                           scope="row"

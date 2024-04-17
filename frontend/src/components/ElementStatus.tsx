@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 
 import { Box } from '@mui/system';
 
-import { ElementStatusProps, Status, StatusColorMap } from '../types';
+import { ElementStatusProps, Status, StatusColorMap } from '../types.d';
 
 const statusColorMap: StatusColorMap = {
   [Status.Stopped]: 'red',
