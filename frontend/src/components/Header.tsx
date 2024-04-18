@@ -41,7 +41,7 @@ const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
 
   return (
     <AppBar position="fixed">
-      <Container maxWidth={false} sx={{ maxWidth: '1280px' }}>
+      <Container maxWidth={false} sx={{ maxWidth: '1920px' }}>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           <Box flexGrow={0} display={'flex'}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -65,7 +65,7 @@ const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
           </Box>
 
           <Box display="flex" flexGrow={0} alignItems="center">
-            <Box sx={{ flexGrow: 0, m: '20px', mr: 0 }}>
+            <Box sx={{ flexGrow: 0, m: '0 20px', mr: 0 }}>
               <Tooltip title="Switch theme">
                 <IconButton sx={{ ml: 1 }} onClick={toggleTheme}>
                   {mode === 'dark' ? (

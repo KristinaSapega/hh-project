@@ -5,6 +5,7 @@ import { ThemeProvider } from '@emotion/react';
 import { Box, CssBaseline, createTheme } from '@mui/material';
 import { ruRU } from '@mui/material/locale';
 
+import AppLayout from './AppLayout';
 import Header from './components/Header';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
@@ -14,17 +15,56 @@ import { routes } from './routes/routes';
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
   const [mode, setMode] = useState<'light' | 'dark'>('light');
+
+  const lightPallete = {
+    mode,
+    primary: {
+      main: '#FB3C1A',
+      contrastText: '#EDEDED',
+    },
+    secondary: {
+      main: '#9c27b0',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#ffffff',
+      paper: '#F4F4F4',
+    },
+    text: {
+      primary: '#4e4e4e',
+      disabled: 'rgba(255,255,255,0.3)',
+    },
+    success: {
+      main: '#58BC35',
+    },
+  };
+
+  const darkPallete = {
+    mode,
+    primary: {
+      main: '#FB3C1A',
+    },
+    secondary: {
+      main: '#1C1C28',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#1C1C28',
+      paper: '#252631',
+    },
+    text: {
+      primary: 'rgba(255,255,255,0.7)',
+      secondary: 'rgba(255, 255, 255, 0.5)',
+      disabled: 'rgba(255,255,255,0.3)',
+    },
+    success: {
+      main: '#58BC35',
+    },
+  };
+
   const theme = createTheme(
     {
-      palette: {
-        mode,
-        primary: {
-          main: '#9a9a9a',
-        },
-        secondary: {
-          main: '#9a9a9a',
-        },
-      },
+      palette: mode === 'dark' ? darkPallete : lightPallete,
     },
     ruRU,
   );
@@ -37,25 +77,41 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <Box
-          sx={{
-            bgcolor: 'background.default',
-            paddingTop: '80px',
-            height: '100vh',
-            maxWidth: '1280px',
-            margin: '0 auto',
-          }}
-        >
+      <Box
+        sx={{
+          '*': {
+            boxShadow: 'none!important',
+            backgroundImage: 'none!important',
+          },
+          bgcolor: 'background.default',
+          paddingTop: '85px',
+          height: '100vh',
+          width: '100vw',
+          maxWidth: '1920px',
+          margin: '0 auto',
+          boxSizing: 'border-box',
+          flexGrow: 1,
+        }}
+      >
+        <BrowserRouter>
           <Header toggleTheme={toggleTheme} mode={mode} />
           <Routes>
-            <Route path={routes.main} element={<MainPage />} />
             <Route path={routes.login} element={<Login />} />
-            <Route path={routes.stand} element={<Stand />} />
-            <Route path="*" element={<></>} />
+            <Route
+              path="*"
+              element={
+                <AppLayout>
+                  <Routes>
+                    <Route path={routes.main} element={<MainPage />} />
+                    <Route path={routes.stand} element={<Stand />} />
+                    <Route path="*" element={<></>} />
+                  </Routes>
+                </AppLayout>
+              }
+            />
           </Routes>
-        </Box>
-      </BrowserRouter>
+        </BrowserRouter>
+      </Box>
     </ThemeProvider>
   );
 };
