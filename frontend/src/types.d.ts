@@ -30,6 +30,22 @@ export interface Container {
   state: string;
 }
 
+export interface Field {
+  name: string;
+  type: 'input' | 'checkbox' | 'select' | 'button' | 'radio';
+  placeholder?: string; // если тип input
+  value?: string; // если чекбокс, либо значение по умолчанию в input
+  options?: Array<string>; // если тип select; первым значением передаем по умолчанию
+  checked?: boolean; // если тип checkbox
+}
+
+export interface Plugin {
+  id: number;
+  name: string;
+  description: string;
+  fields: Array<Field>;
+}
+
 // Login page components props types
 
 export interface FormProps {
@@ -106,7 +122,6 @@ export interface IAuthContext {
 export type ThemeMode = 'dark' | 'light';
 
 // store reducers types
-
 // StandsReducer
 
 export interface StandsState {
@@ -140,6 +155,16 @@ export interface PluginsState {
 export interface PluginsAction {
   type: string;
   payload: Plugin[];
+}
+
+export interface AddPluginAction {
+  type: string;
+  payload: Plugin;
+}
+
+export interface RemovePluginAction {
+  type: string;
+  payload: number;
 }
 
 // Logs
