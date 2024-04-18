@@ -52,11 +52,11 @@ public class StandsController {
   @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
   @GetMapping("/api/stands/{standId}")
-  public StandDto getStand(@PathVariable long standId) {
+  public StandDto getStand(@PathVariable Integer standId) {
     return standsService.getStand(standId);
   }
 
-  @Operation(
+  /*@Operation(
       summary = "Обновление takenBy стенда"
   )
   @ApiResponse(
@@ -66,7 +66,7 @@ public class StandsController {
   @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
   @PatchMapping("/api/stands/{standId}")
-  public StandDto updateStandTakenBy(@PathVariable long standId, @RequestBody StandDto standDto) {
+  public StandDto updateStandTakenBy(@PathVariable Integer standId, @RequestBody StandDto standDto) {
     return standsService.updateStandTakenBy(standId, standDto.takenBy());
-  }
+  }*/
 }

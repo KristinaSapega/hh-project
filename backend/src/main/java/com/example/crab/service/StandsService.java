@@ -1,20 +1,20 @@
 package com.example.crab.service;
 
+import com.example.crab.entity.Stand;
+import com.example.crab.persistence.StandRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.crab.exception.controller.ResourceNotFoundException;
-import com.example.crab.persistence.InventoryFileStandRepository;
 import com.example.crab.transport.StandDto;
 import com.example.crab.transport.StandListDto;
-import com.example.crab.entity.Stand;
 
 @Service
 public class StandsService {
 
-  private final InventoryFileStandRepository standRepository;
+  private final StandRepository standRepository;
 
-  public StandsService(InventoryFileStandRepository standRepository) {
+  public StandsService(StandRepository standRepository) {
     this.standRepository = standRepository;
   }
 
@@ -26,7 +26,7 @@ public class StandsService {
     return new StandListDto(dtoStands);
   }
 
-  public StandDto getStand(long standId) {
+  public StandDto getStand(Integer standId) {
     return standRepository.findById(standId)
         .map(StandDto::fromEntity)
         .orElseThrow(() -> {
@@ -34,9 +34,9 @@ public class StandsService {
         });
   }
 
-  public StandDto updateStandTakenBy(long standId, String username) {
+  /*public StandDto updateStandTakenBy(Integer standId, String username) {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> new ResourceNotFoundException());
     stand.setTakenBy(Optional.of(username));
     return StandDto.fromEntity(standRepository.save(stand));
-  }
+  }*/
 }

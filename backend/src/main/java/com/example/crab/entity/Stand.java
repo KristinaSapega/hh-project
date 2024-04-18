@@ -1,26 +1,38 @@
 package com.example.crab.entity;
 
-import java.util.Optional;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
+@Entity
+@Table(name = "stands")
 public class Stand {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-  private Long id;
+  @Column(nullable = false, unique = true)
   private String host;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private StandState state;
-  private Optional<String> takenBy;
 
-  public Stand(Long id, String host, StandState state, Optional<String> takenBy) {
-    this.id = id;
-    this.host = host;
-    this.state = state;
-    this.takenBy = takenBy;
-  }
+  @ManyToOne
+  @JoinColumn(name = "taken_by")
+  private User takenBy;
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -40,12 +52,11 @@ public class Stand {
     this.state = state;
   }
 
-  public Optional<String> getTakenBy() {
+  public User getTakenBy() {
     return takenBy;
   }
 
-  public void setTakenBy(Optional<String> takenBy) {
+  public void setTakenBy(User takenBy) {
     this.takenBy = takenBy;
   }
-
 }
