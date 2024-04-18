@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record StandDto(
     @Schema(description = "id стенда", example = "12")
-    Long id,
+    Integer id,
     @Schema(description = "Адрес стенда", example = "255.255.255.0")
     String host,
     @Schema(description = "Статус стенда", example = "running")
@@ -14,6 +14,8 @@ public record StandDto(
     String takenBy) {
 
   public static StandDto fromEntity(Stand stand) {
-    return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), stand.getTakenBy().orElse(""));
+    if (stand.getTakenBy() == null)
+      return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), "");
+    return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), stand.getTakenBy().getEmail());
   }
 }
