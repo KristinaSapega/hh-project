@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import { Box, Modal, Paper } from '@mui/material';
+import { Box, Modal, Paper, Typography } from '@mui/material';
 
 import { ModalProps } from '../types';
 import Stands from './Stands';
@@ -17,21 +17,40 @@ const StandsModal: FunctionComponent<ModalProps> = ({ open, onClose }) => {
           padding: '10px',
         }}
       >
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 10px',
-          }}
-        >
-          <h1
-            style={{ fontFamily: 'monospace, Responsive, Arial, sans-serif' }}
+        {/* TODO Добавить проверку на наличие стендов */}
+        {(
+          <Box
+            height={200}
+            width={400}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            Список стендов
-          </h1>
-        </Box>
-        <Stands />
+            <Typography>Нет доступных стендов</Typography>
+          </Box>
+        ) || (
+          <>
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0 10px',
+              }}
+            >
+              <h1
+                style={{
+                  fontFamily: 'monospace, Responsive, Arial, sans-serif',
+                }}
+              >
+                Список стендов
+              </h1>
+            </Box>
+            <Stands />
+          </>
+        )}
       </Paper>
     </Modal>
   );

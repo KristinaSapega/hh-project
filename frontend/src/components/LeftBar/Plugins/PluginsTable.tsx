@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { useState } from 'react';
+import { FunctionComponent } from 'react';
 
 import { CallToActionOutlined } from '@mui/icons-material';
 import {
@@ -12,33 +11,11 @@ import {
 } from '@mui/material';
 import { IconButton } from '@mui/material';
 
-interface Plugin {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Plugin } from '../../../types';
 
-const mock: Array<Plugin> = [
-  {
-    id: 1,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-  {
-    id: 2,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-  {
-    id: 3,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-];
-
-const MyPlugins: FC = () => {
-  const [plugins] = useState<Plugin[] | null>(mock);
-
+const PluginsTable: FunctionComponent<{
+  plugins: Plugin[];
+}> = ({ plugins }) => {
   return (
     <>
       {plugins && (
@@ -93,4 +70,4 @@ const MyPlugins: FC = () => {
   );
 };
 
-export default MyPlugins;
+export default PluginsTable;

@@ -5,62 +5,17 @@ import { ThemeProvider } from '@emotion/react';
 import { Box, CssBaseline, createTheme } from '@mui/material';
 import { ruRU } from '@mui/material/locale';
 
-import AppLayout from './AppLayout';
+import AppLayout from './components/AppLayout/AppLayout';
 import Header from './components/Header';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import Stand from './pages/Stand';
 import { routes } from './routes/routes';
+import { darkPallete, lightPallete } from './utils/palette';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
   const [mode, setMode] = useState<'light' | 'dark'>('light');
-
-  const lightPallete = {
-    mode,
-    primary: {
-      main: '#FB3C1A',
-      contrastText: '#EDEDED',
-    },
-    secondary: {
-      main: '#9c27b0',
-      contrastText: '#ffffff',
-    },
-    background: {
-      default: '#ffffff',
-      paper: '#F4F4F4',
-    },
-    text: {
-      primary: '#4e4e4e',
-      disabled: 'rgba(255,255,255,0.3)',
-    },
-    success: {
-      main: '#58BC35',
-    },
-  };
-
-  const darkPallete = {
-    mode,
-    primary: {
-      main: '#FB3C1A',
-    },
-    secondary: {
-      main: '#1C1C28',
-      contrastText: '#ffffff',
-    },
-    background: {
-      default: '#1C1C28',
-      paper: '#252631',
-    },
-    text: {
-      primary: 'rgba(255,255,255,0.7)',
-      secondary: 'rgba(255, 255, 255, 0.5)',
-      disabled: 'rgba(255,255,255,0.3)',
-    },
-    success: {
-      main: '#58BC35',
-    },
-  };
 
   const theme = createTheme(
     {

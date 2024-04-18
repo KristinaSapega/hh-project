@@ -4,30 +4,9 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
-import CommonPlugins from './CommonPlugins';
-import MyPlugins from './MyPlugins';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-const CustomTabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
-    </Box>
-  );
-};
+import { Plugin } from '../../../types';
+import CustomTabPanel from './CustomTabPanel';
+import PluginsTable from './PluginsTable';
 
 function a11yProps(index: number) {
   return {
@@ -35,6 +14,24 @@ function a11yProps(index: number) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+
+const data: Array<Plugin> = [
+  {
+    id: 1,
+    name: 'deploy',
+    description: 'Деплой ветки на стенде',
+  },
+  {
+    id: 2,
+    name: 'deploy',
+    description: 'Деплой ветки на стенде',
+  },
+  {
+    id: 3,
+    name: 'deploy',
+    description: 'Деплой ветки на стенде',
+  },
+];
 
 const Plugins: FunctionComponent = () => {
   const [value, setValue] = useState<number>(0);
@@ -57,10 +54,10 @@ const Plugins: FunctionComponent = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <CommonPlugins />
+        <PluginsTable plugins={data} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MyPlugins />
+        <PluginsTable plugins={data} />
       </CustomTabPanel>
     </Box>
   );

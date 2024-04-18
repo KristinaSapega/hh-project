@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,9 @@ import { fetchStands } from '../api/fetchStands';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Stand } from '../types';
 
-const RenderButtonCell: FC<{ params: GridCellParams }> = ({ params }) => {
+const RenderButtonCell: FunctionComponent<{ params: GridCellParams }> = ({
+  params,
+}) => {
   const standId = params.row.id;
 
   return (
@@ -30,7 +32,9 @@ const RenderButtonCell: FC<{ params: GridCellParams }> = ({ params }) => {
   );
 };
 
-const RenderCell: FC<{ params: GridCellParams }> = ({ params }) => {
+const RenderCell: FunctionComponent<{ params: GridCellParams }> = ({
+  params,
+}) => {
   const theme = useTheme();
   return (
     <span
@@ -96,7 +100,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const Stands: FC = () => {
+const Stands: FunctionComponent = () => {
   const { user } = useAuthContext();
   const [stands, setStands] = useState<Stand[] | null>(null);
 
