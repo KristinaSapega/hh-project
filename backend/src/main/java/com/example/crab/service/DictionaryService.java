@@ -11,7 +11,7 @@ public class DictionaryService {
   public DictionaryList getDictionaries() {
     Dictionary dictionary = new Dictionary(1, "DeployService", "Клонирование ветки на стенд",
         List.of(
-            new Field("input","repo","repo url"),
+            new Field("input","repo","name repo"),
             new Field("input","repoOwner","repo owner"),
             new Field("input","branch","repo branch")
         ));
