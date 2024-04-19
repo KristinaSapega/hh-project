@@ -1,5 +1,6 @@
 package com.example.crab.controller;
 
+import com.example.crab.service.ContainerService;
 import com.example.crab.transport.ContainerDto;
 import com.example.crab.transport.ContainersListDto;
 import com.example.crab.service.ContainerServiceImpl;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
     name = "API для получения информации о контейнерах"
 )
 public class ContainerController {
-  private final ContainerServiceImpl dockerAPIService;
+  private final ContainerService dockerAPIService;
 
   @Autowired
   public ContainerController(ContainerServiceImpl dockerAPI) {
