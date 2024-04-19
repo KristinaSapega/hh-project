@@ -1,7 +1,11 @@
 package com.example.crab.service;
 
 import com.example.crab.entity.Stand;
+import com.example.crab.entity.User;
+import com.example.crab.exception.controller.UserNotAllowedException;
 import com.example.crab.persistence.StandRepository;
+import com.example.crab.persistence.UserRepository;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +17,11 @@ import com.example.crab.transport.StandListDto;
 public class StandsService {
 
   private final StandRepository standRepository;
+  private final UserRepository userRepository;
 
-  public StandsService(StandRepository standRepository) {
+  public StandsService(StandRepository standRepository, UserRepository userRepository) {
     this.standRepository = standRepository;
+    this.userRepository = userRepository;
   }
 
   public StandListDto getAllStands() {
@@ -34,9 +40,18 @@ public class StandsService {
         });
   }
 
-  /*public StandDto updateStandTakenBy(Integer standId, String username) {
+  public StandDto updateStandTakenBy(Integer standId, String emailFromBody, String emailAuthUser) {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> new ResourceNotFoundException());
-    stand.setTakenBy(Optional.of(username));
+    if (stand.getTakenBy() == null)
+      if (Objects.equals(emailFromBody, emailAuthUser))
+        stand.setTakenBy(userRepository.findByEmail(emailAuthUser).orElseThrow(() -> new ResourceNotFoundException()));
+      else
+        throw new UserNotAllowedException();
+    else
+      if (stand.getTakenBy().getEmail().equals(emailAuthUser) && emailFromBody == null)
+        stand.setTakenBy(null);
+      else
+        throw new UserNotAllowedException();
     return StandDto.fromEntity(standRepository.save(stand));
-  }*/
+  }
 }
