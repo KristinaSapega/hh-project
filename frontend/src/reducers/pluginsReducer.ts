@@ -29,24 +29,31 @@ const removePlugin = (id: number): RemovePluginAction => ({
   payload: id,
 });
 
-const standsReducer = (
+type pluginsActionsType = PluginsAction | AddPluginAction | RemovePluginAction;
+
+const pluginsReducer = (
   state: PluginsState = initialStandsState,
-  action: PluginsAction | AddPluginAction | RemovePluginAction,
+  action: pluginsActionsType,
 ) => {
   switch (action.type) {
-    case GIVE_PLUGINS:
+    case GIVE_PLUGINS: {
+      const plugins = action.payload as Plugin[];
       return {
         ...state,
-        plugins: action.payload,
+        plugins,
       };
-    case ADD_PLUGIN:
+    }
+    case ADD_PLUGIN: {
+      const plugin = action.payload as Plugin;
       return {
         ...state,
-        plugins: [action.payload, ...state.plugins],
+        plugins: [plugin, ...state.plugins],
       };
+    }
     case REMOVE_PLUGIN: {
+      const id = action.payload as number;
       const filteredPlugins = state.plugins.filter(
-        ({ id }) => id !== action.payload,
+        (plugin) => plugin.id !== id,
       );
       return {
         ...state,
@@ -58,4 +65,4 @@ const standsReducer = (
   }
 };
 
-export { givePlugins, addPlugin, removePlugin, standsReducer };
+export { givePlugins, addPlugin, removePlugin, pluginsReducer };
