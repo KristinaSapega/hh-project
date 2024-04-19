@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 
 import { CallToActionOutlined } from '@mui/icons-material';
 import {
@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from '@mui/material';
 import { IconButton } from '@mui/material';
 
@@ -16,6 +17,10 @@ import { Plugin } from '../../../types';
 const PluginsTable: FunctionComponent<{
   plugins: Plugin[];
 }> = ({ plugins }) => {
+  const theme = useTheme();
+
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
+
   return (
     <>
       {plugins && (
@@ -39,7 +44,18 @@ const PluginsTable: FunctionComponent<{
               }}
             >
               {plugins.map((plugin) => (
-                <TableRow key={plugin.id}>
+                <TableRow
+                  key={plugin.id}
+                  sx={{
+                    backgroundColor:
+                      plugin.id === selectedRow
+                        ? theme.palette.primary.main
+                        : 'transparent',
+                  }}
+                  onClick={() => {
+                    setSelectedRow(plugin.id);
+                  }}
+                >
                   <TableCell align="center">{plugin.name}</TableCell>
                   <TableCell
                     align="center"

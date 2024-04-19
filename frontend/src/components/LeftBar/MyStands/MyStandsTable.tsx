@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { RefreshOutlined, RemoveCircleOutline } from '@mui/icons-material';
@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from '@mui/material';
 import { IconButton } from '@mui/material';
 
@@ -21,6 +22,10 @@ const MyStandsTable: FunctionComponent<{
   stands: Stand[];
 }> = ({ stands }) => {
   const navigate = useNavigate();
+
+  const theme = useTheme();
+
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
   return (
     <>
@@ -42,7 +47,16 @@ const MyStandsTable: FunctionComponent<{
             <TableBody>
               {stands.map((stand) => (
                 <TableRow
+                  sx={{
+                    backgroundColor:
+                      stand.id === selectedRow
+                        ? theme.palette.primary.main
+                        : 'transparent',
+                  }}
                   onClick={() => {
+                    setSelectedRow(stand.id);
+                  }}
+                  onDoubleClick={() => {
                     navigate(routes.stand.replace(':id', stand.id.toString()));
                   }}
                   key={stand.id}
