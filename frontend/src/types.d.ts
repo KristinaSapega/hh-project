@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 // data types
 
 export interface Stand {
@@ -17,33 +19,18 @@ export interface Field {
 }
 
 export interface Plugin {
+  id: number;
   name: string;
   description: string;
   shortDescription?: string;
   playbook?: string; // url к плейбук файлу
-  fields: Array<Field>;
+  fields?: Array<Field>;
 }
 
 export interface Container {
   id: string;
   name: string;
   state: string;
-}
-
-export interface Field {
-  name: string;
-  type: 'input' | 'checkbox' | 'select' | 'button' | 'radio';
-  placeholder?: string; // если тип input
-  value?: string; // если чекбокс, либо значение по умолчанию в input
-  options?: Array<string>; // если тип select; первым значением передаем по умолчанию
-  checked?: boolean; // если тип checkbox
-}
-
-export interface Plugin {
-  id: number;
-  name: string;
-  description: string;
-  fields: Array<Field>;
 }
 
 // Login page components props types
@@ -167,6 +154,40 @@ export interface RemovePluginAction {
   payload: number;
 }
 
+// TasksReducer
+
+export interface TasksState {
+  stands: Array<string>;
+  tasks: Array<{
+    id: number;
+    type: string;
+    parameters?: {
+      [key: string]: string;
+    }
+  }>;
+}
+
+export interface AddStandToTasksAction {
+  type: string;
+  payload: string;
+}
+
+export interface RemoveStandFromTasksAction {
+  type: string;
+  payload: string;
+}
+
+export interface AddTaskToTasksAction {
+  type: string;
+  payload: {
+    [key: string]: string;
+  }
+}
+
+export interface RemoveTaskFromTasksAction {
+  type: string;
+  payload: number;
+}
 // Logs
 
 export interface LogsProps {
@@ -179,4 +200,17 @@ export interface LogsProps {
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
+}
+
+// Plugins components
+
+export interface CustomAccordionProps {
+  title: string;
+  children: ReactNode
+}
+
+export interface TabPanelProps {
+  children: React.ReactNode;
+  index: number;
+  value: number;
 }

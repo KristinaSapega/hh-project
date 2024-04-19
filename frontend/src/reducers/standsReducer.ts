@@ -32,16 +32,20 @@ const leaveStand = (id: number): LeaveStandAction => ({
   payload: id,
 });
 
+type standsActionsType = StandsAction | TakeStandAction | LeaveStandAction;
+
 const standsReducer = (
   state: StandsState = initialStandsState,
-  action: StandsAction | TakeStandAction | LeaveStandAction,
+  action: standsActionsType,
 ) => {
   switch (action.type) {
-    case GIVE_STANDS:
+    case GIVE_STANDS: {
+      const stands = action.payload as Stand[];
       return {
         ...state,
-        stands: action.payload,
+        stands,
       };
+    }
     case TAKE_STAND: {
       const { user, id } = action.payload as { user: string; id: number };
       const stand = state.stands.find((stand) => stand.id === id);
@@ -51,7 +55,7 @@ const standsReducer = (
       return state;
     }
     case LEAVE_STAND: {
-      const id = action.payload;
+      const id = action.payload as number;
       const stand = state.stands.find((stand) => stand.id === id);
       if (stand) {
         stand.takenBy = '';
