@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
     name = "API для получения информации о контейнерах"
 )
 public class ContainerController {
-  ContainerServiceImpl dockerAPIService;
+  private final ContainerServiceImpl dockerAPIService;
 
   @Autowired
   public ContainerController(ContainerServiceImpl dockerAPI) {

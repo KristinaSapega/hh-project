@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
     name = "API для Получения информации о доступных playbook"
 )
 public class DictionaryController {
-  DictionaryService dictionaryService;
+  private final DictionaryService dictionaryService;
 
   public DictionaryController(DictionaryService dictionaryService) {
     this.dictionaryService = dictionaryService;
