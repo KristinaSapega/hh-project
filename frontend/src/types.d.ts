@@ -157,7 +157,7 @@ export interface RemovePluginAction {
 // TasksReducer
 
 export interface TasksState {
-  stands: Array<string>;
+  stands: Array<number>;
   tasks: Array<{
     id: number;
     type: string;
@@ -169,12 +169,12 @@ export interface TasksState {
 
 export interface AddStandToTasksAction {
   type: string;
-  payload: string;
+  payload: number;
 }
 
 export interface RemoveStandFromTasksAction {
   type: string;
-  payload: string;
+  payload: number;
 }
 
 export interface AddTaskToTasksAction {

@@ -18,14 +18,14 @@ const ADD_TASK_TO_TASKS = 'ADDTASKSTOTASKS';
 const REMOVE_TASK_FROM_TASKS = 'REMOVETASKFROMTASKS';
 const RESET_TASKS = 'RESETTASKS';
 
-const addStandToTasks = (host: string): AddStandToTasksAction => ({
+const addStandToTasks = (id: number): AddStandToTasksAction => ({
   type: ADD_STAND_TO_TASKS,
-  payload: host,
+  payload: id,
 });
 
-const removeStandFromTasks = (host: string): RemoveStandFromTasksAction => ({
+const removeStandFromTasks = (id: number): RemoveStandFromTasksAction => ({
   type: REMOVE_STAND_FROM_TASKS,
-  payload: host,
+  payload: id,
 });
 
 const addTaskToTasks = (task: {
@@ -58,15 +58,15 @@ const tasksReducer = (
 ) => {
   switch (action.type) {
     case ADD_STAND_TO_TASKS: {
-      const host = action.payload as string;
+      const standId = action.payload as number;
       return {
         ...state,
-        stands: [...state.stands, host],
+        stands: [...state.stands, standId],
       };
     }
     case REMOVE_STAND_FROM_TASKS: {
-      const standHost = action.payload as string;
-      const filteredStands = state.stands.filter((host) => host !== standHost);
+      const standId = action.payload as number;
+      const filteredStands = state.stands.filter((id) => id !== standId);
       return {
         ...state,
         stands: filteredStands,
