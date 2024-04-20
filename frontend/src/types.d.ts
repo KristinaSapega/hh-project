@@ -188,6 +188,12 @@ export interface RemoveTaskFromTasksAction {
   type: string;
   payload: number;
 }
+
+export interface ResetTasksAction {
+  type: string;
+  payload: unknown;
+}
+
 // Logs
 
 export interface LogsProps {
