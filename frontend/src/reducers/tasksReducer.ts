@@ -28,11 +28,9 @@ const removeStandFromTasks = (id: number): RemoveStandFromTasksAction => ({
   payload: id,
 });
 
-const addTaskToTasks = (task: {
-  [key: string]: string;
-}): AddTaskToTasksAction => ({
+const addTaskToTasks = (id: number): AddTaskToTasksAction => ({
   type: ADD_TASK_TO_TASKS,
-  payload: task,
+  payload: id,
 });
 
 const removeTaskFromTasks = (id: number): RemoveTaskFromTasksAction => ({
@@ -57,31 +55,30 @@ const tasksReducer = (
   action: TasksActions,
 ) => {
   switch (action.type) {
-    case ADD_STAND_TO_TASKS: {
-      const standId = action.payload as number;
+    case ADD_STAND_TO_TASKS:
       return {
         ...state,
-        stands: [...state.stands, standId],
+        stands: [...state.stands, action.payload],
       };
-    }
     case REMOVE_STAND_FROM_TASKS: {
-      const standId = action.payload as number;
-      const filteredStands = state.stands.filter((id) => id !== standId);
+      const filteredStands = state.stands.filter((id) => id !== action.payload);
       return {
         ...state,
         stands: filteredStands,
       };
     }
-    case ADD_TASK_TO_TASKS: {
-      const task = action.payload as { [key: string]: string };
+    case ADD_TASK_TO_TASKS:
       return {
         ...state,
-        tasks: [...state.tasks, { id: state.tasks.length + 1, ...task }],
+        tasks: [
+          ...state.tasks,
+          { id: state.tasks.length + 1, standId: action.payload },
+        ],
       };
-    }
     case REMOVE_TASK_FROM_TASKS: {
-      const taskId = action.payload as number;
-      const filteredTasks = state.tasks.filter((task) => task.id !== taskId);
+      const filteredTasks = state.tasks.filter(
+        (task) => task.id !== action.payload,
+      );
       return {
         ...state,
         tasks: filteredTasks,
@@ -91,7 +88,7 @@ const tasksReducer = (
       return {
         stands: [],
         tasks: [],
-      }
+      };
     default:
       return state;
   }
