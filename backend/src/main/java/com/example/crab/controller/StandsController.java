@@ -1,12 +1,16 @@
 package com.example.crab.controller;
 
+import com.example.crab.entity.User;
 import com.example.crab.transport.ContainersListDto;
+import com.example.crab.transport.TakenByDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +60,7 @@ public class StandsController {
     return standsService.getStand(standId);
   }
 
-  /*@Operation(
+  @Operation(
       summary = "Обновление takenBy стенда"
   )
   @ApiResponse(
@@ -65,8 +69,9 @@ public class StandsController {
   )
   @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
+  @ApiResponse(responseCode = "403", description = "User из body не совпадает с аутентифицированным user", content = @Content)
   @PatchMapping("/api/stands/{standId}")
-  public StandDto updateStandTakenBy(@PathVariable Integer standId, @RequestBody StandDto standDto) {
-    return standsService.updateStandTakenBy(standId, standDto.takenBy());
-  }*/
+  public StandDto updateStandTakenBy(@PathVariable Integer standId, @RequestBody TakenByDto takenByDto, @AuthenticationPrincipal UserDetails userDetails) {
+    return standsService.updateStandTakenBy(standId, takenByDto.takenBy(), userDetails.getUsername());
+  }
 }
