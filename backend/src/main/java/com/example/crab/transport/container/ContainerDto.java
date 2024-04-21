@@ -1,11 +1,13 @@
-package com.example.crab.transport;
+package com.example.crab.transport.container;
+
+import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerDto implements Serializable {

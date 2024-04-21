@@ -1,9 +1,11 @@
-package com.example.crab.transport;
+package com.example.crab.transport.container;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 
 public record ContainersListDto(
     @Schema(description = "Список стендов")

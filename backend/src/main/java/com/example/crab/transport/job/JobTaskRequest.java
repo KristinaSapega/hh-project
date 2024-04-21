@@ -5,21 +5,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record JobTaskRequest(
     @Schema(
-        description = "Имя playbook",
-        example = "deployServices"
+        description = "Имя таска",
+        example = "deployService"
     )
     String type,
     @Schema(
-        description = "Параметры playbook (могут задаваться произвольными структурами)",
+        description = "Параметры таска (могут задаваться произвольными структурами)",
         type = "object",
         example = """
             {
-                "services": [
-                    {
-                        "serviceRepo": "url/to/repo",
-                        "branch": "branch"
-                    }
-                ]
+              "service" : {
+                "repo" : "private-repo-example",
+                "repoOwner" : "ministr-kaifa",
+                "branch" : "main"
+              }
             }
             """
     )
