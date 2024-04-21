@@ -1,5 +1,6 @@
 package com.example.crab.controller;
 
+import com.example.crab.exception.controller.ResourceNotFoundException;
 import com.example.crab.service.ContainerService;
 import com.example.crab.transport.ContainerDto;
 import com.example.crab.transport.ContainersListDto;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +56,11 @@ public class ContainerController {
   @ApiResponse(responseCode = "400", description = "Ошибка в standId или containersId", content = @Content)
   @GetMapping("/api/stands/{standId}/containers/{containersId}")
   public ContainerDto getContainersById(@PathVariable Integer standId, @PathVariable String containersId) {
-    return dockerAPIService.getContainerById(standId, containersId);
+    Optional<ContainerDto> container = dockerAPIService.getContainerById(standId, containersId);
+    if (container.isEmpty())
+      throw new ResourceNotFoundException();
+    else
+      return container.get();
   }
 
   @Operation(

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,12 @@ import org.springframework.web.client.RestTemplate;
 public class ContainerServiceImpl implements ContainerService {
   private final ObjectMapper mapper;
   private final StandRepository standRepository;
+  private final RestTemplate restTemplate;
 
-  public ContainerServiceImpl(ObjectMapper objectMapper, StandRepository standRepository) {
+  public ContainerServiceImpl(ObjectMapper objectMapper, StandRepository standRepository, RestTemplate restTemplate) {
     this.mapper = objectMapper;
     this.standRepository = standRepository;
+    this.restTemplate = restTemplate;
   }
 
 
@@ -36,22 +39,24 @@ public class ContainerServiceImpl implements ContainerService {
     return containers;
   }
 
-  public ContainerDto getContainerById(Integer standId, String containerId) {
+  public Optional<ContainerDto> getContainerById(Integer standId, String containerId) {
     List<ContainerDto> containers = getContainers(standId);
     return containers.stream()
         .filter(container -> containerId.equals(container.getId()))
-        .findFirst().orElse(null);
+        .findFirst();
   }
 
   public String getLogByContainerId(Integer standId, String containerId) {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> {
       throw new ResourceNotFoundException();
     });
-    ContainerDto container = getContainerById(standId,containerId);
-    RestTemplate restTemplate = new RestTemplate();
+    Optional<ContainerDto> container = getContainerById(standId, containerId);
+    if (container.isEmpty()) {
+      throw new ResourceNotFoundException();
+    }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://"+ stand.getHost() +":2376/containers/" + containerId +"/logs?stderr=1&stdout=1",
+            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/logs?stderr=1&stdout=1",
             HttpMethod.GET,
             null,
             new ParameterizedTypeReference<String>() {
