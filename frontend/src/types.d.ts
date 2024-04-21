@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 // data types
 
@@ -160,10 +160,7 @@ export interface TasksState {
   stands: Array<number>;
   tasks: Array<{
     id: number;
-    type: string;
-    parameters?: {
-      [key: string]: string;
-    }
+    pluginId: number;
   }>;
 }
 
@@ -179,9 +176,7 @@ export interface RemoveStandFromTasksAction {
 
 export interface AddTaskToTasksAction {
   type: string;
-  payload: {
-    [key: string]: string;
-  }
+  payload: number;
 }
 
 export interface RemoveTaskFromTasksAction {
@@ -212,7 +207,7 @@ export interface ModalProps {
 
 export interface CustomAccordionProps {
   title: string;
-  children: ReactNode
+  children: ReactNode;
 }
 
 export interface TabPanelProps {
