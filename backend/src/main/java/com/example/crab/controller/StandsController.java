@@ -1,7 +1,15 @@
 package com.example.crab.controller;
 
-import com.example.crab.entity.User;
-import com.example.crab.transport.ContainersListDto;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.crab.service.StandsService;
+import com.example.crab.transport.stand.StandDto;
+import com.example.crab.transport.stand.StandListDto;
+
 import com.example.crab.transport.TakenByDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,8 +17,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.crab.service.StandsService;
-import com.example.crab.transport.StandDto;
-import com.example.crab.transport.StandListDto;
+
 
 @RestController
 @SecurityRequirement(name = "basicAuth")

@@ -2,8 +2,8 @@ package com.example.crab.controller;
 
 import com.example.crab.exception.controller.ResourceNotFoundException;
 import com.example.crab.service.ContainerService;
-import com.example.crab.transport.ContainerDto;
-import com.example.crab.transport.ContainersListDto;
+import com.example.crab.transport.container.ContainerDto;
+import com.example.crab.transport.container.ContainersListDto;
 import com.example.crab.service.ContainerServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
