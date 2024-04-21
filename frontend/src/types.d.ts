@@ -143,7 +143,7 @@ export interface TasksState {
   stands: Array<number>;
   tasks: Array<{
     id: number;
-    pluginId: number;
+    taskId: number;
   }>;
 }
 
@@ -197,4 +197,9 @@ export interface TabPanelProps {
   children: React.ReactNode;
   index: number;
   value: number;
+}
+
+export interface PluginsModalProps {
+  open: boolean;
+  onClose: () => void;
 }
