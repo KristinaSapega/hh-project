@@ -55,29 +55,35 @@ const tasksReducer = (
   action: TasksActions,
 ) => {
   switch (action.type) {
-    case ADD_STAND_TO_TASKS:
+    case ADD_STAND_TO_TASKS: {
+      const standId = action.payload as number;
       return {
         ...state,
-        stands: [...state.stands, action.payload],
+        stands: [...state.stands, standId],
       };
+    }
     case REMOVE_STAND_FROM_TASKS: {
-      const filteredStands = state.stands.filter((id) => id !== action.payload);
+      const standId = action.payload as number;
+      const filteredStands = state.stands.filter((id) => id !== standId);
       return {
         ...state,
         stands: filteredStands,
       };
     }
-    case ADD_TASK_TO_TASKS:
+    case ADD_TASK_TO_TASKS: {
+      const taskId = action.payload as number;
       return {
         ...state,
         tasks: [
           ...state.tasks,
-          { id: state.tasks.length + 1, standId: action.payload },
+          { id: state.tasks.length + 1, taskId },
         ],
       };
+    }
     case REMOVE_TASK_FROM_TASKS: {
+      const taskId = action.payload as number;
       const filteredTasks = state.tasks.filter(
-        (task) => task.id !== action.payload,
+        (task) => task.id !== taskId,
       );
       return {
         ...state,
