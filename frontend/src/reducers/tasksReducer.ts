@@ -72,22 +72,28 @@ const tasksReducer = (
     }
     case ADD_TASK_TO_TASKS: {
       const taskId = action.payload as number;
-      return {
-        ...state,
-        tasks: [
-          ...state.tasks,
-          { id: state.tasks.length + 1, taskId },
-        ],
-      };
+      const existingTask = state.tasks.find((task) => task.taskId === taskId);
+      if (!existingTask) {
+        return {
+          ...state,
+          tasks: [...state.tasks, { id: state.tasks.length + 1, taskId }].map(
+            ({ taskId }, index) => ({ id: index, taskId }),
+          ),
+        };
+      }
+      return state;
     }
     case REMOVE_TASK_FROM_TASKS: {
       const taskId = action.payload as number;
       const filteredTasks = state.tasks.filter(
-        (task) => task.id !== taskId,
+        (task) => task.taskId !== taskId,
       );
       return {
         ...state,
-        tasks: filteredTasks,
+        tasks: filteredTasks.map(({ taskId }, index) => ({
+          id: index,
+          taskId,
+        })),
       };
     }
     case RESET_TASKS:
