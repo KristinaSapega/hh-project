@@ -51,6 +51,12 @@
       home: /home/crab-stand
       groups: docker
       append: yes
+  
+  - name: set up ssh key
+    ansible.posix.authorized_key:
+      user: crab-stand
+      state: present
+      key: "{{ lookup('file', '/crab/ansible/kostyl-key.pub') }}"
 
   - name: create services dir
     ansible.builtin.file:
