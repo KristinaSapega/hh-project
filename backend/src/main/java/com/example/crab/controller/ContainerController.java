@@ -4,14 +4,12 @@ import com.example.crab.service.ContainerService;
 import com.example.crab.transport.ContainerDto;
 import com.example.crab.transport.ContainersListDto;
 import com.example.crab.service.ContainerServiceImpl;
-import com.example.crab.transport.job.JobShortInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +38,7 @@ public class ContainerController {
   @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
   @GetMapping("/api/stands/{standId}/containers")
-  public ContainersListDto getContainers(@PathVariable long standId) {
+  public ContainersListDto getContainers(@PathVariable Integer standId) {
     return new ContainersListDto(dockerAPIService.getContainers(standId));
   }
 
@@ -55,7 +53,22 @@ public class ContainerController {
   @ApiResponse(responseCode = "404", description = "Не найден standId или containersId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId или containersId", content = @Content)
   @GetMapping("/api/stands/{standId}/containers/{containersId}")
-  public ContainerDto getContainersById(@PathVariable long standId, @PathVariable String containersId) {
+  public ContainerDto getContainersById(@PathVariable Integer standId, @PathVariable String containersId) {
     return dockerAPIService.getContainerById(standId, containersId);
+  }
+
+  @Operation(
+      summary = "Получение логов контейнера"
+  )
+  @ApiResponse(
+      responseCode = "200",
+      description = "Логи получены",
+      content = {@Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))}
+  )
+  @ApiResponse(responseCode = "404", description = "Не найден standId или containersId", content = @Content)
+  @ApiResponse(responseCode = "400", description = "Ошибка в standId или containersId", content = @Content)
+  @GetMapping("/api/stands/{standId}/containers/{containersId}/logs")
+  public String getLogsByContainerId(@PathVariable Integer standId, @PathVariable String containersId) {
+    return dockerAPIService.getLogByContainerId(standId, containersId);
   }
 }
