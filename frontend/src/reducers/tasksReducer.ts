@@ -66,7 +66,7 @@ const tasksReducer = (
     case ADD_STAND_TO_TASKS: {
       const standId = action.payload as number;
       const isStandExist = state.stands.find((id) => id === standId);
-      if (isStandExist) {
+      if (!isStandExist) {
         return {
           ...state,
           stands: [...state.stands, standId],
