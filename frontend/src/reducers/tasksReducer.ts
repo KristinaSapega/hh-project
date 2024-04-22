@@ -3,6 +3,7 @@ import {
   AddTaskToTasksAction,
   RemoveStandFromTasksAction,
   RemoveTaskFromTasksAction,
+  ResetStandsAction,
   ResetTasksAction,
   TasksState,
 } from '../types';
@@ -17,6 +18,7 @@ const REMOVE_STAND_FROM_TASKS = 'REMOVESTANDFROMTASKS';
 const ADD_TASK_TO_TASKS = 'ADDTASKSTOTASKS';
 const REMOVE_TASK_FROM_TASKS = 'REMOVETASKFROMTASKS';
 const RESET_TASKS = 'RESETTASKS';
+const RESET_STANDS = 'RESETSTANDS';
 
 const addStandToTasks = (id: number): AddStandToTasksAction => ({
   type: ADD_STAND_TO_TASKS,
@@ -43,12 +45,18 @@ const resetTasks = (): ResetTasksAction => ({
   payload: undefined, // Как организовать редьюсер, чтобы убрать этот костыль?
 });
 
+const resetStands = (): ResetStandsAction => ({
+  type: RESET_STANDS,
+  payload: undefined,
+});
+
 type TasksActions =
   | AddStandToTasksAction
   | RemoveStandFromTasksAction
   | AddTaskToTasksAction
   | RemoveTaskFromTasksAction
-  | ResetTasksAction;
+  | ResetTasksAction
+  | ResetStandsAction;
 
 const tasksReducer = (
   state: TasksState = initialState,
@@ -100,6 +108,11 @@ const tasksReducer = (
         })),
       };
     }
+    case RESET_STANDS:
+      return {
+        ...state,
+        stands: [],
+      }
     case RESET_TASKS:
       return {
         stands: [],
@@ -116,5 +129,6 @@ export {
   addTaskToTasks,
   removeTaskFromTasks,
   resetTasks,
+  resetStands,
   tasksReducer,
 };

@@ -169,7 +169,12 @@ export interface RemoveTaskFromTasksAction {
 
 export interface ResetTasksAction {
   type: string;
-  payload: unknown;
+  payload: undefined;
+}
+
+export interface ResetStandsAction {
+  type: string;
+  payload: undefined;
 }
 
 // Logs
