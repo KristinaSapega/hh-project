@@ -57,10 +57,14 @@ const tasksReducer = (
   switch (action.type) {
     case ADD_STAND_TO_TASKS: {
       const standId = action.payload as number;
-      return {
-        ...state,
-        stands: [...state.stands, standId],
-      };
+      const isStandExist = state.stands.find((id) => id === standId);
+      if (isStandExist) {
+        return {
+          ...state,
+          stands: [...state.stands, standId],
+        };
+      }
+      return state;
     }
     case REMOVE_STAND_FROM_TASKS: {
       const standId = action.payload as number;
