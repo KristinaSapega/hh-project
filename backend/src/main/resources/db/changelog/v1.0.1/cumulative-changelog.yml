@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-tag-1.0.1
+      author: klive_rogen
+      changes:
+        - tagDatabase:
+            tag: v1.0.1
+  - include:
+      file: add-stands-data.yml
+      relativeToChangelogFile: true

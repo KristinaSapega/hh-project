@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-stands-data
+      author: klive_rogen
+      changes:
+        - insert:
+            tableName: stands
+            columns:
+              - column:
+                  name: host
+                  value: '176.123.165.242'
+              - column:
+                  name: state
+                  value: 'RUNNING'
+        - insert:
+            tableName: stands
+            columns:
+              - column:
+                  name: host
+                  value: '176.109.99.81'
+              - column:
+                  name: state
+                  value: 'RUNNING'
+        - insert:
+            tableName: stands
+            columns:
+              - column:
+                  name: host
+                  value: '176.109.100.59'
+              - column:
+                  name: state
+                  value: 'RUNNING'
+        - insert:
+            tableName: stands
+            columns:
+              - column:
+                  name: host
+                  value: '95.174.91.149'
+              - column:
+                  name: state
+                  value: 'RUNNING'
+        - insert:
+            tableName: stands
+            columns:
+              - column:
+                  name: host
+                  value: '176.123.163.247'
+              - column:
+                  name: state
+                  value: 'RUNNING'
