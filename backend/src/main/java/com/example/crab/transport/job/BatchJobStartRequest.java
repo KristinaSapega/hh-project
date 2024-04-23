@@ -1,16 +1,17 @@
 package com.example.crab.transport.job;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Schema
-public record JobInfoRequest(
+public record BatchJobStartRequest(
     @Schema(
-        description = "Адреса стендов",
+        description = "Id стендов",
         type = "array",
-        example = "[\"255.255.255.0\", \"192.168.50.1\"]"
+        example = "[1, 2]"
     )
-    List<String> stands,
+    List<Integer> stands,
     @Schema(
         description = "Запланированные задачи"
     )

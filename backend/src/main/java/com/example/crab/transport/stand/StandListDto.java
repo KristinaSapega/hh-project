@@ -1,10 +1,11 @@
-package com.example.crab.transport;
+package com.example.crab.transport.stand;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record StandListDto(
     @Schema(description = "Список стендов")

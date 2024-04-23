@@ -10,8 +10,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.crab.exception.controller.ResourceNotFoundException;
-import com.example.crab.transport.StandDto;
-import com.example.crab.transport.StandListDto;
+import com.example.crab.persistence.StandRepository;
+import com.example.crab.transport.stand.StandDto;
+import com.example.crab.transport.stand.StandListDto;
 
 @Service
 public class StandsService {

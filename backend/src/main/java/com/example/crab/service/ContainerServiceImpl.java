@@ -3,7 +3,7 @@ package com.example.crab.service;
 import com.example.crab.entity.Stand;
 import com.example.crab.exception.controller.ResourceNotFoundException;
 import com.example.crab.persistence.StandRepository;
-import com.example.crab.transport.ContainerDto;
+import com.example.crab.transport.container.ContainerDto;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;

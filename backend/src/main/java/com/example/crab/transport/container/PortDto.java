@@ -1,4 +1,4 @@
-package com.example.crab.transport;
+package com.example.crab.transport.container;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
