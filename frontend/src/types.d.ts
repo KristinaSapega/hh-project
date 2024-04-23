@@ -4,7 +4,7 @@ export interface Stand {
   id: number;
   host: string;
   status: string;
-  takenBy: string;
+  takenBy: string | null;
 }
 
 export interface Field {
@@ -129,21 +129,31 @@ export interface StandsState {
 }
 
 export interface StandsAction {
-  type: string;
+  type: 'SETSTANDS';
   payload: Stand[];
 }
 
 export interface TakeStandAction {
-  type: string;
+  type: 'TAKESTAND';
   payload: {
     user: string;
     id: number;
   };
 }
 
-export interface LeaveStandAction {
-  type: string;
+export interface LeaveStandInitAction {
+  type: 'LEAVESTAND_INIT';
   payload: number;
+}
+
+export interface LeaveStandSuccessAction {
+  type: 'LEAVESTAND_SUCCESS';
+  payload: number;
+}
+
+export interface LeaveStandErrorAction {
+  type: 'LEAVESTAND_ERROR';
+  payload: string;
 }
 
 // PluginsReducer

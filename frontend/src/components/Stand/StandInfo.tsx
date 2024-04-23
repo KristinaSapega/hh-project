@@ -43,7 +43,7 @@ const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
         },
         {
           option: 'Пользователь',
-          value: stand.takenBy,
+          value: stand.takenBy !== null ? stand.takenBy : "",
         },
       ]);
     }

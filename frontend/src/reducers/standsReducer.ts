@@ -1,66 +1,154 @@
+import { fetchReleaseStand } from '../api/fetchReleaseStand';
 import {
-  LeaveStandAction,
-  Stand,
+  LeaveStandInitAction,
+  LeaveStandErrorAction,
+  LeaveStandSuccessAction,
+  //Stand,
   StandsAction,
   StandsState,
   TakeStandAction,
 } from '../types';
 
+const leaveStandSuccess = (standId: string): LeaveStandSuccessAction => ({
+  type: 'LEAVESTAND_SUCCESS',
+  payload: parseInt(standId),
+});
+
+
+const leaveStandError = (errorMessage: string): LeaveStandErrorAction => ({
+  type: 'LEAVESTAND_ERROR',
+  payload: errorMessage,
+});
+
 const initialStandsState: StandsState = {
   stands: [],
 };
 
-const GIVE_STANDS = 'SETSTANDS';
-const TAKE_STAND = 'TAKESTAND';
-const LEAVE_STAND = 'LEAVESTAND';
-
-const giveStands = (stands: Stand[]): StandsAction => ({
-  type: GIVE_STANDS,
-  payload: stands,
-});
-
-const takeStand = (user: string, id: number): TakeStandAction => ({
-  type: TAKE_STAND,
-  payload: {
-    user,
-    id,
-  },
-});
-
-const leaveStand = (id: number): LeaveStandAction => ({
-  type: LEAVE_STAND,
-  payload: id,
-});
-
-const standsReducer = (
+export const standsReducer = (
   state: StandsState = initialStandsState,
-  action: StandsAction | TakeStandAction | LeaveStandAction,
+  action: StandsAction | TakeStandAction | LeaveStandInitAction | LeaveStandSuccessAction | LeaveStandErrorAction,
+  asyncDispatch: any 
 ) => {
   switch (action.type) {
-    case GIVE_STANDS:
+    case 'SETSTANDS':
       return {
         ...state,
         stands: action.payload,
       };
-    case TAKE_STAND: {
-      const { user, id } = action.payload as { user: string; id: number };
-      const stand = state.stands.find((stand) => stand.id === id);
-      if (stand) {
-        stand.takenBy = user;
-      }
+    case 'TAKESTAND': {
+      const { user, id } = action.payload;
+      const standIdx = state.stands.findIndex((stand) => stand.id === id);
+      const newStands = [...state.stands];
+      newStands[standIdx] = {
+        ...newStands[standIdx],
+        takenBy: user,
+      };
+      return {
+        ...state,
+        stands: newStands,
+      };
+    }
+    case 'LEAVESTAND_INIT': {
+      const id = action.payload;
+      const user = localStorage.getItem('user');
+      if (user !== null) {
+      fetchReleaseStand(id, user)
+      .then((standId: string) => asyncDispatch(leaveStandSuccess(standId)))
+      .catch((e: any) => asyncDispatch(leaveStandError(e.message)));
+    } else {
+      console.error();
+    }
       return state;
     }
-    case LEAVE_STAND: {
+    
+    case 'LEAVESTAND_SUCCESS': {
       const id = action.payload;
-      const stand = state.stands.find((stand) => stand.id === id);
-      if (stand) {
-        stand.takenBy = '';
-      }
-      return state;
+      return {
+        ...state,
+        stands: state.stands.map(stand => {
+          if (stand.id === id) {
+            return { ...stand, takenBy: null };
+          }
+          return stand;
+        }),
+      };
     }
     default:
       return state;
   }
 };
+// export const giveStands = (stands: Stand[]): StandsAction => ({
+//   type: 'SETSTANDS',
+//   payload: stands,
+// });
 
-export { giveStands, takeStand, leaveStand, standsReducer };
+// export const takeStand = (user: string, id: number): TakeStandAction => ({
+//   type: 'TAKESTAND',
+//   payload: {
+//     user,
+//     id,
+//   },
+// });
+
+// export const leaveStandInit = (id: number): LeaveStandInitAction => ({
+//   type: 'LEAVESTAND_INIT',
+//   payload: id,
+// });
+
+// export const leaveStandSuccess = (id: number): LeaveStandSuccessAction => ({
+//   type: 'LEAVESTAND_SUCCESS',
+//   payload: id,
+// });
+
+// export const leaveStandError = (message: string): LeaveStandErrorAction => ({
+//   type: 'LEAVESTAND_ERROR',
+//   payload: message,
+// });
+
+// export const standsReducer = (
+//   state: StandsState = initialStandsState,
+//   action: StandsAction | TakeStandAction | LeaveStandInitAction | LeaveStandSuccessAction | LeaveStandErrorAction,
+// ) => {
+//   switch (action.type) {
+//     case 'SETSTANDS':
+//       return {
+//         ...state,
+//         stands: action.payload,
+//       };
+//     case 'TAKESTAND': {
+//       const { user, id } = action.payload;
+//       const standIdx = state.stands.findIndex((stand) => stand.id === id);
+//       const newStands = [...state.stands]
+//       newStands[standIdx] = {
+//         ...newStands[standIdx],
+//         takenBy: user
+//       }
+//       return {
+//         ...state,
+//         stands: newStands
+//       };
+//     }
+//     case 'LEAVESTAND_INIT': {
+//       const id = action.payload;
+//       const user = localStorage.getItem('user')
+//       fetchReleaseStand(id, user)()
+//         .then(standId => action.asyncDispatch(leaveStandSuccess(standId)))
+//         .catch(e => action.asyncDispatch(leaveStandError(e.message)))
+//       return state;
+//     },
+//     case 'LEAVESTAND_SUCCESS': {
+//       const id = action.payload;
+//       return {
+//         ...state,
+//         stands: state.stands.map(stand => {
+//           if (stand.id === id) {
+//             return { ...stand, takenBy: null };
+//           }
+//           return stand;
+//         })
+//       };
+//     }
+//     default:
+//       return state;
+//   }
+// };
