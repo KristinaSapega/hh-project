@@ -1,4 +1,4 @@
-package com.example.crab.transport;
+package com.example.crab.transport.container;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

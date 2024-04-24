@@ -1,21 +1,25 @@
 package com.example.crab.controller;
 
-import com.example.crab.transport.ContainersListDto;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.crab.service.StandsService;
+import com.example.crab.transport.stand.StandDto;
+import com.example.crab.transport.stand.StandListDto;
+
+import com.example.crab.transport.stand.TakenByDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.example.crab.service.StandsService;
-import com.example.crab.transport.StandDto;
-import com.example.crab.transport.StandListDto;
 
 @RestController
 @SecurityRequirement(name = "basicAuth")
@@ -56,7 +60,7 @@ public class StandsController {
     return standsService.getStand(standId);
   }
 
-  /*@Operation(
+  @Operation(
       summary = "Обновление takenBy стенда"
   )
   @ApiResponse(
@@ -65,8 +69,9 @@ public class StandsController {
   )
   @ApiResponse(responseCode = "404", description = "Не найден standId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId", content = @Content)
+  @ApiResponse(responseCode = "403", description = "User из body не совпадает с аутентифицированным user", content = @Content)
   @PatchMapping("/api/stands/{standId}")
-  public StandDto updateStandTakenBy(@PathVariable Integer standId, @RequestBody StandDto standDto) {
-    return standsService.updateStandTakenBy(standId, standDto.takenBy());
-  }*/
+  public StandDto updateStandTakenBy(@PathVariable Integer standId, @RequestBody TakenByDto takenByDto, @AuthenticationPrincipal UserDetails userDetails) {
+    return standsService.updateStandTakenBy(standId, takenByDto.takenBy(), userDetails.getUsername());
+  }
 }

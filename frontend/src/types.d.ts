@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 // data types
 
@@ -154,6 +154,46 @@ export interface RemovePluginAction {
   payload: number;
 }
 
+// TasksReducer
+
+export interface TasksState {
+  stands: Array<number>;
+  tasks: Array<{
+    id: number;
+    taskId: number;
+  }>;
+}
+
+export interface AddStandToTasksAction {
+  type: string;
+  payload: number;
+}
+
+export interface RemoveStandFromTasksAction {
+  type: string;
+  payload: number;
+}
+
+export interface AddTaskToTasksAction {
+  type: string;
+  payload: number;
+}
+
+export interface RemoveTaskFromTasksAction {
+  type: string;
+  payload: number;
+}
+
+export interface ResetTasksAction {
+  type: string;
+  payload: undefined;
+}
+
+export interface ResetStandsAction {
+  type: string;
+  payload: undefined;
+}
+
 // Logs
 
 export interface LogsProps {
@@ -172,11 +212,16 @@ export interface ModalProps {
 
 export interface CustomAccordionProps {
   title: string;
-  children: ReactNode
+  children: ReactNode;
 }
 
 export interface TabPanelProps {
   children: React.ReactNode;
   index: number;
   value: number;
+}
+
+export interface PluginsModalProps {
+  open: boolean;
+  onClose: () => void;
 }

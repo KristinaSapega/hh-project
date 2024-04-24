@@ -1,20 +1,22 @@
-package com.example.crab.transport;
+package com.example.crab.transport.container;
+
+import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerDto implements Serializable {
 
   private String id;
-
   private List<ContainerNameDto> name;
-
   private String state;
+  private String status;
+  private List<PortDto> ports;
 
   @Override
   public String toString(){
@@ -61,5 +63,32 @@ public class ContainerDto implements Serializable {
   @JsonSetter("Names")
   public void setName(List<ContainerNameDto> name) {
     this.name = name;
+  }
+
+  @JsonGetter("status")
+  @Schema(
+      description = "Время поднятия контейнера",
+      example = "Up 6 minutes"
+  )
+  public String getStatus() {
+    return status;
+  }
+
+  @JsonSetter("Status")
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  @JsonGetter("ports")
+  @Schema(
+      description = "Открытые порты контейнера"
+  )
+  public List<PortDto> getPorts() {
+    return ports;
+  }
+
+  @JsonSetter("Ports")
+  public void setPorts(List<PortDto> ports) {
+    this.ports = ports;
   }
 }
