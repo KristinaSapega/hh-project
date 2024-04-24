@@ -1,25 +1,45 @@
-import { FunctionComponent, useState } from 'react';
+import { ChangeEvent, FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 
-import { CallToActionOutlined } from '@mui/icons-material';
 import {
+  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  useTheme,
 } from '@mui/material';
-import { IconButton } from '@mui/material';
 
-import { Plugin } from '../../../types';
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
+import {
+  addTaskToTasks,
+  removeTaskFromTasks,
+} from '../../../reducers/tasksReducer';
+import { RootState } from '../../../store';
 
-const PluginsTable: FunctionComponent<{
-  plugins: Plugin[];
-}> = ({ plugins }) => {
-  const theme = useTheme();
+const ellipsisStyles = {
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+};
 
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
+const PluginsTable: FunctionComponent = () => {
+  const dispatch = useAppDispatch();
+  const plugins = useSelector((state: RootState) => state.plugins.plugins);
+  const activePlugins = useSelector(
+    (state: RootState) => state.tasks.tasks,
+  ).map(({ taskId }) => taskId);
+
+  const handleChange =
+    (pluginId: number) => (event: ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
+      if (checked) {
+        dispatch(addTaskToTasks(pluginId));
+      } else {
+        dispatch(removeTaskFromTasks(pluginId));
+      }
+    };
 
   return (
     <>
@@ -33,48 +53,28 @@ const PluginsTable: FunctionComponent<{
           >
             <TableHead>
               <TableRow>
+                <TableCell align="center" sx={{ width: '20px' }} />
                 <TableCell align="center">Название</TableCell>
                 <TableCell align="center">Описание</TableCell>
-                <TableCell align="center">Действия</TableCell>
+                {/* <TableCell align="center">Действия</TableCell> */}
               </TableRow>
             </TableHead>
-            <TableBody
-              onDoubleClick={() => {
-                console.log('1');
-              }}
-            >
+            <TableBody>
               {plugins.map((plugin) => (
-                <TableRow
-                  key={plugin.id}
-                  sx={{
-                    backgroundColor:
-                      plugin.id === selectedRow
-                        ? theme.palette.primary.main
-                        : 'transparent',
-                  }}
-                  onClick={() => {
-                    setSelectedRow(plugin.id);
-                  }}
-                >
-                  <TableCell align="center">{plugin.name}</TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {plugin.description}
-                  </TableCell>
+                <TableRow key={plugin.id}>
                   <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      sx={{ padding: '2px' }}
-                      onClick={() => {}}
-                    >
-                      <CallToActionOutlined />
-                    </IconButton>
+                    <Checkbox
+                      sx={{ p: 0 }}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                      onChange={handleChange(plugin.id)}
+                      checked={activePlugins.includes(plugin.id)}
+                    />
+                  </TableCell>
+                  <TableCell align="center" sx={{ ...ellipsisStyles }}>
+                    {plugin.name}
+                  </TableCell>
+                  <TableCell align="center" sx={{ ...ellipsisStyles }}>
+                    {plugin.description}
                   </TableCell>
                 </TableRow>
               ))}

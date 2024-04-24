@@ -1,11 +1,14 @@
 import { FunctionComponent, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
-import { Plugin } from '../../../types';
-import CustomTabPanel from './CustomTabPanel';
+import { RootState } from '../../../store';
+import CustomTabPanel from '../../CustomTabPanel';
+import PluginsModal from './Modal/PluginsModal';
 import PluginsTable from './PluginsTable';
 
 function a11yProps(index: number) {
@@ -15,26 +18,20 @@ function a11yProps(index: number) {
   };
 }
 
-const data: Array<Plugin> = [
-  {
-    id: 1,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-  {
-    id: 2,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-  {
-    id: 3,
-    name: 'deploy',
-    description: 'Деплой ветки на стенде',
-  },
-];
-
 const Plugins: FunctionComponent = () => {
+  const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<number>(0);
+
+  const activePlugins = useSelector((state: RootState) => state.tasks.tasks);
+  const activeStands = useSelector((state: RootState) => state.tasks.stands);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -54,11 +51,37 @@ const Plugins: FunctionComponent = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <PluginsTable plugins={data} />
+        <PluginsTable />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'end',
+            marginTop: '10px',
+          }}
+        >
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setOpen(true)}
+            disabled={!activePlugins.length || !activeStands.length}
+          >
+            Применить
+          </Button>
+        </Box>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <PluginsTable plugins={data} />
+        <PluginsTable />
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleOpen}
+          disabled={!activePlugins.length}
+        >
+          Применить
+        </Button>
       </CustomTabPanel>
+
+      <PluginsModal open={open} onClose={handleClose} />
     </Box>
   );
 };

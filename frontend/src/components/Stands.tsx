@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect } from 'react';
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { AddOutlined } from '@mui/icons-material';
@@ -8,7 +8,10 @@ import Button from '@mui/material/Button';
 import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 
 import { fetchStands } from '../api/fetchStands';
+import { useAppDispatch } from '../hooks/useAppDispatch';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { giveStands } from '../reducers/standsReducer';
+import { RootState } from '../store';
 import { Stand } from '../types';
 
 const RenderButtonCell: FunctionComponent<{ params: GridCellParams }> = ({
@@ -102,14 +105,16 @@ const columns: GridColDef[] = [
 
 const Stands: FunctionComponent = () => {
   const { user } = useAuthContext();
-  const [stands, setStands] = useState<Stand[] | null>(null);
+
+  const stands = useSelector((state: RootState) => state.stands.stands);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     (async () => {
       const fetchedStands: Stand[] = await fetchStands(user!);
-      setStands(fetchedStands);
+      dispatch(giveStands(fetchedStands));
     })();
-  }, [user]);
+  }, [user, dispatch]);
 
   return (
     <>
