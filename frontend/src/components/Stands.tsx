@@ -1,5 +1,4 @@
-import { FunctionComponent, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { AddOutlined } from '@mui/icons-material';
@@ -7,11 +6,6 @@ import { Tooltip, useTheme } from '@mui/material';
 import Button from '@mui/material/Button';
 import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 
-import { fetchStands } from '../api/fetchStands';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { giveStands } from '../reducers/standsReducer';
-import { RootState } from '../store';
 import { Stand } from '../types';
 
 const RenderButtonCell: FunctionComponent<{ params: GridCellParams }> = ({
@@ -103,58 +97,42 @@ const columns: GridColDef[] = [
   },
 ];
 
-const Stands: FunctionComponent = () => {
-  const { user } = useAuthContext();
-
-  const stands = useSelector((state: RootState) => state.stands.stands);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    (async () => {
-      const fetchedStands: Stand[] = await fetchStands(user!);
-      dispatch(giveStands(fetchedStands));
-    })();
-  }, [user, dispatch]);
-
+const Stands: FunctionComponent<{ stands: Stand[] }> = ({ stands }) => {
   return (
-    <>
-      {stands && (
-        <div
-          style={{
-            padding: '0 10px',
+    <div
+      style={{
+        padding: '0 10px',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+        }}
+      >
+        <DataGrid
+          rows={stands}
+          columns={columns}
+          disableRowSelectionOnClick
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
           }}
-        >
-          <div
-            style={{
-              width: '100%',
-            }}
-          >
-            <DataGrid
-              rows={stands}
-              columns={columns}
-              disableRowSelectionOnClick
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10]}
-              sx={{
-                border: 0,
-                userSelect: 'none',
-                '&.MuiDataGrid-root .MuiDataGrid-cell, &.MuiDataGrid-root .MuiDataGrid-columnHeader':
-                  {
-                    outline: 'none',
-                  },
-                '& .css-1essi2g-MuiDataGrid-columnHeaderRow': {
-                  background: 'transparent!important',
-                },
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </>
+          pageSizeOptions={[5, 10]}
+          sx={{
+            border: 0,
+            userSelect: 'none',
+            '&.MuiDataGrid-root .MuiDataGrid-cell, &.MuiDataGrid-root .MuiDataGrid-columnHeader':
+              {
+                outline: 'none',
+              },
+            '& .css-1essi2g-MuiDataGrid-columnHeaderRow': {
+              background: 'transparent!important',
+            },
+          }}
+        />
+      </div>
+    </div>
   );
 };
 export default Stands;
