@@ -128,33 +128,6 @@ export interface StandsState {
   stands: Stand[];
 }
 
-export interface StandsAction {
-  type: 'SETSTANDS';
-  payload: Stand[];
-}
-
-export interface TakeStandAction {
-  type: 'TAKESTAND';
-  payload: {
-    user: string;
-    id: number;
-  };
-}
-
-export interface LeaveStandInitAction {
-  type: 'LEAVESTAND_INIT';
-  payload: number;
-}
-
-export interface LeaveStandSuccessAction {
-  type: 'LEAVESTAND_SUCCESS';
-  payload: number;
-}
-
-export interface LeaveStandErrorAction {
-  type: 'LEAVESTAND_ERROR';
-  payload: string;
-}
 
 // PluginsReducer
 
