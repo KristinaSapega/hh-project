@@ -7,7 +7,7 @@ const lightPallete: PaletteOptions = {
     contrastText: '#EDEDED',
   },
   secondary: {
-    main: '#9c27b0',
+    main: 'rgba(0, 0, 0, 0.3)',
     contrastText: '#ffffff',
   },
   background: {
@@ -16,7 +16,8 @@ const lightPallete: PaletteOptions = {
   },
   text: {
     primary: '#4e4e4e',
-    disabled: 'rgba(255,255,255,0.3)',
+    secondary: 'rgba(0, 0, 0, 0.5)',
+    disabled: 'rgba(0, 0, 0, 0.3)',
   },
   success: {
     main: '#58BC35',
@@ -29,7 +30,7 @@ const darkPallete: PaletteOptions = {
     main: '#FB3C1A',
   },
   secondary: {
-    main: '#1C1C28',
+    main: 'rgba(255, 255, 255, 0.3)',
     contrastText: '#ffffff',
   },
   background: {
@@ -37,9 +38,9 @@ const darkPallete: PaletteOptions = {
     paper: '#252631',
   },
   text: {
-    primary: 'rgba(255,255,255,0.7)',
+    primary: 'rgba(255, 255, 255, 0.7)',
     secondary: 'rgba(255, 255, 255, 0.5)',
-    disabled: 'rgba(255,255,255,0.3)',
+    disabled: 'rgba(255, 255, 255, 0.3)',
   },
   success: {
     main: '#58BC35',

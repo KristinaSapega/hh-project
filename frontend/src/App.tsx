@@ -15,7 +15,7 @@ import { darkPallete, lightPallete } from './utils/palette';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode, setMode] = useState<'light' | 'dark'>('dark');
 
   const theme = createTheme(
     {
