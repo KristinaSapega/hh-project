@@ -4,6 +4,7 @@ import { fetchReleaseStand } from '../api/fetchReleaseStand';
 import { fetchBookStand } from '../api/fetchBookStand';
 import fetchStands from '../api/fetchStands';
 
+
 const getUser = () => {
     const user = localStorage.getItem('user');
     if (!user) throw new Error('Необходимо авторизоваться');
