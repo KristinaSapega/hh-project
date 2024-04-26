@@ -2,8 +2,16 @@ import { FunctionComponent, ReactNode, useState } from 'react';
 
 import { Box, Paper, Typography } from '@mui/material';
 
-import LeftBar from './components/LeftBar/LeftBar';
-import Logs from './components/Logs/Logs';
+import LeftBar from '../LeftBar/LeftBar';
+import Logs from '../Logs/Logs';
+
+const scrollStyles = {
+  scrollbarWidth: 'none',
+  overflow: 'auto',
+  '&::webkit-scrollbar': {
+    display: 'none',
+  },
+};
 
 const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
   children,
@@ -28,11 +36,7 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
       <Box
         sx={{
           gridArea: 'left',
-          overflow: 'auto',
-          scrollbarWidth: 'none',
-          '&::webkit-scrollbar': {
-            display: 'none',
-          },
+          ...scrollStyles,
         }}
       >
         <LeftBar />
@@ -41,13 +45,9 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
       <Paper
         sx={{
           gridArea: 'content',
-          overflow: 'auto',
           borderRadius: '20px',
           padding: '0 10px',
-          scrollbarWidth: 'none',
-          '&::webkit-scrollbar': {
-            display: 'none',
-          },
+          ...scrollStyles,
         }}
       >
         {children}
@@ -57,6 +57,7 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
         sx={{
           gridArea: 'right',
           display: 'flex',
+          borderRadius: '20px',
           flexDirection: 'column',
         }}
       >
@@ -78,7 +79,9 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
           gridArea: 'logs',
           overflow: 'auto',
           display: 'flex',
-          alignItems: 'end',
+          justifyContent: 'end',
+          alignItems: 'start',
+          borderRadius: '20px',
         }}
       >
         <Logs

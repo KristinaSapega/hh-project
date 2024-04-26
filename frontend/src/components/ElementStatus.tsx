@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 
+import { Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { ElementStatusProps, Status, StatusColorMap } from '../types.d';
@@ -12,7 +13,7 @@ const statusColorMap: StatusColorMap = {
 
 const ElementStatus: FunctionComponent<ElementStatusProps> = ({ status }) => {
   return (
-    <>
+    <Tooltip title={status}>
       <Box
         sx={{
           display: 'inline-block',
@@ -23,8 +24,7 @@ const ElementStatus: FunctionComponent<ElementStatusProps> = ({ status }) => {
           borderRadius: '50%',
         }}
       ></Box>
-      {status}
-    </>
+    </Tooltip>
   );
 };
 
