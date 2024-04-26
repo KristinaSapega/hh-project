@@ -19,7 +19,6 @@ const ElementStatus: FunctionComponent<ElementStatusProps> = ({ status }) => {
           display: 'inline-block',
           width: '10px',
           height: '10px',
-          mr: '10px',
           backgroundColor: `${statusColorMap[status]}`,
           borderRadius: '50%',
         }}
