@@ -10,17 +10,9 @@ import { LogsProps } from '../../types';
 
 const Logs: FunctionComponent<LogsProps> = ({ isVisible, setIsVisible }) => {
   return (
-    <>
-      {isVisible ? (
-        <IconButton onClick={setIsVisible}>
-          <ArrowDropDownOutlined />
-        </IconButton>
-      ) : (
-        <IconButton onClick={setIsVisible}>
-          <ArrowDropUpOutlined />
-        </IconButton>
-      )}
-    </>
+    <IconButton onClick={setIsVisible}>
+      {isVisible ? <ArrowDropDownOutlined /> : <ArrowDropUpOutlined />}
+    </IconButton>
   );
 };
 
