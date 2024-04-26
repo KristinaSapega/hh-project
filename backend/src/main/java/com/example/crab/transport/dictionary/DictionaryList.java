@@ -5,5 +5,5 @@ import java.util.List;
 
 public record DictionaryList (
     @Schema(description = "Лист доступных playbooks")
-    List<Dictionary> taskTemplates) {
+    List<Task> taskTemplates) {
 }
