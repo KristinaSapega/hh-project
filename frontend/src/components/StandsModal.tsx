@@ -3,26 +3,20 @@ import { useSelector } from 'react-redux';
 
 import { Box, Modal, Paper, Typography } from '@mui/material';
 
-import fetchStands from '../api/fetchStands';
 import { useAppDispatch } from '../hooks/useAppDispatch';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { giveStands } from '../reducers/standsReducer';
 import { RootState } from '../store';
-import { ModalProps, Stand } from '../types';
+import { ModalProps } from '../types';
 import Stands from './Stands';
+import { apiGetStands } from '../store/stands';
 
 const StandsModal: FunctionComponent<ModalProps> = ({ open, onClose }) => {
-  const { user } = useAuthContext();
 
   const stands = useSelector((state: RootState) => state.stands.stands);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    (async () => {
-      const fetchedStands: Stand[] = await fetchStands(user!);
-      dispatch(giveStands(fetchedStands));
-    })();
-  }, [user, dispatch]);
+    dispatch(apiGetStands());
+  }, [dispatch]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -35,7 +29,6 @@ const StandsModal: FunctionComponent<ModalProps> = ({ open, onClose }) => {
           padding: '10px',
         }}
       >
-        {/* TODO Добавить проверку на наличие стендов */}
         {!stands.length ? (
           <Box
             height={200}
@@ -66,7 +59,7 @@ const StandsModal: FunctionComponent<ModalProps> = ({ open, onClose }) => {
                 Список стендов
               </h1>
             </Box>
-            <Stands stands={stands} />
+            <Stands stands={stands} onClose={onClose} />
           </>
         )}
       </Paper>
