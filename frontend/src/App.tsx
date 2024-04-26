@@ -11,7 +11,7 @@ import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import Stand from './pages/Stand';
 import { routes } from './routes/routes';
-import { darkPallete, lightPallete } from './utils/palette';
+import { darkPalette, lightPalette } from './utils/palette';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
@@ -19,7 +19,7 @@ const App = () => {
 
   const theme = createTheme(
     {
-      palette: mode === 'dark' ? darkPallete : lightPallete,
+      palette: mode === 'dark' ? darkPalette : lightPalette,
     },
     ruRU,
   );
