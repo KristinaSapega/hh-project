@@ -6,7 +6,7 @@ export interface Stand {
   id: number;
   host: string;
   status: string;
-  takenBy: string;
+  takenBy: string | null;
 }
 
 export interface Field {
@@ -115,23 +115,6 @@ export interface StandsState {
   stands: Stand[];
 }
 
-export interface StandsAction {
-  type: string;
-  payload: Stand[];
-}
-
-export interface TakeStandAction {
-  type: string;
-  payload: {
-    user: string;
-    id: number;
-  };
-}
-
-export interface LeaveStandAction {
-  type: string;
-  payload: number;
-}
 
 // PluginsReducer
 

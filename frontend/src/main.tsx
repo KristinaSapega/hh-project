@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import App from './App';
 import AuthProvider from './contexts/AuthContext';
-import store from './store';
+import { store } from './store';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
