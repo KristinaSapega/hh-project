@@ -1,22 +1,14 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Box, Modal, Paper, Typography } from '@mui/material';
 
-import { useAppDispatch } from '../hooks/useAppDispatch';
 import { RootState } from '../store';
 import { ModalProps } from '../types';
 import Stands from './Stands';
-import { apiGetStands } from '../store/stands';
 
 const StandsModal: FC<ModalProps> = ({ open, onClose }) => {
-
   const stands = useSelector((state: RootState) => state.stands.stands);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(apiGetStands());
-  }, [dispatch]);
 
   return (
     <Modal open={open} onClose={onClose}>
