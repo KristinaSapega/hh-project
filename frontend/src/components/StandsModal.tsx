@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Box, Modal, Paper, Typography } from '@mui/material';
-
 import { RootState } from '../store';
 import { ModalProps } from '../types';
 import Stands from './Stands';

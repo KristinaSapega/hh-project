@@ -1,13 +1,12 @@
 import { FC } from 'react';
-
 import { Box } from '@mui/material';
-
 import EmptyOwnStands from '../components/Main/EmptyOwnStands';
 import StartWorkWindow from '../components/Main/StartWorkWindow';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { RootState } from '../store';
 import { Stand } from '../types';
+
 
 const Main: FC = () => {
   // TODO запрашивать стенды здесь и сразу смотреть,
@@ -20,14 +19,16 @@ const Main: FC = () => {
   );
 
   return (
-    <Box
-      sx={{
-        padding: '20px 20px',
-        height: '100%',
-      }}
-    >
-      {!ownStands.length ? <EmptyOwnStands /> : <StartWorkWindow />}
-    </Box>
+    <>
+      <Box
+        sx={{
+          padding: '20px 20px',
+          height: '100%',
+        }}
+      >
+        {!ownStands.length ? <EmptyOwnStands /> : <StartWorkWindow />}
+      </Box>
+    </>
   );
 };
 
