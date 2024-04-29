@@ -8,10 +8,8 @@ import com.example.crab.service.StandsService;
 import com.example.crab.transport.stand.StandDto;
 import com.example.crab.transport.stand.StandListDto;
 import java.util.List;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,16 +19,12 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 
 @WebMvcTest(controllers = StandsController.class,
@@ -42,23 +36,7 @@ public class StandsControllerTest {
   private StandsService standsService;
 
   @Autowired
-  private WebApplicationContext context;
-
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
-
-  @Autowired
   private MockMvc mockMvc;
-
-  @Before
-  public void setUp() {
-    MockitoAnnotations.initMocks(this);
-    this.mockMvc = MockMvcBuilders
-        .webAppContextSetup(context)
-        .addFilter(springSecurityFilterChain)
-        .apply(springSecurity())
-        .build();
-  }
 
   @Test
   @WithAnonymousUser

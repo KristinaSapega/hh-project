@@ -9,56 +9,30 @@ import com.example.crab.transport.container.ContainerNameDto;
 import com.example.crab.transport.container.PortDto;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-
-@WebMvcTest(controllers = ContainerController.class,
-    excludeAutoConfiguration = SecurityConfig.class)
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = ContainerController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ContainersControllerTest {
 
   @MockBean
   private ContainerServiceImpl containerService;
 
   @Autowired
-  private WebApplicationContext context;
-
-  @Autowired
-  private FilterChainProxy springSecurityFilterChain;
-
-  @Autowired
   private MockMvc mockMvc;
 
-  @Before
-  public void setUp() {
-    MockitoAnnotations.initMocks(this);
-    this.mockMvc = MockMvcBuilders
-        .webAppContextSetup(context)
-        .addFilter(springSecurityFilterChain)
-        .apply(springSecurity())
-        .build();
-  }
-
   @Test
-  @WithMockUser
   public void testGetContainerByStandId() throws Exception{
     when(containerService.getContainers(1)).thenReturn(getContainers());
     mockMvc.perform(get("/api/stands/1/containers"))
@@ -68,7 +42,6 @@ public class ContainersControllerTest {
   }
 
   @Test
-  @WithMockUser
   public void testGetContainerByIdByStandIdSuccess() throws Exception{
     when(containerService.getContainerById(1,"ab345df")).thenReturn(Optional.ofNullable(getContainers().get(0)));
     mockMvc.perform(get("/api/stands/1/containers/ab345df"))
@@ -80,7 +53,6 @@ public class ContainersControllerTest {
   }
 
   @Test
-  @WithMockUser
   public void testGetContainerByIdByStandIdNotFound() throws Exception{
     when(containerService.getContainerById(1,"ab345df")).thenReturn(Optional.ofNullable(getContainers().get(0)));
     mockMvc.perform(get("/api/stands/1/containers/ab345d"))
@@ -89,7 +61,6 @@ public class ContainersControllerTest {
   }
 
   @Test
-  @WithMockUser
   public void testGetLogByContainerIdSuccess() throws Exception{
     when(containerService.getLogByContainerId(1,"ab345df")).thenReturn("start process");
     mockMvc.perform(get("/api/stands/1/containers/ab345df/logs"))
@@ -99,7 +70,6 @@ public class ContainersControllerTest {
   }
 
   @Test
-  @WithMockUser
   public void testGetLogByContainerIdNotFound() throws Exception{
     when(containerService.getLogByContainerId(1,"ab345d")).thenThrow(new ResourceNotFoundException());
     mockMvc.perform(get("/api/stands/1/containers/ab345d/logs"))
