@@ -25,7 +25,7 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
         height: 'calc(100vh - 85px)',
         gap: '20px',
         margin: '0 20px',
-        gridTemplateColumns: '15fr 50fr 40px',
+        gridTemplateColumns: '450px 50fr 40px',
         gridTemplateRows: isVisible ? 'auto 300px' : 'auto 40px',
         gridTemplateAreas: `
 "left content right"

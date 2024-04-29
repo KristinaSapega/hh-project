@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { ThemeProvider } from '@emotion/react';
@@ -7,10 +7,12 @@ import { ruRU } from '@mui/material/locale';
 
 import AppLayout from './components/AppLayout/AppLayout';
 import Header from './components/Header';
+import { useAppDispatch } from './hooks/useAppDispatch';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import Stand from './pages/Stand';
 import { routes } from './routes/routes';
+import { apiGetStands } from './store/stands';
 import { darkPalette, lightPalette } from './utils/palette';
 
 const App = () => {
@@ -23,6 +25,13 @@ const App = () => {
     },
     ruRU,
   );
+
+  // для возможности доступа к данным при загрузке приложения с любой страницы
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(apiGetStands());
+  }, [dispatch]);
 
   // функция для переключения темы, передаем пропсом в хедер
   const toggleTheme = () => {
