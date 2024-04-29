@@ -4,9 +4,11 @@ const routes = {
   main: '/',
   login: '/login',
   stand: '/stand/:id',
+  plugin: '/dictionaries', 
   api: {
     stands: '/api/stands',
     stand: (id: number) => `/api/stands/${id}`,
+    plugins: '/api/dictionaries',
     containers: (id: number) => `/api/stands/${id}/containers`,
     container: (standId: number, id: number) =>
       `/api/stands/${standId}/containers/${id}`,
