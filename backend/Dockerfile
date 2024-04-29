@@ -6,7 +6,7 @@ COPY src src
 COPY pom.xml .
 RUN mvn clean package -Dmaven.test.skip
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /crab
 #install ansible
 RUN apk add --no-cache openssh
