@@ -1,34 +1,14 @@
 import { FunctionComponent } from 'react';
-import { useSelector } from 'react-redux';
 
 import { Modal, Paper } from '@mui/material';
 
-import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { resetTasks } from '../../../../reducers/tasksReducer';
-import { RootState } from '../../../../store';
 import { PluginsModalProps } from '../../../../types';
-import PluginsSetup from './PluginsSetup';
 
 const PluginsModal: FunctionComponent<PluginsModalProps> = ({
   open,
   onClose,
 }) => {
-  const stands = useSelector((state: RootState) => state.tasks.stands);
-  const dispatch = useAppDispatch();
-
-  const handleTasksRun = () => {
-    // ЗАПРОС НА БЕК С ТАСКАМИ
-    if (stands.length) {
-      handleClose();
-      alert('ЗАПРОС НА БЕК');
-      dispatch(resetTasks());
-    } else {
-      alert('Не выбрано ни одного стенда');
-    }
-  };
-
   const handleClose = () => {
-    dispatch(resetTasks());
     onClose();
   };
 
@@ -50,7 +30,6 @@ const PluginsModal: FunctionComponent<PluginsModalProps> = ({
           },
         }}
       >
-        <PluginsSetup handleTasksRun={handleTasksRun} />
       </Paper>
     </Modal>
   );

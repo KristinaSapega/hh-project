@@ -9,13 +9,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
+  Typography,
+  useTheme,
 } from '@mui/material';
 
-import { useAppDispatch } from '../../../hooks/useAppDispatch';
-import {
-  addTaskToTasks,
-  removeTaskFromTasks,
-} from '../../../reducers/tasksReducer';
 import { RootState } from '../../../store';
 
 const ellipsisStyles = {
@@ -25,25 +23,22 @@ const ellipsisStyles = {
 };
 
 const PluginsTable: FunctionComponent = () => {
-  const dispatch = useAppDispatch();
   const plugins = useSelector((state: RootState) => state.plugins.plugins);
-  const activePlugins = useSelector(
-    (state: RootState) => state.tasks.tasks,
-  ).map(({ taskId }) => taskId);
+
+  const theme = useTheme();
 
   const handleChange =
     (pluginId: number) => (event: ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       if (checked) {
-        dispatch(addTaskToTasks(pluginId));
       } else {
-        dispatch(removeTaskFromTasks(pluginId));
       }
+      // TODO добавлять/удалять плагин из списка тасок при переключении чекбокса
     };
 
   return (
     <>
-      {plugins && (
+      {plugins ? (
         <TableContainer>
           <Table
             size="small"
@@ -56,7 +51,6 @@ const PluginsTable: FunctionComponent = () => {
                 <TableCell align="center" sx={{ width: '20px' }} />
                 <TableCell align="center">Название</TableCell>
                 <TableCell align="center">Описание</TableCell>
-                {/* <TableCell align="center">Действия</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -67,11 +61,12 @@ const PluginsTable: FunctionComponent = () => {
                       sx={{ p: 0 }}
                       inputProps={{ 'aria-label': 'controlled' }}
                       onChange={handleChange(plugin.id)}
-                      checked={activePlugins.includes(plugin.id)}
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ ...ellipsisStyles }}>
-                    {plugin.name}
+                    <Tooltip title={plugin.description}>
+                      <>{plugin.type}</>
+                    </Tooltip>
                   </TableCell>
                   <TableCell align="center" sx={{ ...ellipsisStyles }}>
                     {plugin.description}
@@ -81,6 +76,10 @@ const PluginsTable: FunctionComponent = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      ) : (
+        <Typography align="center" color={theme.palette.text.secondary}>
+          Пока нет плагинов
+        </Typography>
       )}
     </>
   );
