@@ -10,11 +10,11 @@ import Header from './components/Header';
 import { useAppDispatch } from './hooks/useAppDispatch';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
-import Stand from './pages/Stand';
+// import Stand from './pages/Stand';
 import { routes } from './routes/routes';
 import { apiGetStands } from './store/stands';
 import { darkPalette, lightPalette } from './utils/palette';
-import Plugins from './components/LeftBar/Plugins/Plugins';
+// import Plugins from './components/LeftBar/Plugins/Plugins';
 //import { useAppSelector } from './hooks/useAppSelector';
 import { apiGetPlugins } from './store/plugins';
 
@@ -72,8 +72,8 @@ const App = () => {
                 <AppLayout>
                   <Routes>
                     <Route path={routes.main} element={<MainPage />} />
-                    <Route path={routes.stand} element={<Stand />} />
-                    <Route path={routes.plugin} element={<Plugins />} />
+                    {/* <Route path={routes.stand} element={<Stand />} />
+                    <Route path={routes.plugin} element={<Plugins />} /> */}
                     <Route path="*" element={<></>} />
                   </Routes>
                 </AppLayout>

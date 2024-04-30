@@ -15,7 +15,7 @@ export const fetchPlugins = async (user: string): Promise<Plugin[]> => {
       );
     }
   
-    const data: Plugin[] = (await response.json()).plugins;
+    const data: Plugin[] = (await response.json()).taskTemplates;
     return data;
   };
   
