@@ -1,4 +1,4 @@
-import { ChangeEvent, FunctionComponent, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,10 +24,11 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import { routes } from '../../../routes/routes';
 import { RootState } from '../../../store';
 import { apiLeaveStand } from '../../../store/stands';
+import { addStandToQueue, removeStandFromQueue } from '../../../store/tasks';
 import ElementStatus from '../../ElementStatus';
 import StandsModal from '../../StandsModal';
 
-const MyStandsTable: FunctionComponent = () => {
+const MyStandsTable: FC = () => {
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const MyStandsTable: FunctionComponent = () => {
   const ownStands = stands.filter(
     (stand) => stand.takenBy === atob(user || '').split(':')[0],
   );
+  const activeStands = useSelector((state: RootState) => state.tasks.stands);
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -54,9 +56,10 @@ const MyStandsTable: FunctionComponent = () => {
     (standId: number) => (event: ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       if (checked) {
+        dispatch(addStandToQueue(standId));
       } else {
+        dispatch(removeStandFromQueue(standId));
       }
-      // TODO: Добавление стенда в очередь тасок
     };
 
   return (
@@ -87,6 +90,7 @@ const MyStandsTable: FunctionComponent = () => {
                           sx={{ p: 0 }}
                           inputProps={{ 'aria-label': 'controlled' }}
                           onChange={handleChange(stand.id)}
+                          checked={activeStands.includes(stand.id)}
                         />
                       </Tooltip>
                     </TableCell>
