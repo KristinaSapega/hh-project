@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-tag-1.1.0
+      author: klive_rogen
+      changes:
+        - tagDatabase:
+            tag: v1.1.0
+  - include:
+      file: create-table-tasks.yml
+      relativeToChangelogFile: true
+  - include:
+      file: add-tasks-data.yml
+      relativeToChangelogFile: true
