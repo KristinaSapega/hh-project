@@ -1,4 +1,4 @@
-import { FunctionComponent, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material';
@@ -19,28 +19,52 @@ const buttonStyles = {
   width: 150,
 };
 
-interface PluginsSetupProps {
-  handleTasksRun: () => void;
-}
-
-const PluginsSetup: FunctionComponent<PluginsSetupProps> = ({
-  handleTasksRun,
-}) => {
+const PluginsSetup: FC = () => {
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const activeStands = useSelector((state: RootState) => state.tasks.stands);
   const plugins = useSelector((state: RootState) => state.plugins.plugins);
 
   const [value, setValue] = useState<number>(0);
 
   const [formsData, setFormsData] = useState<{
-    [key: number]: { [key: string]: string | boolean };
+    [key: number]: Array<{ [key: string]: string | boolean }>;
   }>(
-    tasks.reduce((acc, task) => {
-      return { ...acc, [task.taskId]: {} };
+    tasks.reduce((acc, taskId) => {
+      return { ...acc, [taskId]: [] };
     }, {}),
   );
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleSubmit = (event: SyntheticEvent) => {
+    event.preventDefault();
+
+    const tasksData = Object.entries(formsData).reduce(
+      (acc: unknown[], [key, value]) => {
+        const plugin = plugins.find(({ id }) => id === Number(key)) as Plugin;
+        const { type } = plugin;
+        const formattedTasks = value.map((task) => {
+          return {
+            type,
+            parameters: {
+              services: task,
+            },
+          };
+        });
+
+        return [...acc, ...formattedTasks];
+      },
+      [],
+    );
+
+    const data = {
+      stands: activeStands,
+      tasks: tasksData,
+    };
+    console.log(data);
+    alert(JSON.stringify(data));
   };
 
   return (
@@ -51,6 +75,8 @@ const PluginsSetup: FunctionComponent<PluginsSetupProps> = ({
         flexDirection: 'column',
         height: '100%',
       }}
+      component="form"
+      onSubmit={handleSubmit}
     >
       <Box>
         <Typography variant="h5" align="center">
@@ -63,27 +89,23 @@ const PluginsSetup: FunctionComponent<PluginsSetupProps> = ({
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              {tasks.map((task) => {
+              {tasks.map((taskId) => {
                 const plugin = plugins.find(
-                  (plugin) => plugin.id === task.taskId,
+                  (plugin) => plugin.id === taskId,
                 ) as Plugin;
                 return (
-                  <Tab
-                    key={task.id}
-                    label={plugin.name}
-                    {...a11yProps(value)}
-                  />
+                  <Tab key={taskId} label={plugin.type} {...a11yProps(value)} />
                 );
               })}
             </Tabs>
           </Box>
           <Box>
-            {tasks.map((task, index) => {
+            {tasks.map((taskId, index) => {
               const plugin = plugins.find(
-                (plugin) => plugin.id === task.taskId,
+                (plugin) => plugin.id === taskId,
               ) as Plugin;
               return (
-                <CustomTabPanel key={task.id} value={value} index={index}>
+                <CustomTabPanel key={taskId} value={value} index={index}>
                   <FormGenerator
                     plugin={plugin}
                     formData={formsData[plugin.id]}
@@ -125,7 +147,7 @@ const PluginsSetup: FunctionComponent<PluginsSetupProps> = ({
           }}
           variant="contained"
           color="success"
-          onClick={handleTasksRun}
+          type="submit"
         >
           Применить
         </Button>

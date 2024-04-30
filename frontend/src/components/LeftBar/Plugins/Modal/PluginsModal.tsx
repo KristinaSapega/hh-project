@@ -1,14 +1,20 @@
-import { FunctionComponent } from 'react';
+import { FC } from 'react';
 
 import { Modal, Paper } from '@mui/material';
 
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { resetTasks } from '../../../../store/tasks';
 import { PluginsModalProps } from '../../../../types';
+import PluginsSetup from './PluginsSetup';
 
-const PluginsModal: FunctionComponent<PluginsModalProps> = ({
+const PluginsModal: FC<PluginsModalProps> = ({
   open,
   onClose,
 }) => {
+  const dispatch = useAppDispatch();
+
   const handleClose = () => {
+    dispatch(resetTasks());
     onClose();
   };
 
@@ -30,6 +36,7 @@ const PluginsModal: FunctionComponent<PluginsModalProps> = ({
           },
         }}
       >
+        <PluginsSetup />
       </Paper>
     </Modal>
   );
