@@ -20,7 +20,7 @@ export interface Field {
 
 export interface Plugin {
   id: number;
-  name: string;
+  type: string;
   description: string;
   shortDescription?: string;
   playbook?: string; // url к плейбук файлу
