@@ -45,16 +45,16 @@ const PluginsSetup: FC = () => {
       (acc: unknown[], [key, value]) => {
         const plugin = plugins.find(({ id }) => id === Number(key)) as Plugin;
         const { type } = plugin;
-        const formattedTasks = value.map((task) => {
-          return {
+
+        return [
+          ...acc,
+          {
             type,
             parameters: {
-              services: task,
+              services: value,
             },
-          };
-        });
-
-        return [...acc, ...formattedTasks];
+          },
+        ];
       },
       [],
     );
