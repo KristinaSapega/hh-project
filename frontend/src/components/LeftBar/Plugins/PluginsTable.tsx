@@ -1,8 +1,11 @@
-import { ChangeEvent, FunctionComponent } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
+import { OpenInNew } from '@mui/icons-material';
 import {
   Checkbox,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -14,7 +17,10 @@ import {
   useTheme,
 } from '@mui/material';
 
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
+import { routes } from '../../../routes/routes';
 import { RootState } from '../../../store';
+import { addTaskToQueue, removeTaskFromQueue } from '../../../store/tasks';
 
 const ellipsisStyles = {
   textOverflow: 'ellipsis',
@@ -22,8 +28,12 @@ const ellipsisStyles = {
   overflow: 'hidden',
 };
 
-const PluginsTable: FunctionComponent = () => {
+const PluginsTable: FC = () => {
+  const dispatch = useAppDispatch();
   const plugins = useSelector((state: RootState) => state.plugins.plugins);
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+
+  const navigate = useNavigate();
 
   const theme = useTheme();
 
@@ -31,9 +41,10 @@ const PluginsTable: FunctionComponent = () => {
     (pluginId: number) => (event: ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       if (checked) {
+        dispatch(addTaskToQueue(pluginId));
       } else {
+        dispatch(removeTaskFromQueue(pluginId));
       }
-      // TODO добавлять/удалять плагин из списка тасок при переключении чекбокса
     };
 
   return (
@@ -51,6 +62,7 @@ const PluginsTable: FunctionComponent = () => {
                 <TableCell align="center" sx={{ width: '20px' }} />
                 <TableCell align="center">Название</TableCell>
                 <TableCell align="center">Описание</TableCell>
+                <TableCell align="center">Действия</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -61,6 +73,7 @@ const PluginsTable: FunctionComponent = () => {
                       sx={{ p: 0 }}
                       inputProps={{ 'aria-label': 'controlled' }}
                       onChange={handleChange(plugin.id)}
+                      checked={tasks.includes(plugin.id)}
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ ...ellipsisStyles }}>
@@ -70,6 +83,19 @@ const PluginsTable: FunctionComponent = () => {
                   </TableCell>
                   <TableCell align="center" sx={{ ...ellipsisStyles }}>
                     {plugin.description}
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        navigate(
+                          routes.plugin.replace(':id', plugin.id.toString()),
+                        );
+                      }}
+                      sx={{ color: theme.palette.text.secondary }}
+                    >
+                      <OpenInNew />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

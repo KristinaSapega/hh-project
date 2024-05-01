@@ -1,10 +1,9 @@
-import { FunctionComponent, useState } from 'react';
+import { FC, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { Button } from '@mui/material';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import { Box, Button, Tab, Tabs } from '@mui/material';
 
+import { RootState } from '../../../store';
 import CustomTabPanel from '../../CustomTabPanel';
 import PluginsModal from './Modal/PluginsModal';
 import PluginsTable from './PluginsTable';
@@ -16,9 +15,12 @@ function a11yProps(index: number) {
   };
 }
 
-const Plugins: FunctionComponent = () => {
+const Plugins: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<number>(0);
+
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const activeStands = useSelector((state: RootState) => state.tasks.stands);
 
   const handleClose = () => {
     setOpen(false);
@@ -58,6 +60,7 @@ const Plugins: FunctionComponent = () => {
             variant="contained"
             color="success"
             onClick={() => setOpen(true)}
+            disabled={!tasks.length || !activeStands.length}
           >
             Применить
           </Button>
@@ -76,6 +79,7 @@ const Plugins: FunctionComponent = () => {
             variant="contained"
             color="success"
             onClick={handleOpen}
+            disabled={!tasks.length || !activeStands.length}
           >
             Применить
           </Button>

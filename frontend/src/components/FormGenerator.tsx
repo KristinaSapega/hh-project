@@ -3,17 +3,20 @@ import {
   Dispatch,
   FunctionComponent,
   SetStateAction,
-  useEffect,
+  useState,
 } from 'react';
 
+import { AddOutlined } from '@mui/icons-material';
 import {
   Box,
   Checkbox,
   FormControlLabel,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -21,9 +24,9 @@ import { Plugin } from '../types';
 
 interface FormGeneratorProps {
   plugin: Plugin;
-  formData: { [key: string]: string | boolean };
+  formData: Array<{ [key: string]: string | boolean }>;
   setFormsData: Dispatch<
-    SetStateAction<{ [key: number]: { [key: string]: string | boolean } }>
+    SetStateAction<{ [key: number]: { [key: string]: string | boolean }[] }>
   >;
 }
 
@@ -32,121 +35,149 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
   formData,
   setFormsData,
 }) => {
-  const { id, name, description, fields } = plugin;
+  const { id, type, description, fields } = plugin;
+  const [formsCount, setFormsCount] = useState<number>(1);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const fieldValue = type === 'checkbox' ? checked : value;
-    setFormsData((prevData) => ({
-      ...prevData,
-      [id]: {
-        ...formData,
-        [name]: fieldValue,
-      },
-    }));
-  };
+  const handleInputChange =
+    (formId: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value, type, checked } = e.target;
+      const fieldValue = type === 'checkbox' ? checked : value;
+      setFormsData((prevData) => {
+        const updatedFormData = [...prevData[id]];
+        updatedFormData[formId] = {
+          ...updatedFormData[formId],
+          [name]: fieldValue,
+        };
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormsData((prevData) => ({
-      ...prevData,
-      [id]: {
-        ...formData,
-        [name]: checked,
-      },
-    }));
-  };
-
-  const handleSelectChange = (e: SelectChangeEvent<string>) => {
-    const { name, value } = e.target;
-    setFormsData((prevData) => ({
-      ...prevData,
-      [id]: {
-        ...formData,
-        [name]: value,
-      },
-    }));
-  };
-
-  useEffect(() => {
-    return () => {
-      console.log(formData, id);
+        return {
+          ...prevData,
+          [id]: updatedFormData,
+        };
+      });
     };
-  }, [formData, id]);
+
+  const handleCheckboxChange =
+    (formId: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, checked } = e.target;
+      setFormsData((prevData) => {
+        const updatedFormData = [...prevData[id]];
+        updatedFormData[formId] = {
+          ...updatedFormData[formId],
+          [name]: checked,
+        };
+
+        return {
+          ...prevData,
+          [id]: updatedFormData,
+        };
+      });
+    };
+
+  const handleSelectChange =
+    (formId: number) => (e: SelectChangeEvent<string>) => {
+      const { name, value } = e.target;
+      setFormsData((prevData) => {
+        const updatedFormData = [...prevData[id]];
+        updatedFormData[formId] = {
+          ...updatedFormData[formId],
+          [name]: value,
+        };
+
+        return {
+          ...prevData,
+          [id]: updatedFormData,
+        };
+      });
+    };
 
   return (
-    <Box
-      sx={{
-        margin: '10px 0',
-      }}
-    >
+    <Box sx={{ margin: '10px 0' }}>
       <Box>
-        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">{type}</Typography>
         <Typography>{description}</Typography>
       </Box>
-
-      <Box
-        sx={{
-          margin: '20px 0',
-          padding: '30px',
-          borderRadius: '20px',
-          border: '1px solid rgba(255, 255, 255, 0.7)',
-        }}
-      >
-        {fields &&
-          fields.map((field) => {
-            switch (field.type) {
-              case 'input':
-                return (
-                  <TextField
-                    key={field.name}
-                    label={field.name}
-                    placeholder={field.placeholder}
-                    name={field.name}
-                    value={formData[field.name] || ''}
-                    onChange={handleInputChange}
-                    fullWidth
-                    sx={{
-                      margin: '10px 0',
-                    }}
-                  />
-                );
-              case 'checkbox':
-                return (
-                  <FormControlLabel
-                    key={field.name}
-                    control={
-                      <Checkbox
-                        checked={!!formData[field.name]}
-                        onChange={handleCheckboxChange}
-                        name={field.name}
-                      />
-                    }
-                    label={field.placeholder}
-                  />
-                );
-              case 'select':
-                return (
-                  <Select
-                    key={field.name}
-                    value={(formData[field.name] as string) || ''}
-                    onChange={handleSelectChange}
-                    fullWidth
-                    label={field.placeholder}
-                    name={field.name}
-                  >
-                    {field.options?.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                );
-              default:
-                return null;
-            }
-          })}
-      </Box>
+      {[...Array(formsCount)].map((_, index) => (
+        <Box
+          key={index}
+          sx={{
+            margin: '20px 0',
+            padding: '30px',
+            pt: '10px',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.7)',
+          }}
+        >
+          {fields &&
+            fields.map((field) => {
+              switch (field.type) {
+                case 'input':
+                  return (
+                    <TextField
+                      key={field.name}
+                      label={field.name}
+                      placeholder={field.placeholder}
+                      name={field.name}
+                      value={
+                        (formData[index] && formData[index][field.name]) || ''
+                      }
+                      onChange={handleInputChange(index)}
+                      fullWidth
+                      required
+                      sx={{ margin: '10px 0' }}
+                    />
+                  );
+                case 'checkbox':
+                  return (
+                    <FormControlLabel
+                      key={field.name}
+                      control={
+                        <Checkbox
+                          checked={
+                            !!(formData[index] && formData[index][field.name])
+                          }
+                          onChange={handleCheckboxChange(index)}
+                          name={field.name}
+                          required
+                        />
+                      }
+                      label={field.placeholder}
+                    />
+                  );
+                case 'select':
+                  return (
+                    <Select
+                      key={field.name}
+                      value={
+                        (formData[index] &&
+                          (formData[index][field.name] as string)) ||
+                        ''
+                      }
+                      onChange={handleSelectChange(index)}
+                      fullWidth
+                      label={field.placeholder}
+                      name={field.name}
+                      required
+                    >
+                      {field.options?.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                default:
+                  return null;
+              }
+            })}
+        </Box>
+      ))}
+      {fields && (
+        <Tooltip title="Добавить еще одну таску">
+          <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
+            <AddOutlined />
+          </IconButton>
+        </Tooltip>
+      )}
     </Box>
   );
 };
