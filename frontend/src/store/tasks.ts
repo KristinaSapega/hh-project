@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState: { stands: number[]; tasks: number[] } = {
+  stands: [],
+  tasks: [],
+};
+
 const tasksSlice = createSlice({
   name: 'tasks',
-  initialState: {
-    stands: [] as number[],
-    tasks: [] as number[],
-  },
+  initialState,
   reducers: {
     addTaskToQueue: (state, action) => {
       const task = action.payload;
@@ -37,12 +39,7 @@ const tasksSlice = createSlice({
         stands: filteredStands,
       };
     },
-    resetTasks: () => {
-      return {
-        stands: [],
-        tasks: [],
-      };
-    },
+    resetTasks: () => initialState,
   },
 });
 

@@ -3,7 +3,6 @@ import {
   Dispatch,
   FunctionComponent,
   SetStateAction,
-  useEffect,
   useState,
 } from 'react';
 
@@ -90,12 +89,6 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
         };
       });
     };
-
-  useEffect(() => {
-    return () => {
-      console.log(formData, id);
-    };
-  }, [formData, id]);
 
   return (
     <Box sx={{ margin: '10px 0' }}>

@@ -1,10 +1,7 @@
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Button } from '@mui/material';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import { Box, Button, Tab, Tabs } from '@mui/material';
 
 import { RootState } from '../../../store';
 import CustomTabPanel from '../../CustomTabPanel';
