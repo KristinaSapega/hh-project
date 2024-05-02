@@ -63,3 +63,34 @@
       path: /home/crab-stand/services
       state: directory
       owner: crab-stand
+
+  - name: create directory for docker service override
+    file:
+      path: /etc/systemd/system/docker.service.d
+      state: directory
+
+  - name: create clear file override.conf
+    copy:
+      content: ""
+      dest: /etc/systemd/system/docker.service.d/override.conf
+      force: false
+      group: sys
+      owner: root
+      mode: 0555
+
+  - name: write override.conf file
+    blockinfile:
+      path: /etc/systemd/system/docker.service.d/override.conf
+      block: |
+        [Service]
+        ExecStart=
+        ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376
+
+  - name: reload systemd daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: restart Docker service
+    systemd:
+      name: docker.service
+      state: restarted
