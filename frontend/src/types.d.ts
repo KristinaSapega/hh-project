@@ -31,6 +31,7 @@ export interface Container {
   id: string;
   name: string;
   state: string;
+  status: string;
 }
 
 // Login page components props types
