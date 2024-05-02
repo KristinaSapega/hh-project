@@ -30,6 +30,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Статус',
   },
+  {
+    id: 'status',
+    numeric: true,
+    disablePadding: false,
+    label: 'Запущен',
+  }
 ];
 
 const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {

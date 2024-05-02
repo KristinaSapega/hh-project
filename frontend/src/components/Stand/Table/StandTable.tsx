@@ -15,6 +15,8 @@ import { Container } from '../../../types';
 import ElementStatus from '../../ElementStatus';
 import StandTableHeader from './StandTableHeader';
 
+const CONTAINER_ID_MAX_SYMBOLS = 8;
+
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -100,13 +102,8 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
       <Paper sx={{ width: '100%', mb: 2 }}>
         {!isLoading && (
           <>
-            {/* <StandTableToolbar /> */}
             <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="medium"
-              >
+              <Table aria-labelledby="tableTitle" size="medium">
                 <StandTableHeader
                   order={order}
                   orderBy={orderBy}
@@ -118,20 +115,14 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
 
                     return (
                       <TableRow hover tabIndex={-1} key={container.id}>
-                        <TableCell
-                          id={labelId}
-                          scope="row"
-                          align="right"
-                          sx={{ width: '30%' }}
-                        >
-                          {container.id}
+                        <TableCell id={labelId} scope="row" align="right">
+                          {container.id.slice(0, CONTAINER_ID_MAX_SYMBOLS)}
                         </TableCell>
-                        <TableCell sx={{ width: '30%' }} align="right">
-                          {container.name}
-                        </TableCell>
-                        <TableCell sx={{ width: '30%' }} align="right">
+                        <TableCell align="right">{container.name}</TableCell>
+                        <TableCell align="right">
                           <ElementStatus status={container.state} />
                         </TableCell>
+                        <TableCell align="right">{container.status}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -147,15 +138,17 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={containers.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            {containers.length > rowsPerPage && (
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={containers.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            )}
           </>
         )}
       </Paper>
