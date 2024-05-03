@@ -43,7 +43,7 @@ const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
         },
         {
           option: 'Пользователь',
-          value: stand.takenBy !== null ? stand.takenBy : "",
+          value: stand.takenBy !== null ? stand.takenBy : '',
         },
       ]);
     }
@@ -55,10 +55,7 @@ const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
         Информация о стенде
       </Typography>
 
-      <Table
-        size="medium"
-        sx={{ tableLayout: 'fixed', maxWidth: { md: '25%' } }}
-      >
+      <Table size="medium">
         <TableBody>
           {rows.map((row) => {
             return (

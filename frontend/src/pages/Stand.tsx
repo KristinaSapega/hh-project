@@ -1,25 +1,32 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 
 import StandInfo from '../components/Stand/StandInfo';
 import StandTable from '../components/Stand/Table/StandTable';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { addStandToTasks } from '../reducers/tasksReducer';
+import { useAppSelector } from '../hooks/useAppSelector';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { routes } from '../routes/routes';
 
 const Stand = () => {
   const params = useParams();
   const { id } = params;
 
-  const dispatch = useAppDispatch();
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  const ownStands = useAppSelector((state) => state.stands.stands).filter(
+    (stand) => stand.takenBy === atob(user!).split(':')[0],
+  );
+
+  const isUserStand = !!ownStands.find((stand) => stand.id === Number(id));
 
   useEffect(() => {
-    dispatch(addStandToTasks(Number(id)));
-  }, [dispatch, id]);
-
-  // TODO: если переходим на страницу стенда
-  // с каким-то рандомным id вручную, пересылать на 404
+    if (!isUserStand) {
+      navigate(routes.main);
+    }
+  }, [isUserStand, navigate]);
 
   return (
     <Box>

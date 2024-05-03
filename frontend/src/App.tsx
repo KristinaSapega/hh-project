@@ -7,16 +7,15 @@ import { ruRU } from '@mui/material/locale';
 
 import AppLayout from './components/AppLayout/AppLayout';
 import Header from './components/Header';
+import Plugins from './components/LeftBar/Plugins/Plugins';
 import { useAppDispatch } from './hooks/useAppDispatch';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
-// import Stand from './pages/Stand';
+import Stand from './pages/Stand';
 import { routes } from './routes/routes';
+import { apiGetPlugins } from './store/plugins';
 import { apiGetStands } from './store/stands';
 import { darkPalette, lightPalette } from './utils/palette';
-// import Plugins from './components/LeftBar/Plugins/Plugins';
-//import { useAppSelector } from './hooks/useAppSelector';
-import { apiGetPlugins } from './store/plugins';
 
 const App = () => {
   // для смены темы. в палитре заданы свои основные цвета тем
@@ -34,8 +33,8 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(apiGetStands())
-    dispatch(apiGetPlugins())
+    dispatch(apiGetStands());
+    dispatch(apiGetPlugins());
   }, [dispatch]);
 
   // функция для переключения темы, передаем пропсом в хедер
@@ -72,8 +71,8 @@ const App = () => {
                 <AppLayout>
                   <Routes>
                     <Route path={routes.main} element={<MainPage />} />
-                    {/* <Route path={routes.stand} element={<Stand />} />
-                    <Route path={routes.plugin} element={<Plugins />} /> */}
+                    <Route path={routes.stand} element={<Stand />} />
+                    <Route path={routes.plugin} element={<Plugins />} />
                     <Route path="*" element={<></>} />
                   </Routes>
                 </AppLayout>
