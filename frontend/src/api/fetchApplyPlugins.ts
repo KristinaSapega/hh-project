@@ -6,19 +6,18 @@ interface ApplyPluginsRequest {
     tasks: Task[];
 }
 
-interface Service {
-    repo: string;
-    repoOwner: string;
-    branch: string;
-}
+// interface Service {
+//     repo: string;
+//     repoOwner: string;
+//     branch: string;
+// }
 
 export interface ApplyPluginsResponse {
     stands: number[];   
     tasks: {
         type: string;
-        parameters: {
-            service: Service;
-        };
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        parameters?: {};
     }[]
 }
 
