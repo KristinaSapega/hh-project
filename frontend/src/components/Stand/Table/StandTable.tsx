@@ -51,16 +51,21 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
 
   const { user } = useAuthContext();
 
+  let header = null;
+  if (user) {
+    header = user.header;
+  }
+
   useEffect(() => {
     const getStandContainer = async () => {
       setIsLoading(true);
-      const data = await api.fetchContainers(user ?? '', id);
+      const data = await api.fetchContainers(header as string, id);
       await setContainers(data.containers);
       setIsLoading(false);
     };
 
     getStandContainer();
-  }, [user, id]);
+  }, [header, id]);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,

@@ -21,14 +21,19 @@ const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
 
   const { user } = useAuthContext();
 
+  let header = null;
+  if (user) {
+    header = user.header;
+  }
+
   useEffect(() => {
     const getStand = async () => {
-      const stand = await api.fetchStand(user ?? '', id);
+      const stand = await api.fetchStand(header as string, id);
       setStand(stand);
     };
 
     getStand();
-  }, [user, id]);
+  }, [header, id]);
 
   useEffect(() => {
     if (stand) {

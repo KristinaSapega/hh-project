@@ -14,13 +14,24 @@ const Stand = () => {
   const { id } = params;
 
   const { user } = useAuthContext();
+
+  let login = null;
+  if (user) {
+    login = user.login;
+  }
   const navigate = useNavigate();
 
   const ownStands = useAppSelector((state) => state.stands.stands).filter(
-    (stand) => stand.takenBy === atob(user!).split(':')[0],
+    (stand) => stand.takenBy === login,
   );
 
   const isUserStand = !!ownStands.find((stand) => stand.id === Number(id));
+
+  useEffect(() => {
+    if (!user) {
+      navigate(routes.login);
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (!isUserStand) {

@@ -1,22 +1,33 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Box } from '@mui/material';
+
 import EmptyOwnStands from '../components/Main/EmptyOwnStands';
 import StartWorkWindow from '../components/Main/StartWorkWindow';
 import { useAppSelector } from '../hooks/useAppSelector';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { routes } from '../routes/routes';
 import { RootState } from '../store';
 import { Stand } from '../types';
-
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const Main: FC = () => {
-  // TODO запрашивать стенды здесь и сразу смотреть,
-  // если ли занятые пользователем, в зависимости от этого показывать нужный компонент
+  const navigate = useNavigate();
   const { user } = useAuthContext();
+  
+  let login = null;
+  if (user) {
+    login = user.login;
+  }
 
   const stands = useAppSelector((state: RootState) => state.stands.stands);
-  const ownStands = stands.filter(
-    (stand: Stand) => stand.takenBy === atob(user || '').split(':')[0],
-  );
+  const ownStands = stands.filter((stand: Stand) => stand.takenBy === login);
+
+  useEffect(() => {
+    if (!user) {
+      navigate(routes.login);
+    }
+  }, [user, navigate]);
 
   return (
     <>
