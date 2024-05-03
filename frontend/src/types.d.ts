@@ -27,6 +27,13 @@ export interface Plugin {
   fields?: Array<Field>;
 }
 
+export interface Task {
+  type: string;
+  parameters: {
+    service: Record<string, string | boolean>;
+  };
+}
+
 export interface Container {
   id: string;
   name: string;

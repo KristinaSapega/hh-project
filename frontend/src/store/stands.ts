@@ -3,12 +3,8 @@ import { Stand } from '../types';
 import { fetchReleaseStand } from '../api/fetchReleaseStand';
 import { fetchBookStand } from '../api/fetchBookStand';
 import fetchStands from '../api/fetchStands';
+import { getUser } from './utils';
 
-const getUser = () => {
-    const user = localStorage.getItem('user');
-    if (!user) throw new Error('Необходимо авторизоваться');
-    return user;
-}
 
 export const apiGetStands = createAsyncThunk(
     'stands/apiGetStands',

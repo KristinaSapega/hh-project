@@ -1,12 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchPlugins } from '../api/fetchPlugins';
 import { Plugin } from '../types';
+import { getUser } from './utils';
 
-const getUser = () => {
-    const user = localStorage.getItem('user');
-    if (!user) throw new Error('Необходимо авторизоваться');
-    return user;
-}
 
 export const apiGetPlugins = createAsyncThunk(
     'plugins/apiGetPlugins',
@@ -16,19 +12,8 @@ export const apiGetPlugins = createAsyncThunk(
 );
 
 //export const apiSavePlugin = createAsyncThunk() ??сохранение изменений плагина
+//export const apiCreatePlugin = createAsyncThunk() ??создание нового плагина 
 
-// export const apiGetPluginsByStand = createAsyncThunk( //добавить применение плагина к стенду
-//     'plugins/apiGetPluginsByStand',
-//     async (standId) => {
-//         const user = getUser();
-//         return await fetchPlugins(user, standId);
-//     }
-// );
-
-//при выборе плагина открывается модальное окно где создается конфигурация плагина помимо основного функционала
-//для применения плагина указываем определенный набор параметров, которые он требует
-//нужны: ссылка на репозиторий, название ветки, имя владельца репозитори - редактирование(заполнение) плагина - сохранение изменений 
-//должна быть возможность создать новый плагин
 
 
 const pluginsSlice = createSlice({
@@ -37,9 +22,9 @@ const pluginsSlice = createSlice({
         plugins: [] as Plugin[],
     },
     reducers: {
-        //givePlugin
-        //addPlugin
-        //removePlugin
+        //savePlugin
+        //createPlugin
+        //removePlugin?
     },
     extraReducers: (builder) => {
         builder

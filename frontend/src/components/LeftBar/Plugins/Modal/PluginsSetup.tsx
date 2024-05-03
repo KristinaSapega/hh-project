@@ -7,6 +7,8 @@ import { RootState } from '../../../../store';
 import { Plugin } from '../../../../types';
 import CustomTabPanel from '../../../CustomTabPanel';
 import FormGenerator from '../../../FormGenerator';
+import fetchApplyPlugins from '../../../../api/fetchApplyPlugins';
+import { getUser } from '../../../../store/utils';
 
 function a11yProps(index: number) {
   return {
@@ -20,9 +22,14 @@ const buttonStyles = {
 };
 
 const PluginsSetup: FC = () => {
+  const user = getUser();
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
   const activeStands = useSelector((state: RootState) => state.tasks.stands);
   const plugins = useSelector((state: RootState) => state.plugins.plugins);
+  const pluginsById: Record<number, Plugin> = {};
+  for (const plugin of plugins) {
+    pluginsById[plugin.id] = plugin;
+  }
 
   const [value, setValue] = useState<number>(0);
 
@@ -66,6 +73,21 @@ const PluginsSetup: FC = () => {
     console.log(data);
     alert(JSON.stringify(data));
   };
+
+  const applyPlugins = async () => {
+    try {
+      await fetchApplyPlugins(user, activeStands, tasks.map(id => {
+        return {
+          type: pluginsById[id].type,
+          parameters: {
+            service: formsData[id][0]
+          }
+        }
+      }));
+    } catch (error) {
+      console.error('Произошла ошибка при применении плагинов:', error);
+    }
+  }
 
   return (
     <Box
@@ -148,6 +170,7 @@ const PluginsSetup: FC = () => {
           variant="contained"
           color="success"
           type="submit"
+          onClick={applyPlugins}
         >
           Применить
         </Button>

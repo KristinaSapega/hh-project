@@ -11,18 +11,11 @@ const tasksSlice = createSlice({
   reducers: {
     addTaskToQueue: (state, action) => {
       const task = action.payload;
-      return {
-        ...state,
-        tasks: [...state.tasks, task],
-      };
+      state.tasks.push(task);
     },
     removeTaskFromQueue: (state, action) => {
       const taskId = action.payload;
-      const filteredTasks = state.tasks.filter((id) => id !== taskId);
-      return {
-        ...state,
-        tasks: filteredTasks,
-      };
+      state.tasks = state.tasks.filter((id) => id !== taskId);
     },
     addStandToQueue: (state, action) => {
       const standId = action.payload;
