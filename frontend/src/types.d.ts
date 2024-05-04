@@ -1,5 +1,12 @@
 import { ReactNode } from 'react';
 
+// auth types
+
+export interface User {
+  login: string;
+  header: string;
+}
+
 // data types
 
 export interface Stand {
@@ -107,8 +114,8 @@ export interface HeaderProps {
 // Auth context
 
 export interface IAuthContext {
-  user: string | null;
-  login: (user: string) => void;
+  user: User | null;
+  login: (login: string, header: string) => void;
   logout: () => void;
 }
 

@@ -16,7 +16,11 @@ const RenderButtonCell: FC<{ params: GridCellParams; onClose: () => void }> = ({
   onClose,
 }) => {
   const { user } = useAuthContext();
-  const login = atob(user!).split(':')[0];
+
+  let login = null;
+  if (user) {
+    login = user.login;
+  }
 
   const standId = params.row.id;
 

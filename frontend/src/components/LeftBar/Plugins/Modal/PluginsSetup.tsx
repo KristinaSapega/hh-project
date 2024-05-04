@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material';
 
+import fetchApplyPlugins from '../../../../api/fetchApplyPlugins';
+import { useAuthContext } from '../../../../hooks/useAuthContext';
 import { RootState } from '../../../../store';
 import { Plugin } from '../../../../types';
 import CustomTabPanel from '../../../CustomTabPanel';
 import FormGenerator from '../../../FormGenerator';
-import fetchApplyPlugins from '../../../../api/fetchApplyPlugins';
-import { getUser } from '../../../../store/utils';
 
 function a11yProps(index: number) {
   return {
@@ -22,7 +22,13 @@ const buttonStyles = {
 };
 
 const PluginsSetup: FC = () => {
-  const user = getUser();
+  const { user } = useAuthContext();
+
+  let header = null;
+  if (user) {
+    header = user.header;
+  }
+
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
   const activeStands = useSelector((state: RootState) => state.tasks.stands);
   const plugins = useSelector((state: RootState) => state.plugins.plugins);
@@ -76,18 +82,22 @@ const PluginsSetup: FC = () => {
 
   const applyPlugins = async () => {
     try {
-      await fetchApplyPlugins(user, activeStands, tasks.map(id => {
-        return {
-          type: pluginsById[id].type,
-          parameters: {
-            service: formsData[id][0]
-          }
-        }
-      }));
+      await fetchApplyPlugins(
+        header as string,
+        activeStands,
+        tasks.map((id) => {
+          return {
+            type: pluginsById[id].type,
+            parameters: {
+              service: formsData[id][0],
+            },
+          };
+        }),
+      );
     } catch (error) {
       console.error('Произошла ошибка при применении плагинов:', error);
     }
-  }
+  };
 
   return (
     <Box

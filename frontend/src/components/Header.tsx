@@ -16,6 +16,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
+import { useAuthContext } from '../hooks/useAuthContext';
 import { routes } from '../routes/routes';
 import { HeaderProps } from '../types';
 
@@ -37,7 +38,14 @@ const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
   const pathname = location.pathname;
 
   // для перехода на другие страницы по клику на пункт меню
+
+  const { logout } = useAuthContext();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate(routes.login);
+  };
 
   return (
     <AppBar position="fixed">
@@ -108,10 +116,7 @@ const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
                   </MenuItem>
 
                   <MenuItem key="logout" onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      onClick={() => navigate(routes.login)}
-                    >
+                    <Typography textAlign="center" onClick={handleLogout}>
                       Logout
                     </Typography>
                   </MenuItem>

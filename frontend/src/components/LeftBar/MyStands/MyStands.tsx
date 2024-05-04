@@ -30,12 +30,15 @@ import StandsModal from '../../StandsModal';
 
 const MyStandsTable: FC = () => {
   const { user } = useAuthContext();
+
+  let login = null;
+  if (user) {
+    login = user.login;
+  }
   const navigate = useNavigate();
 
   const stands = useSelector((state: RootState) => state.stands.stands);
-  const ownStands = stands.filter(
-    (stand) => stand.takenBy === atob(user || '').split(':')[0],
-  );
+  const ownStands = stands.filter((stand) => stand.takenBy === login);
   const activeStands = useSelector((state: RootState) => state.tasks.stands);
 
   const [open, setOpen] = useState<boolean>(false);

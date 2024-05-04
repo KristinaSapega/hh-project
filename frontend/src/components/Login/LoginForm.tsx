@@ -60,9 +60,9 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
   const handleSubmit = () => {
     try {
       const convertUserData = btoa(`${formData.login}:${formData.password}`);
-      login(convertUserData);
+      login(formData.login, convertUserData);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+import { User } from '../types';
+
 const useLocalStorage = (
   key: string,
-): [string | null, Dispatch<SetStateAction<string | null>>] => {
-  const [value, setValue] = useState<string | null>(() => {
+): [User | null, Dispatch<SetStateAction<User | null>>] => {
+  const [value, setValue] = useState<User | null>(() => {
     try {
-      const data = localStorage.getItem(key);
+      const data: User | null = JSON.parse(localStorage.getItem(key) ?? '');
       return data || null;
     } catch (error) {
       console.log(error);
@@ -16,7 +18,7 @@ const useLocalStorage = (
   useEffect(() => {
     try {
       if (value) {
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
       } else {
         localStorage.removeItem(key);
       }

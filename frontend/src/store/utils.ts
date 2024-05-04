@@ -1,5 +1,5 @@
 export const getUser = () => {
-    const user = localStorage.getItem('user');
-    if (!user) throw new Error('Необходимо авторизоваться');
-    return user;
-}
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (!user.login) throw new Error('Необходимо авторизоваться');
+  return user;
+};
