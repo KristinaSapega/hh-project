@@ -1,13 +1,24 @@
 import { FC, useState } from 'react';
 
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 
 import { useAppSelector } from '../../../hooks/useAppSelector';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { RootState } from '../../../store';
 
+const menuItemStyles = {
+  fontSize: '12px',
+};
+
 const StandsList: FC = () => {
   const { user } = useAuthContext();
+  const [selectedStand, setSelectedStand] = useState<string | null>(null);
+
   let login = null;
   if (user) {
     login = user.login;
@@ -17,47 +28,33 @@ const StandsList: FC = () => {
     (state: RootState) => state.stands.stands,
   ).filter((stand) => stand.takenBy === login);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectedStand(event.target.value as string);
   };
 
   return (
-    <Box>
-      <Button
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        size='small'
-        color='inherit'
-        onClick={handleClick}
-      >
-        Выберите стенд
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
+    <FormControl fullWidth size="small" sx={{ p: '10px', height: '50px' }}>
+      <Select
+        displayEmpty
+        value={selectedStand ? selectedStand : ''}
+        onChange={handleChange}
+        disabled={!ownStands.length}
+        sx={{
+          maxWidth: '100%',
+          overflow: 'hidden',
+          fontSize: '12px',
         }}
       >
-        {ownStands.map((stand) => {
-          const { id, host } = stand;
-          return (
-            <MenuItem key={id} onClick={handleClose}>
-              {host}
-            </MenuItem>
-          );
-        })}
-      </Menu>
-    </Box>
+        <MenuItem disabled value="" sx={{ ...menuItemStyles, display: 'none' }}>
+          Выберите стенд
+        </MenuItem>
+        {ownStands.map((stand) => (
+          <MenuItem key={stand.id} value={stand.id} sx={{ ...menuItemStyles }}>
+            {stand.host}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
