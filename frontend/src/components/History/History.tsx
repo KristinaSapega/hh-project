@@ -4,7 +4,6 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
 
 import { HistoryProps } from '../../types';
-import JobsContainer from './Jobs/JobsContainer';
 import StandsList from './Jobs/StandsList';
 
 const History: FC<HistoryProps> = ({ isVisible, setIsVisible }) => {
@@ -29,13 +28,8 @@ const History: FC<HistoryProps> = ({ isVisible, setIsVisible }) => {
               <ArrowRightOutlined />
             </IconButton>
 
-            <Box sx={{ textAlign: 'center', width: '100%' }}>
-              <StandsList />
-              {/* <Typography>История джобов</Typography> */}
-            </Box>
+            <StandsList />
           </Box>
-
-          <JobsContainer />
         </Box>
       ) : (
         <Box
