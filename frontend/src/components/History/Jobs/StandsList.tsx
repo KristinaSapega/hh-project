@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
   FormControl,
@@ -15,9 +15,13 @@ const menuItemStyles = {
   fontSize: '12px',
 };
 
-const StandsList: FC = () => {
+interface StandsListProps {
+  selectedStand: string;
+  handleChange: (e: SelectChangeEvent) => void;
+}
+
+const StandsList: FC<StandsListProps> = ({ selectedStand, handleChange }) => {
   const { user } = useAuthContext();
-  const [selectedStand, setSelectedStand] = useState<string | null>(null);
 
   let login = null;
   if (user) {
@@ -28,15 +32,11 @@ const StandsList: FC = () => {
     (state: RootState) => state.stands.stands,
   ).filter((stand) => stand.takenBy === login);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedStand(event.target.value as string);
-  };
-
   return (
     <FormControl fullWidth size="small" sx={{ p: '10px', height: '50px' }}>
       <Select
         displayEmpty
-        value={selectedStand ? selectedStand : ''}
+        value={selectedStand}
         onChange={handleChange}
         disabled={!ownStands.length}
         sx={{
