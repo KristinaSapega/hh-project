@@ -1,4 +1,4 @@
-- name: Deploy services
+- name: deploy services
   hosts: all
   become_user: crab-stand
   become: yes

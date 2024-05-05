@@ -1,5 +1,6 @@
 package com.example.crab.service.job;
 
+import com.example.crab.entity.Job;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;

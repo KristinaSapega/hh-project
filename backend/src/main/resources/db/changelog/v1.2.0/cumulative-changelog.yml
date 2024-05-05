@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-tag-1.2.0
+      author: mary_kom
+      changes:
+        - tagDatabase:
+            tag: v1.2.0
+  - include:
+      file: create-table-jobs.yml
+      relativeToChangelogFile: true

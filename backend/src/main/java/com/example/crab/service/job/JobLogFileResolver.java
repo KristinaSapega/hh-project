@@ -1,5 +1,6 @@
 package com.example.crab.service.job;
 
+import com.example.crab.entity.Job;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,10 +25,10 @@ public class JobLogFileResolver {
 
   public Path resolve(Job job) {
     return LOGS_DIR.resolve("%d-%s-%s-%s".formatted(
-      job.id(),
-      job.standAddress(), 
-      job.taskType(), 
-      TIMESTAMP_FORMATTER.format(job.createdAt())));
+      job.getId(),
+      job.getStand().getHost(),
+      job.getTaskName(),
+      TIMESTAMP_FORMATTER.format(job.getCreatedAt())));
   }
 
 }
