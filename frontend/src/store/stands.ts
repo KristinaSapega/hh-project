@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import { fetchBookStand } from '../api/fetchBookStand';
 import { fetchReleaseStand } from '../api/fetchReleaseStand';
