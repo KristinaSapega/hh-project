@@ -6,7 +6,7 @@ import fetchStands from '../api/fetchStands';
 import { Stand } from '../types';
 import { getUser } from './utils';
 
-export const apiGetStands = createAsyncThunk(
+export const apiGetStands = createAsyncThunk<Stand[], void>(
   'stands/apiGetStands',
   async () => {
     const { header } = getUser();
