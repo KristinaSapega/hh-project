@@ -1,7 +1,8 @@
 import { FunctionComponent, ReactNode, useState } from 'react';
 
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
+import History from '../History/History';
 import LeftBar from '../LeftBar/LeftBar';
 import Logs from '../Logs/Logs';
 
@@ -16,7 +17,8 @@ const scrollStyles = {
 const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
   children,
 }) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLogsVisible, setIsLogsVisible] = useState<boolean>(false);
+  const [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(false);
 
   return (
     <Box
@@ -25,8 +27,8 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
         height: 'calc(100vh - 85px)',
         gap: '20px',
         margin: '0 20px',
-        gridTemplateColumns: '450px 50fr 40px',
-        gridTemplateRows: isVisible ? 'auto 300px' : 'auto 40px',
+        gridTemplateColumns: isHistoryVisible ? '450px 50fr 200px' : '450px 50fr 40px',
+        gridTemplateRows: isLogsVisible ? 'auto 300px' : 'auto 40px',
         gridTemplateAreas: `
 "left content right"
 "logs logs logs"
@@ -61,17 +63,17 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
           flexDirection: 'column',
         }}
       >
-        <Typography
+        <Box
           sx={{
-            textOrientation: 'sideways',
-            textAlign: 'center',
-            writingMode: 'sideways-lr',
             borderRadius: '5px',
-            padding: '15px 5px',
+            ...scrollStyles,
           }}
         >
-          History
-        </Typography>
+          <History
+            isVisible={isHistoryVisible}
+            setIsVisible={() => setIsHistoryVisible(!isHistoryVisible)}
+          />
+        </Box>
       </Paper>
 
       <Paper
@@ -85,8 +87,8 @@ const AppLayout: FunctionComponent<{ children?: ReactNode }> = ({
         }}
       >
         <Logs
-          isVisible={isVisible}
-          setIsVisible={() => setIsVisible(!isVisible)}
+          isVisible={isLogsVisible}
+          setIsVisible={() => setIsLogsVisible(!isLogsVisible)}
         />
       </Paper>
     </Box>
