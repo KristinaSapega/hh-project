@@ -28,7 +28,6 @@ const History: FC<HistoryProps> = ({ isVisible, setIsVisible }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'start',
-              mb: 2,
             }}
           >
             <IconButton onClick={setIsVisible}>
