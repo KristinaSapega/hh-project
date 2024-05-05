@@ -121,6 +121,13 @@ export interface HeaderProps {
   toggleTheme: () => void;
 }
 
+// History components types
+
+export interface HistoryProps {
+  isVisible: boolean;
+  setIsVisible: () => void;
+}
+
 // Auth context
 
 export interface IAuthContext {
