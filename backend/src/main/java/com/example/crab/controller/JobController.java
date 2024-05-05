@@ -3,6 +3,8 @@ package com.example.crab.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.crab.service.job.Job;
+import com.example.crab.transport.job.JobDto;
 import com.example.crab.service.job.JobService;
 import com.example.crab.transport.job.BatchJobStartRequest;
 
@@ -46,8 +48,8 @@ public class JobController {
   @ApiResponse(responseCode = "400", description = "Ошибка во входных данных", content = @Content)
   @PostMapping("/api/jobs")
   @ResponseStatus(HttpStatus.CREATED)
-  public void runJobs(@RequestBody BatchJobStartRequest request) {
-    jobService.runJobs(request);
+  public void runJobs(@RequestBody BatchJobStartRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    jobService.runJobs(request, userDetails.getUsername());
   }
 
   @Operation(
@@ -84,7 +86,7 @@ public class JobController {
   @ApiResponse(responseCode = "404", description = "Стенд не найден", content = @Content)
   @ApiResponse(responseCode = "400", description = "Некорректный standId", content = @Content)
   @GetMapping("/api/jobs")
-  public List<Job> getJobs(@Parameter(
+  public List<JobDto> getJobs(@Parameter(
                             name = "standId", 
                             description  = "Айди стенда", 
                             required = true) 

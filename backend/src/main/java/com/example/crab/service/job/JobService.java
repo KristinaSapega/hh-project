@@ -1,13 +1,19 @@
 package com.example.crab.service.job;
 
+import com.example.crab.entity.Stand;
+import com.example.crab.exception.controller.UserNotAllowedException;
+import com.example.crab.persistence.JobRepository;
+import com.example.crab.entity.Job;
+import com.example.crab.persistence.StandRepository;
+import com.example.crab.transport.job.JobDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
@@ -21,49 +27,70 @@ public class JobService {
   private final JobExecutor executor;
   private final JobLogFileResolver logFileResolver;
   private final StandsService standsService;
+  private final JobRepository jobRepository;
+  private final StandRepository standRepository;
+  private final ObjectMapper objectMapper;
 
-  private final List<Job> jobs;
 
-  public JobService(JobExecutor executor, JobLogFileResolver logFileResolver, StandsService standsService) {
+
+  public JobService(JobExecutor executor, JobLogFileResolver logFileResolver, StandsService standsService, JobRepository jobRepository,
+      StandRepository standRepository
+  ) {
     this.executor = executor;
     this.logFileResolver = logFileResolver;
     this.standsService = standsService;
-    jobs = new ArrayList<>();
+    this.jobRepository = jobRepository;
+    this.standRepository = standRepository;
+    this.objectMapper = new ObjectMapper();
   }
 
-  public void runJobs(BatchJobStartRequest request) {
-    var newJobs = IntStream.range(0, request.stands().size() * request.tasks().size())
-      .mapToObj(Integer::valueOf)
-      .flatMap(standIdIndex -> request.tasks().stream()
-        .map(task -> 
-          new Job(
-            jobs.size() + standIdIndex,
-            standsService.getStand(request.stands().get(standIdIndex)).host(),
-            task.name(),
-            Instant.now(),
-            Optional.of(task.parameters()))))
-      .toList();
+  public void runJobs(BatchJobStartRequest request, String user) {
+    List<Job> newJobs = request.stands().stream()
+        .flatMap(stand -> request.tasks().stream()
+            .map(task -> {
+              if (!standsService.getStand(stand).takenBy().equals(user)) {
+                throw new UserNotAllowedException();
+              }
+              Job job = new Job();
+              Stand st = standRepository.findById(stand).orElseThrow(() -> new ResourceNotFoundException());
+              job.setStand(st);
+              job.setTaskName(task.name());
+              job.setCreatedAt(Instant.now());
+              job.setParameters(toJson(task.parameters()));
+              jobRepository.save(job);
+              return job;
+            }))
+        .toList();
     executor.runJobs(newJobs);
-    jobs.addAll(newJobs);
   }
 
   public String getJobLogs(int jobId, long offset) {
+    Job job = jobRepository.findById(jobId).orElseThrow(() -> new ResourceNotFoundException());
     try {
-      return Files.readAllLines(logFileResolver.resolve(jobs.get(jobId))).stream()
-        .skip(offset)
-        .collect(Collectors.joining("\n"));
+      return Files.readAllLines(logFileResolver.resolve(job)).stream()
+          .skip(offset)
+          .collect(Collectors.joining("\n"));
     } catch (IndexOutOfBoundsException e) {
       throw new ResourceNotFoundException("No job with id = " + jobId, e);
     } catch (IOException e) {
       throw new RuntimeException("IOException on logs read", e);
-    }
+  }
   }
 
-  public List<Job> getStandJobs(int standId) {
-    var standAddress = standsService.getStand(standId).host();
-    return jobs.stream()
-      .filter(job -> job.standAddress().equals(standAddress))
-      .toList();
+  public List<JobDto> getStandJobs(int standId) {
+    Stand stand = standRepository.findById(standId).orElseThrow(() -> new ResourceNotFoundException());
+    return jobRepository.findByStand(stand).stream()
+        .map(JobDto::fromEntity)
+        .toList();
   }
-  
+
+  private String toJson(Object object) {
+    String json = null;
+    try {
+      json = objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+    return json;
+  }
 }
