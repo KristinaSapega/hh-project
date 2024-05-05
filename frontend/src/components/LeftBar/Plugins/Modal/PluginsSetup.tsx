@@ -51,35 +51,6 @@ const PluginsSetup: FC = () => {
     setValue(newValue);
   };
 
-  const handleSubmit = (event: SyntheticEvent) => {
-    event.preventDefault();
-
-    const tasksData = Object.entries(formsData).reduce(
-      (acc: unknown[], [key, value]) => {
-        const plugin = plugins.find(({ id }) => id === Number(key)) as Plugin;
-        const { type } = plugin;
-
-        return [
-          ...acc,
-          {
-            type,
-            parameters: {
-              services: value,
-            },
-          },
-        ];
-      },
-      [],
-    );
-
-    const data = {
-      stands: activeStands,
-      tasks: tasksData,
-    };
-    console.log(data);
-    alert(JSON.stringify(data));
-  };
-
   const applyPlugins = async () => {
     try {
       await fetchApplyPlugins(
@@ -107,8 +78,6 @@ const PluginsSetup: FC = () => {
         flexDirection: 'column',
         height: '100%',
       }}
-      component="form"
-      onSubmit={handleSubmit}
     >
       <Box>
         <Typography variant="h5" align="center">
