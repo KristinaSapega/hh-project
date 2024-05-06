@@ -39,7 +39,7 @@ public class JobService {
           new Job(
             jobs.size() + standIdIndex,
             standsService.getStand(request.stands().get(standIdIndex)).host(),
-            task.type(),
+            task.name(),
             Instant.now(),
             Optional.of(task.parameters()))))
       .toList();

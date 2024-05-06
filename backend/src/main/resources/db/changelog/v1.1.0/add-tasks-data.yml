@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-tasks-data
+      author: klive_rogen
+      changes:
+        - insert:
+            tableName: tasks
+            columns:
+              - column:
+                  name: name
+                  value: 'deployServices'
+              - column:
+                  name: description
+                  value: 'Плейбук для развертывания нескольких сервисов из git-репозиториев'
+              - column:
+                  name: playbook_path
+                  value: 'ansible/playbook/deployServices.yml'
+              - column:
+                  name: params_schema_path
+                  value: 'ansible/playbook_params_schema/deployServicesSchema.json'
+        - insert:
+            tableName: tasks
+            columns:
+              - column:
+                  name: name
+                  value: 'ping'
+              - column:
+                  name: description
+                  value: 'Плейбук для проверки активности стенда'
+              - column:
+                  name: playbook_path
+                  value: 'ansible/playbook/ping.yml'
+        - insert:
+            tableName: tasks
+            columns:
+              - column:
+                  name: name
+                  value: 'removeServices'
+              - column:
+                  name: description
+                  value: 'Плейбук для удаления контейнеров сервисов со стенда'
+              - column:
+                  name: playbook_path
+                  value: 'ansible/playbook/removeServices.yml'
+        - insert:
+            tableName: tasks
+            columns:
+              - column:
+                  name: name
+                  value: 'standInit'
+              - column:
+                  name: description
+                  value: 'Плейбук для инициализации стенда'
+              - column:
+                  name: playbook_path
+                  value: 'ansible/playbook/standInit.yml'

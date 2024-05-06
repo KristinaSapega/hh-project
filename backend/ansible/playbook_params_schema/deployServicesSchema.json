@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "repo": {
+            "type": "string"
+          },
+          "repoOwner": {
+            "type": "string"
+          },
+          "branch": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo",
+          "repoOwner",
+          "branch"
+        ]
+      }
+    }
+  },
+  "required": [
+    "services"
+  ]
+}
