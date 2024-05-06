@@ -6,16 +6,10 @@ interface ApplyPluginsRequest {
     tasks: Task[];
 }
 
-// interface Service {
-//     repo: string;
-//     repoOwner: string;
-//     branch: string;
-// }
-
 export interface ApplyPluginsResponse {
     stands: number[];   
     tasks: {
-        type: string;
+        name: string;
         // eslint-disable-next-line @typescript-eslint/ban-types
         parameters?: {};
     }[]
@@ -43,6 +37,5 @@ export const fetchApplyPlugins = async (user: string, standIds: number[], tasks:
 
     return await response.json() as ApplyPluginsResponse;
 };
-
 
 export default fetchApplyPlugins;
