@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { BASE_BACKEND_URL } from '../../../routes/routes';
@@ -10,7 +10,6 @@ const formatDate = (dateString: string) => {
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
 
-  // return `${hours}:${minutes} ${day}.${month}.${year}`;
   return `${hours}:${minutes}`;
 };
 
@@ -22,8 +21,6 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
   const [jobs, setJobs] = useState<{ taskType: string; createdAt: string }[]>(
     [],
   );
-
-  const theme = useTheme();
 
   const { user } = useAuthContext();
   let header = null;
@@ -58,28 +55,29 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
       sx={{
         padding: '5px',
         margin: '10px',
-        border: `1px solid ${theme.palette.text.secondary}`,
-        borderRadius: '5px',
       }}
     >
-      {jobs.map((job, index) => {
-        return (
-          <Box
-            key={index}
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              margin: '5px',
-              padding: '5px',
-            }}
-          >
-            <Typography fontSize={12}>{job.taskType}</Typography>
+      {jobs.length ? (
+        jobs.map((job, index) => {
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: .5,
+              }}
+            >
+              <Typography fontSize={12}>{job.taskType}</Typography>
 
-            <Typography fontSize={12}>{formatDate(job.createdAt)}</Typography>
-          </Box>
-        );
-      })}
+              <Typography fontSize={12}>{formatDate(job.createdAt)}</Typography>
+            </Box>
+          );
+        })
+      ) : (
+        <Typography fontSize={12}>Ничего не выполнялось на стенде</Typography>
+      )}
     </Box>
   );
 };
