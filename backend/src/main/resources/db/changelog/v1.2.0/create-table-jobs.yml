@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-jobs
+      author: mary_kom
+      changes:
+        - createTable:
+            tableName: jobs
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable:  false
+              - column:
+                  name: stand_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_stands_id
+                    references: stands(id)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: task_name
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parameters
+                  type: VARCHAR(500)
+        - createIndex:
+            columns:
+              - column:
+                  name: id
+            indexName: idx_stand_address
+            tableName: stands

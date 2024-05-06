@@ -3,8 +3,10 @@ package com.example.crab.service;
 import com.example.crab.entity.Stand;
 import com.example.crab.entity.User;
 import com.example.crab.exception.controller.UserNotAllowedException;
+import com.example.crab.persistence.JobRepository;
 import com.example.crab.persistence.StandRepository;
 import com.example.crab.persistence.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,12 @@ public class StandsService {
 
   private final StandRepository standRepository;
   private final UserRepository userRepository;
+  private final JobRepository jobRepository;
 
-  public StandsService(StandRepository standRepository, UserRepository userRepository) {
+  public StandsService(StandRepository standRepository, UserRepository userRepository, JobRepository jobRepository) {
     this.standRepository = standRepository;
     this.userRepository = userRepository;
+    this.jobRepository = jobRepository;
   }
 
   public StandListDto getAllStands() {
@@ -41,6 +45,7 @@ public class StandsService {
         });
   }
 
+  @Transactional
   public StandDto updateStandTakenBy(Integer standId, String emailFromBody, String emailAuthUser) {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> new ResourceNotFoundException());
     if (stand.getTakenBy() == null)
@@ -49,8 +54,10 @@ public class StandsService {
       else
         throw new UserNotAllowedException();
     else
-      if (stand.getTakenBy().getEmail().equals(emailAuthUser) && emailFromBody == null)
+      if (stand.getTakenBy().getEmail().equals(emailAuthUser) && emailFromBody == null) {
         stand.setTakenBy(null);
+        jobRepository.deleteJobByStand(stand);
+      }
       else
         throw new UserNotAllowedException();
     return StandDto.fromEntity(standRepository.save(stand));

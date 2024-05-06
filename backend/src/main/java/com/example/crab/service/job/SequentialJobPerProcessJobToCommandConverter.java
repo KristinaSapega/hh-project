@@ -1,5 +1,6 @@
 package com.example.crab.service.job;
 
+import com.example.crab.entity.Job;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -49,11 +50,9 @@ public class SequentialJobPerProcessJobToCommandConverter implements JobToComman
         .orElse(""),
       sshUser.map("--user %s "::formatted)
         .orElse(""),
-      job.standAddress(),
-      TASKS_DIR.resolve(job.taskType() + ".yml").toAbsolutePath().toString(),
-      job.parameters()
-        .map(parameters -> "--extra-vars='%s' ".formatted(toJsonUnchecked(parameters)))
-        .orElse(""),
+      job.getStand().getHost(),
+      TASKS_DIR.resolve(job.getTaskName() + ".yml").toAbsolutePath().toString(),
+        "--extra-vars='%s' ".formatted(job.getParameters()),
       logResolver.resolve(job).toAbsolutePath().toString());
   }
 
