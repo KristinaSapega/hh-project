@@ -99,9 +99,8 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
       </Box>
       {fields &&
         [...Array(formsCount)].map((_, index) => (
-          <Box>
+          <Box key={index}>
             <Box
-              key={index}
               sx={{
                 margin: '20px 0',
                 padding: '30px',
