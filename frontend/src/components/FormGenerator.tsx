@@ -99,86 +99,82 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
       </Box>
       {fields &&
         [...Array(formsCount)].map((_, index) => (
-          <Box key={index}>
-            <Box
-              sx={{
-                margin: '20px 0',
-                padding: '30px',
-                pt: '10px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.7)',
-              }}
-            >
-              {fields.map(([field, { type }]) => {
-                switch (type) {
-                  case 'string':
-                    return (
-                      <TextField
-                        key={field}
-                        label={field}
-                        placeholder={field}
-                        name={field}
-                        value={
-                          (formData[index] && formData[index][field]) || ''
-                        }
-                        onChange={handleInputChange(index)}
-                        fullWidth
-                        required
-                        sx={{ margin: '10px 0' }}
-                      />
-                    );
-                  // case 'checkbox':
-                  //   return (
-                  //     <FormControlLabel
-                  //       key={field.name}
-                  //       control={
-                  //         <Checkbox
-                  //           checked={
-                  //             !!(formData[index] && formData[index][field.name])
-                  //           }
-                  //           onChange={handleCheckboxChange(index)}
-                  //           name={field.name}
-                  //           required
-                  //         />
-                  //       }
-                  //       label={field.placeholder}
-                  //     />
-                  //   );
-                  // case 'select':
-                  //   return (
-                  //     <Select
-                  //       key={field.name}
-                  //       value={
-                  //         (formData[index] &&
-                  //           (formData[index][field.name] as string)) ||
-                  //         ''
-                  //       }
-                  //       onChange={handleSelectChange(index)}
-                  //       fullWidth
-                  //       label={field.placeholder}
-                  //       name={field.name}
-                  //       required
-                  //     >
-                  //       {field.options?.map((option) => (
-                  //         <MenuItem key={option} value={option}>
-                  //           {option}
-                  //         </MenuItem>
-                  //       ))}
-                  //     </Select>
-                  //   );
-                  default:
-                    return null;
-                }
-              })}
-            </Box>
-
-            <Tooltip title="Добавить еще одну таску">
-              <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
-                <AddOutlined />
-              </IconButton>
-            </Tooltip>
+          <Box
+            key={index}
+            sx={{
+              margin: '20px 0',
+              padding: '30px',
+              pt: '10px',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.7)',
+            }}
+          >
+            {fields.map(([field, { type }]) => {
+              switch (type) {
+                case 'string':
+                  return (
+                    <TextField
+                      key={field}
+                      label={field}
+                      placeholder={field}
+                      name={field}
+                      value={(formData[index] && formData[index][field]) || ''}
+                      onChange={handleInputChange(index)}
+                      fullWidth
+                      required
+                      sx={{ margin: '10px 0' }}
+                    />
+                  );
+                // case 'checkbox':
+                //   return (
+                //     <FormControlLabel
+                //       key={field.name}
+                //       control={
+                //         <Checkbox
+                //           checked={
+                //             !!(formData[index] && formData[index][field.name])
+                //           }
+                //           onChange={handleCheckboxChange(index)}
+                //           name={field.name}
+                //           required
+                //         />
+                //       }
+                //       label={field.placeholder}
+                //     />
+                //   );
+                // case 'select':
+                //   return (
+                //     <Select
+                //       key={field.name}
+                //       value={
+                //         (formData[index] &&
+                //           (formData[index][field.name] as string)) ||
+                //         ''
+                //       }
+                //       onChange={handleSelectChange(index)}
+                //       fullWidth
+                //       label={field.placeholder}
+                //       name={field.name}
+                //       required
+                //     >
+                //       {field.options?.map((option) => (
+                //         <MenuItem key={option} value={option}>
+                //           {option}
+                //         </MenuItem>
+                //       ))}
+                //     </Select>
+                //   );
+                default:
+                  return null;
+              }
+            })}
           </Box>
         ))}
+      <Tooltip title="Добавить еще одну таску">
+        <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
+          <AddOutlined />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
