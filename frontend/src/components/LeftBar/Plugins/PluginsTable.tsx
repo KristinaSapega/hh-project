@@ -81,7 +81,7 @@ const PluginsTable: FC = () => {
                   >
                     <TableCell align="center" sx={{ ...ellipsisStyles }}>
                       <Tooltip title={description}>
-                        <Typography fontSize='.875rem'>{name}</Typography>
+                        <Typography fontSize=".875rem">{name}</Typography>
                       </Tooltip>
                     </TableCell>
                     <TableCell align="center">
