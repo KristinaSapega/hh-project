@@ -1,38 +1,46 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import {
   ArrowDropDownOutlined,
   ArrowDropUpOutlined,
 } from '@mui/icons-material';
 import { Box, Collapse, IconButton, Tab, Tabs } from '@mui/material';
-import { LogsProps, Stand} from '../../types';
+import { LogsProps } from '../../types';
 import { RootState } from '../../store';
 import { apiGetStands } from '../../store/stands';
+import fetchLogs from '../../api/fetchLogs';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { useAuth } from '../../hooks/useAuth';
+import fetchContainers from '../../api/fetchContainers';
 
 
-const Logs: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
-  const dispatch = useDispatch();
-  const stands = useSelector((state: RootState) => state.stands.stands); 
-  const [, setFilteredStands] = useState<Stand[]>([]); 
+const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
+  const { user } = useAuth();
+  const dispatch = useAppDispatch();
+  const stands = useAppSelector((state: RootState) => state.stands.stands); 
 
+  const [logs, setLogs] = useState<string[]>([]);
+  
   useEffect(() => {
     dispatch(apiGetStands());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (stands.length > 0) {
-      const userStands = stands.filter((stand) => stand.takenBy === 'User 1'); 
-      setFilteredStands(userStands);
-    }
-  }, [stands]);
-
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(0);
 
-  const handleStandClick = (standId: number) => {
+  const handleStandClick = async (standId: number) => {
     setActiveStand(activeStand === standId ? null : standId);
-    setActiveTab(0); // Сбрасываем внутреннюю вкладку при выборе нового стенда
+    setActiveTab(0);
+    try {
+      const containers = await fetchContainers(user!.header, standId);
+      const allLogs = await Promise.all(containers.map(async c => {
+        return await fetchLogs(standId, c.id, user!.header)
+      }))
+      setLogs(allLogs.flat()); 
+    } catch (error) {
+      console.error('Ошибка при загрузке логов:', error);
+    }
   };
 
   const handleInnerTabChange = (
@@ -91,9 +99,9 @@ const Logs: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
               >
               </Tabs>
               {activeTab === 0 && (
-                <div>
-                  вывод логов {stand.id}
-                </div>
+                logs.map(line => (
+                  <div>{line}</div>
+                ))
               )}
               {/* {activeTab === 1 && (
                 <div>
@@ -108,4 +116,4 @@ const Logs: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   );
 };
 
-export default Logs;
+export default Logging;
