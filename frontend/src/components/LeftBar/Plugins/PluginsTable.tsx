@@ -54,7 +54,12 @@ const PluginsTable: FC = () => {
     <>
       {plugins ? (
         <TableContainer>
-          <Table size="small">
+          <Table
+            size="small"
+            sx={{
+              width: '100%',
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell align="center">Название</TableCell>
@@ -76,7 +81,7 @@ const PluginsTable: FC = () => {
                   >
                     <TableCell align="center" sx={{ ...ellipsisStyles }}>
                       <Tooltip title={description}>
-                        <Typography>{name}</Typography>
+                        <Typography fontSize='.875rem'>{name}</Typography>
                       </Tooltip>
                     </TableCell>
                     <TableCell align="center">
