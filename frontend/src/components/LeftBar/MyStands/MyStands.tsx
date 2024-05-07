@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ import { LogoutOutlined, OpenInNew } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -51,19 +50,24 @@ const MyStandsTable: FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleLeaveStand = (id: number) => () => {
+  const handleLeaveStand = (id: number) => (event: SyntheticEvent) => {
+    event.stopPropagation();
     dispatch(apiLeaveStand(id));
+    dispatch(removeStandFromQueue(id));
   };
 
-  const handleChange =
-    (standId: number) => (event: ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked;
-      if (checked) {
-        dispatch(addStandToQueue(standId));
-      } else {
-        dispatch(removeStandFromQueue(standId));
-      }
-    };
+  const handleOpenStandPage = (id: number) => (event: SyntheticEvent) => {
+    event.stopPropagation();
+    navigate(routes.stand.replace(':id', id.toString()));
+  };
+
+  const handleChange = (id: number) => () => {
+    if (!activeStands.includes(id)) {
+      dispatch(addStandToQueue(id));
+    } else {
+      dispatch(removeStandFromQueue(id));
+    }
+  };
 
   return (
     <>
@@ -78,83 +82,77 @@ const MyStandsTable: FC = () => {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" />
                   <TableCell align="center">Хост</TableCell>
                   <TableCell align="center">Статус</TableCell>
                   <TableCell align="center">Действия</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {ownStands.map((stand) => (
-                  <TableRow key={stand.id} data-id={stand.id}>
-                    <TableCell align="center">
-                      <Tooltip title="Выбрать стенд">
-                        <Checkbox
-                          sx={{ p: 0 }}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                          onChange={handleChange(stand.id)}
-                          checked={activeStands.includes(stand.id)}
-                        />
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell
-                      align="center"
+                {ownStands.map((stand) => {
+                  const { id, status, host } = stand;
+                  return (
+                    <TableRow
+                      key={id}
+                      data-id={id}
                       sx={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        backgroundColor: activeStands.includes(id)
+                          ? theme.palette.primary.main
+                          : theme.palette.background.paper,
                       }}
+                      onClick={handleChange(id)}
                     >
-                      {stand.host}
-                    </TableCell>
-                    <TableCell align="center">
-                      <ElementStatus status={stand.status} />
-                    </TableCell>
-                    <TableCell align="center" sx={{ padding: 0 }}>
-                      <Box
+                      <TableCell
+                        align="center"
                         sx={{
-                          '&:focus': {
-                            outline: 'none',
-                          },
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                         }}
                       >
-                        <Tooltip title="Освободить стенд">
-                          <IconButton
-                            size="small"
-                            sx={{
-                              padding: '2px',
-                              color: theme.palette.text.secondary,
-                            }}
-                            onClick={handleLeaveStand(stand.id)}
-                          >
-                            <LogoutOutlined />
-                          </IconButton>
-                        </Tooltip>
-                        {stand.status === 'running' && (
-                          <Tooltip title="Открыть страницу стенда">
+                        {host}
+                      </TableCell>
+                      <TableCell align="center">
+                        <ElementStatus status={status} />
+                      </TableCell>
+                      <TableCell align="center" sx={{ padding: 0 }}>
+                        <Box
+                          sx={{
+                            '&:focus': {
+                              outline: 'none',
+                            },
+                          }}
+                        >
+                          <Tooltip title="Освободить стенд">
                             <IconButton
                               size="small"
                               sx={{
                                 padding: '2px',
                                 color: theme.palette.text.secondary,
                               }}
-                              onClick={() => {
-                                navigate(
-                                  routes.stand.replace(
-                                    ':id',
-                                    stand.id.toString(),
-                                  ),
-                                );
-                              }}
+                              onClick={handleLeaveStand(id)}
                             >
-                              <OpenInNew />
+                              <LogoutOutlined />
                             </IconButton>
                           </Tooltip>
-                        )}
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          {status === 'running' && (
+                            <Tooltip title="Открыть страницу стенда">
+                              <IconButton
+                                size="small"
+                                sx={{
+                                  padding: '2px',
+                                  color: theme.palette.text.secondary,
+                                }}
+                                onClick={handleOpenStandPage(id)}
+                              >
+                                <OpenInNew />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
