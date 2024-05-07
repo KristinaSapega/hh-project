@@ -84,7 +84,7 @@ const PluginsTable: FC = () => {
                         <Typography fontSize=".875rem">{name}</Typography>
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" sx={{ p: 0 }}>
                       <IconButton
                         size="small"
                         onClick={handleOpenPluginsPage(id)}
