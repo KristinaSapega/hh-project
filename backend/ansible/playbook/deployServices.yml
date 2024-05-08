@@ -6,9 +6,14 @@
     services: "{{ services }}"
   tasks:
     - name: stop existing containers with the same name
-      command: sudo docker-compose -f "/home/crab-stand/services/{{ item.repo }}/docker-compose.yml" down
+      community.docker.docker_compose_v2:
+        project_src: "/home/crab-stand/services/{{ item.repo }}"
+        project_name: "{{ item.repo }}"
+        state: absent
+        remove_images: all
       loop: "{{ services }}"
-      ignore_errors: yes
+      ignore_errors: true 
+
 
     - name: clone repositories
       ansible.builtin.git:
