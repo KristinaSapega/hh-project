@@ -1,5 +1,6 @@
 package com.example.crab.controller;
 
+import com.example.crab.transport.ansibleLog.AnsibleReport;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,22 @@ public class JobController {
                            @RequestParam(required = false, defaultValue = "0") long offset) {
 
     return jobService.getJobLogs(jobId, offset);
+  }
+
+  @Operation(
+      summary = "Получение логов джоба в виде объекта",
+      description = "Логи выполнения джоба в формате объекта"
+  )
+  @ApiResponse(
+      responseCode = "200",
+      description = "Запущенная джоба найдена",
+      content = {@Content(mediaType = "text/plain")}
+  )
+  @ApiResponse(responseCode = "404", description = "Джоба не найдена", content = @Content)
+  @ApiResponse(responseCode = "400", description = "Некорректный jobId", content = @Content)
+  @GetMapping("/api/jobs/{jobId}/logs/json")
+  public AnsibleReport getJobLogs(@PathVariable int jobId) {
+    return jobService.getJobLogsJson(jobId);
   }
 
   @Operation(
