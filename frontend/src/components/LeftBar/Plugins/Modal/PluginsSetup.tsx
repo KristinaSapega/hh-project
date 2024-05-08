@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, FormEvent, SyntheticEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material';
@@ -21,7 +21,7 @@ const buttonStyles = {
   width: 150,
 };
 
-const PluginsSetup: FC = () => {
+const PluginsSetup: FC<{ closeModal: () => void }> = ({ closeModal }) => {
   const { user } = useAuthContext();
 
   let header = null;
@@ -51,23 +51,27 @@ const PluginsSetup: FC = () => {
     setValue(newValue);
   };
 
-  const applyPlugins = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     try {
       await fetchApplyPlugins(
         header as string,
         activeStands,
         tasks.map((id) => {
           return {
-            type: pluginsById[id].type,
-            parameters: {
-              service: formsData[id][0],
-            },
+            name: pluginsById[id].name,
+            parameters: formsData[id].length
+              ? {
+                  services: formsData[id],
+                }
+              : {},
           };
         }),
       );
     } catch (error) {
       console.error('Произошла ошибка при применении плагинов:', error);
     }
+    closeModal();
   };
 
   return (
@@ -78,6 +82,8 @@ const PluginsSetup: FC = () => {
         flexDirection: 'column',
         height: '100%',
       }}
+      component="form"
+      onSubmit={handleSubmit}
     >
       <Box>
         <Typography variant="h5" align="center">
@@ -95,7 +101,7 @@ const PluginsSetup: FC = () => {
                   (plugin) => plugin.id === taskId,
                 ) as Plugin;
                 return (
-                  <Tab key={taskId} label={plugin.type} {...a11yProps(value)} />
+                  <Tab key={taskId} label={plugin.name} {...a11yProps(value)} />
                 );
               })}
             </Tabs>
@@ -149,7 +155,6 @@ const PluginsSetup: FC = () => {
           variant="contained"
           color="success"
           type="submit"
-          onClick={applyPlugins}
         >
           Применить
         </Button>

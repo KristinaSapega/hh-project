@@ -16,29 +16,39 @@ export interface Stand {
   takenBy: string | null;
 }
 
-export interface Field {
-  name: string;
-  type: 'input' | 'checkbox' | 'select' | 'button' | 'radio';
-  placeholder?: string; // если тип input
-  value?: string; // если чекбокс, либо значение по умолчанию в input
-  options?: Array<string>; // если тип select; первым значением передаем по умолчанию
-  checked?: boolean; // если тип checkbox
-}
+// export interface Field {
+//   name: string;
+//   type: 'input' | 'checkbox' | 'select' | 'button' | 'radio';
+//   placeholder?: string; // если тип input
+//   value?: string; // если чекбокс, либо значение по умолчанию в input
+//   options?: Array<string>; // если тип select; первым значением передаем по умолчанию
+//   checked?: boolean; // если тип checkbox
+// }
 
 export interface Plugin {
   id: number;
-  type: string;
+  name: string;
   description: string;
-  shortDescription?: string;
-  playbook?: string; // url к плейбук файлу
-  fields?: Array<Field>;
+  paramsSchema: {
+    properties: {
+      services: {
+        items: {
+          properties: {
+            [key: string]: {
+              type: string;
+            };
+          };
+        };
+      };
+    }
+  } | null;
 }
 
 export interface Task {
-  type: string;
+  name: string;
   parameters: {
-    service: Record<string, string | boolean>;
-  };
+    services: Record<string, string | boolean>[];
+  } | object;
 }
 
 export interface Container {
@@ -111,6 +121,13 @@ export interface HeaderProps {
   toggleTheme: () => void;
 }
 
+// History components types
+
+export interface HistoryProps {
+  isVisible: boolean;
+  setIsVisible: () => void;
+}
+
 // Auth context
 
 export interface IAuthContext {
@@ -129,7 +146,6 @@ export type ThemeMode = 'dark' | 'light';
 export interface StandsState {
   stands: Stand[];
 }
-
 
 // PluginsReducer
 

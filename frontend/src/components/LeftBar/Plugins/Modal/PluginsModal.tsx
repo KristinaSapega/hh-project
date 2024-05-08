@@ -36,7 +36,7 @@ const PluginsModal: FC<PluginsModalProps> = ({
           },
         }}
       >
-        <PluginsSetup />
+        <PluginsSetup closeModal={handleClose} />
       </Paper>
     </Modal>
   );
