@@ -5,17 +5,27 @@
   vars:
     services: "{{ services }}"
   tasks:
+    - name: stop existing containers with the same name
+      community.docker.docker_compose_v2:
+        project_src: "/home/crab-stand/services/{{ item.repo }}"
+        project_name: "{{ item.repo }}"
+        state: absent
+        remove_images: all
+      loop: "{{ services }}"
+      ignore_errors: true
+
     - name: clone repositories
       ansible.builtin.git:
         repo: "https://github.com/{{ item.repoOwner + '/' + item.repo }}"
         version: "{{ item.branch }}"
-        dest: "/home/crab-stand/services/{{ item.repo + '-' + item.branch }}"
+        dest: "/home/crab-stand/services/{{ item.repo }}"
       loop: "{{ services }}"
 
     - name: run docker-compose
       community.docker.docker_compose_v2:
-        project_src: "/home/crab-stand/services/{{ item.repo + '-' + item.branch }}"
-        state: present 
+        project_src: "/home/crab-stand/services/{{ item.repo }}"
+        project_name: "{{ item.repo }}"
+        state: present
       loop: "{{ services }}"
 
 #{
