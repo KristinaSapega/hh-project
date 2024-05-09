@@ -97,10 +97,11 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
         <Typography variant="h6">{name}</Typography>
         <Typography>{description}</Typography>
       </Box>
-      {fields &&
-        [...Array(formsCount)].map((_, index) => (
-          <Box key={index}>
+      {fields && (
+        <Box>
+          {[...Array(formsCount)].map((_, index) => (
             <Box
+              key={index}
               sx={{
                 margin: '20px 0',
                 padding: '30px',
@@ -171,14 +172,14 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
                 }
               })}
             </Box>
-
-            <Tooltip title="Добавить еще одну таску">
-              <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
-                <AddOutlined />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        ))}
+          ))}
+          <Tooltip title="Добавить еще одну таску">
+            <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
+              <AddOutlined />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )}
     </Box>
   );
 };

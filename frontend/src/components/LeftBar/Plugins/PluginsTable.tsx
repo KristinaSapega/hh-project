@@ -1,10 +1,9 @@
-import { ChangeEvent, FC } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { OpenInNew } from '@mui/icons-material';
 import {
-  Checkbox,
   IconButton,
   Table,
   TableBody,
@@ -37,15 +36,19 @@ const PluginsTable: FC = () => {
 
   const theme = useTheme();
 
-  const handleChange =
-    (pluginId: number) => (event: ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked;
-      if (checked) {
-        dispatch(addTaskToQueue(pluginId));
-      } else {
-        dispatch(removeTaskFromQueue(pluginId));
-      }
-    };
+  const handleChange = (id: number) => (event: SyntheticEvent) => {
+    event.stopPropagation();
+    if (!tasks.includes(id)) {
+      dispatch(addTaskToQueue(id));
+    } else {
+      dispatch(removeTaskFromQueue(id));
+    }
+  };
+
+  const handleOpenPluginsPage = (id: number) => (event: SyntheticEvent) => {
+    event.stopPropagation();
+    navigate(routes.plugin.replace(':id', id.toString()));
+  };
 
   return (
     <>
@@ -54,51 +57,45 @@ const PluginsTable: FC = () => {
           <Table
             size="small"
             sx={{
-              tableLayout: 'fixed',
+              width: '100%',
             }}
           >
             <TableHead>
               <TableRow>
-                <TableCell align="center" sx={{ width: '20px' }} />
                 <TableCell align="center">Название</TableCell>
-                <TableCell align="center">Описание</TableCell>
                 <TableCell align="center">Действия</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {plugins.map((plugin) => (
-                <TableRow key={plugin.id}>
-                  <TableCell align="center">
-                    <Checkbox
-                      sx={{ p: 0 }}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                      onChange={handleChange(plugin.id)}
-                      checked={tasks.includes(plugin.id)}
-                    />
-                  </TableCell>
-                  <TableCell align="center" sx={{ ...ellipsisStyles }}>
-                    <Tooltip title={plugin.description}>
-                      <>{plugin.type}</>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell align="center" sx={{ ...ellipsisStyles }}>
-                    {plugin.description}
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        navigate(
-                          routes.plugin.replace(':id', plugin.id.toString()),
-                        );
-                      }}
-                      sx={{ color: theme.palette.text.secondary }}
-                    >
-                      <OpenInNew />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {plugins.map((plugin) => {
+                const { id, name, description } = plugin;
+                return (
+                  <TableRow
+                    key={id}
+                    sx={{
+                      backgroundColor: tasks.includes(id)
+                        ? theme.palette.primary.main
+                        : theme.palette.background.paper,
+                    }}
+                    onClick={handleChange(id)}
+                  >
+                    <TableCell align="center" sx={{ ...ellipsisStyles }}>
+                      <Tooltip title={description}>
+                        <Typography fontSize=".875rem">{name}</Typography>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell align="center" sx={{ p: 0 }}>
+                      <IconButton
+                        size="small"
+                        onClick={handleOpenPluginsPage(id)}
+                        sx={{ color: theme.palette.text.secondary }}
+                      >
+                        <OpenInNew />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
