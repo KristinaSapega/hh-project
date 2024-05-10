@@ -17,10 +17,15 @@ interface JobsProps {
   selectedStand: string;
 }
 
+interface Jobs {
+  [key: string]: Array<{
+    taskType: string;
+    createdAt: string;
+  }>;
+}
+
 const Jobs: FC<JobsProps> = ({ selectedStand }) => {
-  const [jobs, setJobs] = useState<{ taskType: string; createdAt: string }[]>(
-    [],
-  );
+  const [jobs, setJobs] = useState<Jobs>({});
 
   const { user } = useAuthContext();
   let header = null;
@@ -31,7 +36,6 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
   useEffect(() => {
     const getJobs = async (): Promise<void> => {
       try {
-        setJobs([]);
         const response = await fetch(
           `${BASE_BACKEND_URL}/api/jobs?standId=${selectedStand}`,
           {
@@ -44,19 +48,28 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
           throw Error(response.statusText);
         }
         const data = await response.json();
-        setJobs(data);
+        if (
+          (jobs[selectedStand] && data.length !== jobs[selectedStand].length) ||
+          !jobs[selectedStand]
+        ) {
+          setJobs((prev) => {
+            return {
+              ...prev,
+              [selectedStand]: data,
+            };
+          });
+        }
       } catch (error) {
         alert(error);
       }
     };
 
-
     const interval: number = setInterval(getJobs, 500);
 
     return () => {
       clearInterval(interval);
-    }
-  }, [selectedStand, header]);
+    };
+  }, [selectedStand, header, jobs]);
 
   return (
     <Box
@@ -65,8 +78,8 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
         margin: '10px',
       }}
     >
-      {!!jobs.length && (
-        jobs.map((job, index) => {
+      {jobs[selectedStand] &&
+        jobs[selectedStand].map((job, index) => {
           return (
             <Box
               key={index}
@@ -74,7 +87,7 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                mb: .5,
+                mb: 0.5,
               }}
             >
               <Typography fontSize={12}>{job.taskType}</Typography>
@@ -82,8 +95,7 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
               <Typography fontSize={12}>{formatDate(job.createdAt)}</Typography>
             </Box>
           );
-        })
-      )}
+        })}
     </Box>
   );
 };
