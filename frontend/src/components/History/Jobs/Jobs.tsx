@@ -29,8 +29,9 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
   }
 
   useEffect(() => {
-    (async () => {
+    const getJobs = async (): Promise<void> => {
       try {
+        setJobs([]);
         const response = await fetch(
           `${BASE_BACKEND_URL}/api/jobs?standId=${selectedStand}`,
           {
@@ -47,7 +48,14 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
       } catch (error) {
         alert(error);
       }
-    })();
+    };
+
+
+    const interval: number = setInterval(getJobs, 500);
+
+    return () => {
+      clearInterval(interval);
+    }
   }, [selectedStand, header]);
 
   return (
@@ -57,7 +65,7 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
         margin: '10px',
       }}
     >
-      {jobs.length ? (
+      {!!jobs.length && (
         jobs.map((job, index) => {
           return (
             <Box
@@ -75,8 +83,6 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
             </Box>
           );
         })
-      ) : (
-        <Typography fontSize={12}>Ничего не выполнялось на стенде</Typography>
       )}
     </Box>
   );
