@@ -47,7 +47,6 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
   const [orderBy, setOrderBy] = useState<keyof Container>('id');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { user } = useAuthContext();
 
@@ -58,14 +57,18 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
 
   useEffect(() => {
     const getStandContainer = async () => {
-      setIsLoading(true);
       const data = await api.fetchContainers(header as string, id);
-      await setContainers(data.containers);
-      setIsLoading(false);
+      if (data.containers.length !== containers.length) {
+        await setContainers(data.containers);
+      }
     };
 
-    getStandContainer();
-  }, [header, id]);
+    const interval: number = setInterval(getStandContainer, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [header, id, containers.length]);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -103,10 +106,10 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        {!isLoading && (
-          <>
+    <>
+      {!!containers.length && (
+        <Box sx={{ width: '100%' }}>
+          <Paper sx={{ width: '100%', mb: 2 }}>
             <TableContainer>
               <Table aria-labelledby="tableTitle" size="medium">
                 <StandTableHeader
@@ -154,10 +157,10 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             )}
-          </>
-        )}
-      </Paper>
-    </Box>
+          </Paper>
+        </Box>
+      )}
+    </>
   );
 };
 
