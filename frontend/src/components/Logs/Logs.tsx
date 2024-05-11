@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
   ArrowDropDownOutlined,
@@ -18,10 +18,10 @@ import fetchContainers from '../../api/fetchContainers';
 const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
-  const stands = useAppSelector((state: RootState) => state.stands.stands); 
+  const stands = useAppSelector((state: RootState) => state.stands.stands);
 
-  const [logs, setLogs] = useState<string[]>([]);
-  
+  const [logs, setLogs] = useState<{ [standId: number]: { [containerId: string]: string[] } }>({});
+
   useEffect(() => {
     dispatch(apiGetStands());
   }, [dispatch]);
@@ -29,18 +29,37 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(0);
 
-  const handleStandClick = async (standId: number) => {
-    setActiveStand(activeStand === standId ? null : standId);
-    setActiveTab(0);
+  const updateLogs = useCallback(async (standId: number) => {
     try {
       const containers = await fetchContainers(user!.header, standId);
-      const allLogs = await Promise.all(containers.map(async c => {
-        return await fetchLogs(standId, c.id, user!.header)
-      }))
-      setLogs(allLogs.flat()); 
+      const logsData: { [containerId: string]: string[] } = {};
+      await Promise.all(containers.map(async c => {
+        const containerLogs = await fetchLogs(standId, c.id, user!.header);
+        logsData[c.id as unknown as string] = containerLogs;
+      }));
+      setLogs(prevLogs => ({
+        ...prevLogs,
+        [standId]: logsData,
+      }));
     } catch (error) {
       console.error('Ошибка при загрузке логов:', error);
     }
+  }, [user])
+
+  useEffect(() => {
+    if (activeStand === null) return;
+    const intervalId = setInterval(() => {
+      updateLogs(activeStand);
+    }, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [activeStand, dispatch, updateLogs]);
+
+  const handleStandClick = async (standId: number) => {
+    setActiveStand(activeStand === standId ? null : standId);
+    setActiveTab(0);
+    updateLogs(standId);
   };
 
   const handleInnerTabChange = (
@@ -69,7 +88,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
               <Tab
                 key={stand.id}
                 value={stand.id}
-                label={`Стенд ${stand.id}`}
+                label={stand.host}
                 onClick={() => handleStandClick(stand.id)}
               />
             ))}
@@ -99,15 +118,15 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
               >
               </Tabs>
               {activeTab === 0 && (
-                logs.map(line => (
-                  <div>{line}</div>
+                logs[stand.id] && Object.keys(logs[stand.id]).map(containerId => (
+                  <div key={containerId}>
+                    <div>Логи контейнера {containerId}:</div>
+                    {logs[stand.id][containerId].map((line: string, index: number) => (
+                      <div key={index}>{line}</div>
+                    ))}
+                  </div>
                 ))
               )}
-              {/* {activeTab === 1 && (
-                <div>
-                  вывод чего-то для стенда {stand.id}
-                </div>
-              )} */}
             </Box>
           ))}
         </Collapse>
@@ -117,3 +136,5 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
 };
 
 export default Logging;
+
+
