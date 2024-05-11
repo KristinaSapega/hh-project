@@ -26,8 +26,9 @@ export const apiLeaveStand = createAsyncThunk(
 export const apiTakeStand = createAsyncThunk(
   'stands/apiTakeStand',
   async (standId: number) => {
-    const { header } = getUser();
-    return header && (await fetchBookStand(standId, 'admin@test.ru', header));
+    const { header, login } = getUser();
+    console.log(header, login);
+    return header && (await fetchBookStand(standId, login, header));
   },
 );
 
