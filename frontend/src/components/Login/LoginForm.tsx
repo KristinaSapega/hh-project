@@ -1,20 +1,21 @@
-import { ValidationErrors } from 'final-form';
-import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
+import { FORM_ERROR, ValidationErrors } from 'final-form';
+import { ChangeEvent, FunctionComponent, useState } from 'react';
 import { Field, Form } from 'react-final-form';
-import { useNavigate } from 'react-router-dom';
 
 import { LockOutlined } from '@mui/icons-material';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
   Grid,
+  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
 
 import { useAuthContext } from '../../hooks/useAuthContext';
-import { routes } from '../../routes/routes';
+import { BASE_BACKEND_URL, routes } from '../../routes/routes';
 import { FormProps, LoginFormValues } from '../../types';
 
 const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
@@ -31,8 +32,22 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
     }));
   };
 
-  const { user, login } = useAuthContext();
-  const navigate = useNavigate();
+  // состояние и обработка для Snackbar, всплывающего уведомления
+
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const { login } = useAuthContext();
 
   const validate = async (): Promise<ValidationErrors | undefined> => {
     // нативная функция конвертации в base64 не поддерживает кириллицу
@@ -54,29 +69,39 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
       errors.password = 'Поле не должно содержать кириллицы';
     }
 
-    return Object.keys(errors).length > 0 ? errors : undefined;
+    return errors;
   };
 
-  const handleSubmit = () => {
+  const onSubmit = async () => {
     try {
       const convertUserData = btoa(`${formData.login}:${formData.password}`);
-      login(formData.login, convertUserData);
+
+      const response = await fetch(`${BASE_BACKEND_URL}${routes.api.login}`, {
+        headers: {
+          Authorization: `Basic ${convertUserData}`,
+        },
+      });
+
+      if (!response.ok) {
+        setOpen(true);
+        if (response.status === 401) {
+          return { [FORM_ERROR]: response.statusText };
+        } else {
+          return { [FORM_ERROR]: 'Произошла ошибка' };
+        }
+      } else {
+        login(formData.login, convertUserData);
+      }
     } catch (error) {
       alert(error);
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      navigate(routes.main);
-    }
-  }, [user, navigate]);
-
   return (
     <Form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       validate={validate}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, submitError, form }) => (
         <Box
           sx={{
             maxWidth: '500px',
@@ -94,7 +119,14 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
           <Typography component="h1" variant="h5">
             Вход
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box
+            component="form"
+            onSubmit={(e) => {
+              form.reset();
+              handleSubmit(e);
+            }}
+            noValidate
+          >
             <Field name="login">
               {({ input, meta }) => (
                 <TextField
@@ -150,6 +182,12 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
               </Typography>
             </Grid>
           </Box>
+
+          <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+            <Alert variant="filled" severity={submitError && 'error'}>
+              {submitError}
+            </Alert>
+          </Snackbar>
         </Box>
       )}
     />

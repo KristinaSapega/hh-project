@@ -7,6 +7,7 @@ const routes = {
   plugin: '/dictionaries/:id', 
   
   api: {
+    login: '/api/login',
     stands: '/api/stands',
     stand: (id: number) => `/api/stands/${id}`,
     plugins: `/api/dictionaries`,
