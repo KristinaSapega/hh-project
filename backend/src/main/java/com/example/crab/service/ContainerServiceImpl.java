@@ -77,7 +77,7 @@ public class ContainerServiceImpl implements ContainerService {
     }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/pause",
+            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/stop",
             HttpMethod.POST,
             null,
             new ParameterizedTypeReference<String>() {
@@ -94,7 +94,7 @@ public class ContainerServiceImpl implements ContainerService {
     }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/unpause",
+            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/restart",
             HttpMethod.POST,
             null,
             new ParameterizedTypeReference<String>() {
