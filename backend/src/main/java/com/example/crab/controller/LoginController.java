@@ -22,8 +22,8 @@ public class LoginController {
       responseCode = "200",
       description = "Пользователь найден, вход в приложение возможен"
   )
-  @ApiResponse(responseCode = "401", description = "Нет такого пользователя", content = @Content)
+  @ApiResponse(responseCode = "403", description = "Нет такого пользователя", content = @Content)
   @GetMapping("/api/login")
-  public void getLogin() {
+  public void login() {
   }
 }
