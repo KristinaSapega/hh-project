@@ -101,7 +101,7 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
     <Form
       onSubmit={onSubmit}
       validate={validate}
-      render={({ handleSubmit, submitError, form }) => (
+      render={({ handleSubmit, submitError }) => (
         <Box
           sx={{
             maxWidth: '500px',
@@ -119,14 +119,7 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
           <Typography component="h1" variant="h5">
             Вход
           </Typography>
-          <Box
-            component="form"
-            onSubmit={(e) => {
-              form.reset();
-              handleSubmit(e);
-            }}
-            noValidate
-          >
+          <Box component="form" onSubmit={handleSubmit} noValidate>
             <Field name="login">
               {({ input, meta }) => (
                 <TextField
