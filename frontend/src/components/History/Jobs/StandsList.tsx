@@ -23,7 +23,7 @@ interface StandsListProps {
 const StandsList: FC<StandsListProps> = ({ selectedStand, handleChange }) => {
   const { user } = useAuthContext();
 
-  let login = null;
+  let login: string | null = null;
   if (user) {
     login = user.login;
   }

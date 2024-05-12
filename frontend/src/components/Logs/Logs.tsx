@@ -4,7 +4,7 @@ import {
   ArrowDropDownOutlined,
   ArrowDropUpOutlined,
 } from '@mui/icons-material';
-import { Box, Collapse, IconButton, Tab, Tabs } from '@mui/material';
+import { Box, Collapse, FormControl, IconButton, MenuItem, Select, Tab, Tabs } from '@mui/material';
 import { LogsProps } from '../../types';
 import { RootState } from '../../store';
 import { apiGetStands } from '../../store/stands';
@@ -18,7 +18,9 @@ import fetchContainers from '../../api/fetchContainers';
 const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
-  const stands = useAppSelector((state: RootState) => state.stands.stands);
+  const ownStands = useAppSelector(
+    (state: RootState) => state.stands.stands,
+  ).filter((stand) => stand.takenBy === user?.login); 
 
   const [logs, setLogs] = useState<{ [standId: number]: { [containerId: string]: string[] } }>({});
 
@@ -28,6 +30,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
 
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [selectedContainer, setSelectedContainer] = useState<{ [standId: number]: string | null }>({});
 
   const updateLogs = useCallback(async (standId: number) => {
     try {
@@ -60,6 +63,10 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
     setActiveStand(activeStand === standId ? null : standId);
     setActiveTab(0);
     updateLogs(standId);
+    setSelectedContainer(prevState => ({
+      ...prevState,
+      [standId]: null,
+    }));
   };
 
   const handleInnerTabChange = (
@@ -68,6 +75,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   ) => {
     setActiveTab(newValue);
   };
+
   return (
     <Box sx={{ width: '100%' }}>
       {!isVisible ? (
@@ -84,7 +92,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
             indicatorColor="primary"
             textColor="primary"
           >
-            {stands.map((stand) => (
+            {ownStands.map((stand) => ( 
               <Tab
                 key={stand.id}
                 value={stand.id}
@@ -98,7 +106,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
 
       {isVisible && (
         <Collapse in={true} timeout="auto" unmountOnExit>
-          {stands.map((stand) => (
+          {ownStands.map((stand) => ( 
             <Box
               key={stand.id}
               p={3}
@@ -118,15 +126,50 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
               >
               </Tabs>
               {activeTab === 0 && (
-                logs[stand.id] && Object.keys(logs[stand.id]).map(containerId => (
-                  <div key={containerId}>
-                    <div>Логи контейнера {containerId}:</div>
-                    {logs[stand.id][containerId].map((line: string, index: number) => (
-                      <div key={index}>{line}</div>
-                    ))}
-                  </div>
-                ))
+                <>
+                  <FormControl size="small" sx={{ p: '10px', height: '50px', marginTop: '-25px' }}>
+                    <Select
+                      displayEmpty
+                      value={selectedContainer[stand.id] || ''}
+                      onChange={(e) => setSelectedContainer(prevState => ({
+                        ...prevState,
+                        [stand.id]: e.target.value || null,
+
+                      })
+                      )}
+                      sx={{
+                        '& .MuiSelect-selectMenu': { // Уменьшаем размер шрифта
+                          fontSize: '0.9rem', 
+                        },
+                        '& .MuiOutlinedInput-input': { // Уменьшаем размер шрифта во вводе
+                          fontSize: '0.9rem',
+                        },
+                        '& .MuiListItem-root': { // Уменьшаем размер шрифта в элементах выпадающего списка
+                          fontSize: '0.8rem', 
+                        },
+                      }}
+                    >
+                      <MenuItem disabled value="">
+                        Выберите контейнер
+                      </MenuItem>
+
+                      {logs[stand.id] && Object.keys(logs[stand.id]).map(containerId => (
+                        <MenuItem key={containerId} value={containerId}>
+                          Контейнер {containerId}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {selectedContainer[stand.id] && (
+                    <div>
+                      {logs[stand.id][selectedContainer[stand.id] as string].map((line: string, index: number) => (
+                        <div key={index}style={{ fontSize: '0.8rem', marginTop: '1rem' }}>{line}</div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
+
             </Box>
           ))}
         </Collapse>
@@ -136,5 +179,3 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
 };
 
 export default Logging;
-
-

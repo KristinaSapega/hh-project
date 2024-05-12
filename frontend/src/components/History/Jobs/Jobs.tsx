@@ -28,7 +28,7 @@ const Jobs: FC<JobsProps> = ({ selectedStand }) => {
   const [jobs, setJobs] = useState<Jobs>({});
 
   const { user } = useAuthContext();
-  let header = null;
+  let header: unknown = null;
   if (user) {
     header = user.header;
   }
