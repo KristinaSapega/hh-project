@@ -1,5 +1,7 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 
+import { OpenInNew } from '@mui/icons-material';
+import { Link, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -10,6 +12,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
 import api from '../../../api';
+import { useAppSelector } from '../../../hooks/useAppSelector';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { Container } from '../../../types';
 import ElementStatus from '../../ElementStatus';
@@ -33,8 +36,8 @@ function getComparator<Key extends keyof Container>(
   order: Order,
   orderBy: Key,
 ): (
-  a: { [key in Key]: number | string | JSX.Element },
-  b: { [key in Key]: number | string | JSX.Element },
+  a: { [key in Key]: number | string | Container['ports'] | JSX.Element },
+  b: { [key in Key]: number | string | Container['ports'] | JSX.Element },
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -54,6 +57,10 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
   if (user) {
     header = user.header;
   }
+
+  const stand = useAppSelector((state) => state.stands.stands).find(
+    (stand) => stand.id === id,
+  );
 
   useEffect(() => {
     const getStandContainer = async () => {
@@ -108,9 +115,24 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
   return (
     <>
       {!!containers.length && (
-        <Box sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            width: '100%',
+          }}
+        >
+          <Typography variant="h5" align="center" padding={2}>
+            Сервисы
+          </Typography>
           <Paper sx={{ width: '100%', mb: 2 }}>
-            <TableContainer>
+            <TableContainer
+              sx={{
+                scrollbarWidth: 'none',
+                overflow: 'auto',
+                '&::webkit-scrollbar': {
+                  display: 'none',
+                },
+              }}
+            >
               <Table aria-labelledby="tableTitle" size="medium">
                 <StandTableHeader
                   order={order}
@@ -129,6 +151,24 @@ const StandTable: FunctionComponent<{ id: number }> = ({ id }) => {
                         <TableCell align="right">{container.name}</TableCell>
                         <TableCell align="right">
                           <ElementStatus status={container.state} />
+                        </TableCell>
+                        <TableCell align="right">
+                          {stand && (
+                            <Link
+                              href={`http://${stand.host}:${container.ports[0].publicPort}`}
+                              target='_blank'
+                            >
+                              <Box
+                                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}
+                              >
+                                <OpenInNew />
+                                <Typography>
+                                  {container.ports[0].publicPort}:
+                                  {container.ports[0].privatePort}
+                                </Typography>
+                              </Box>
+                            </Link>
+                          )}
                         </TableCell>
                         <TableCell align="right">{container.status}</TableCell>
                       </TableRow>

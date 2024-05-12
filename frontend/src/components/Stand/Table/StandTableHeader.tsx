@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  useTheme,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
@@ -16,7 +17,7 @@ const headCells: readonly HeadCell[] = [
     id: 'id',
     numeric: true,
     disablePadding: false,
-    label: 'id сервиса',
+    label: 'ID сервиса',
   },
   {
     id: 'name',
@@ -31,11 +32,17 @@ const headCells: readonly HeadCell[] = [
     label: 'Статус',
   },
   {
+    id: 'ports',
+    numeric: true,
+    disablePadding: false,
+    label: 'Порты',
+  },
+  {
     id: 'status',
     numeric: true,
     disablePadding: false,
-    label: 'Запущен',
-  }
+    label: 'Последний запуск',
+  },
 ];
 
 const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
@@ -44,6 +51,8 @@ const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
     (property: keyof Container) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
+
+  const theme = useTheme();
 
   return (
     <TableHead>
@@ -59,6 +68,7 @@ const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
+              sx={{ color: theme.palette.text.secondary, '&:focus': { color: theme.palette.text.secondary } }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
