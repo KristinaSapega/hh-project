@@ -9,6 +9,7 @@ import AppLayout from './components/AppLayout/AppLayout';
 import Header from './components/Header';
 import Plugins from './components/LeftBar/Plugins/Plugins';
 import { useAppDispatch } from './hooks/useAppDispatch';
+import { useAuthContext } from './hooks/useAuthContext';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import Stand from './pages/Stand';
@@ -32,10 +33,15 @@ const App = () => {
   //const plugins = useAppSelector(state => state.plugins.plugins);
   const dispatch = useAppDispatch();
 
+  const { user } = useAuthContext();
+
   useEffect(() => {
-    dispatch(apiGetStands());
-    dispatch(apiGetPlugins());
-  }, [dispatch]);
+    // чтобы не делать запросов, когда пользователь не авторизован
+    if (user) {
+      dispatch(apiGetStands());
+      dispatch(apiGetPlugins());
+    }
+  }, [dispatch, user]);
 
   // функция для переключения темы, передаем пропсом в хедер
   const toggleTheme = () => {
