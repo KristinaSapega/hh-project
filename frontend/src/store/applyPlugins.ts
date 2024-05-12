@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ApplyPluginsResponse, fetchApplyPlugins } from '../api/fetchApplyPlugins'; 
+import { fetchApplyPlugins } from '../api/fetchApplyPlugins'; 
 import { Task } from '../types';
 
 interface PluginState {
@@ -7,7 +7,7 @@ interface PluginState {
     error: string | null;
     data: ApplyPluginsResponse | null;
   }
-  
+
   const initialState: PluginState = {
     loading: false,
     error: null,

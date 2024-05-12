@@ -30,7 +30,7 @@ import StandsModal from '../../StandsModal';
 const MyStandsTable: FC = () => {
   const { user } = useAuthContext();
 
-  let login = null;
+  let login: string | null = null;
   if (user) {
     login = user.login;
   }
