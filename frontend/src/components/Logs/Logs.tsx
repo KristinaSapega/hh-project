@@ -124,12 +124,12 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
               },
             }}
           >
-            <MenuItem disabled value="">
+            <MenuItem disabled value="" sx={{ display: 'none' }}>
               Выберите контейнер
             </MenuItem>
             {logs[activeStand || 0] &&
               Object.keys(logs[activeStand || 0]).map((containerId) => (
-                <MenuItem key={containerId} value={containerId}>
+                <MenuItem key={containerId} value={containerId} sx={{ fontSize: '.8rem'}}>
                   {containerId}
                 </MenuItem>
               ))}
