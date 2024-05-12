@@ -63,12 +63,17 @@ const StandTableHeader: FunctionComponent<StandTableHeaderProps> = (props) => {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{
+              color: theme.palette.text.secondary,
+              '&:focus': { color: theme.palette.text.secondary },
+              '&:checked': { color: theme.palette.text.secondary },
+              '&:hover': { color: theme.palette.text.primary },
+            }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
-              sx={{ color: theme.palette.text.secondary, '&:focus': { color: theme.palette.text.secondary } }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
