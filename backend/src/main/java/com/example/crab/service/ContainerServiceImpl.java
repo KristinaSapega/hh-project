@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +30,7 @@ public class ContainerServiceImpl implements ContainerService {
     });
     ResponseEntity<List<ContainerDto>> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/json",
+            "http://" + stand.getHost() + ":2376/containers/json?all=1",
             HttpMethod.GET,
             null,
             new ParameterizedTypeReference<List<ContainerDto>>() {
@@ -64,6 +65,41 @@ public class ContainerServiceImpl implements ContainerService {
 
     String logs = response.getBody();
     return logs;
+  }
+
+  public void stopContainer(Integer standId, String containerId) {
+    Stand stand = standRepository.findById(standId).orElseThrow(() -> {
+      throw new ResourceNotFoundException();
+    });
+    Optional<ContainerDto> container = getContainerById(standId, containerId);
+    if (container.isEmpty()) {
+      throw new ResourceNotFoundException();
+    }
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/pause",
+            HttpMethod.POST,
+            null,
+            new ParameterizedTypeReference<String>() {
+            });
+  }
+
+  public void startContainer(Integer standId, String containerId) {
+    Stand stand = standRepository.findById(standId).orElseThrow(() -> {
+      throw new ResourceNotFoundException();
+    });
+    Optional<ContainerDto> container = getContainerById(standId, containerId);
+    if (container.isEmpty()) {
+      throw new ResourceNotFoundException();
+    }
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/unpause",
+            HttpMethod.POST,
+            null,
+            new ParameterizedTypeReference<String>() {
+            });
+
   }
 
 }
