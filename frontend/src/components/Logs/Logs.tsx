@@ -4,25 +4,36 @@ import {
   ArrowDropDownOutlined,
   ArrowDropUpOutlined,
 } from '@mui/icons-material';
-import { Box, Collapse, FormControl, IconButton, MenuItem, Select, Tab, Tabs } from '@mui/material';
-import { LogsProps } from '../../types';
-import { RootState } from '../../store';
-import { apiGetStands } from '../../store/stands';
+import {
+  Box,
+  Collapse,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
+} from '@mui/material';
+
+import fetchContainers from '../../api/fetchContainers';
 import fetchLogs from '../../api/fetchLogs';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAuth } from '../../hooks/useAuth';
-import fetchContainers from '../../api/fetchContainers';
-
+import { RootState } from '../../store';
+import { apiGetStands } from '../../store/stands';
+import { LogsProps } from '../../types';
 
 const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
   const ownStands = useAppSelector(
     (state: RootState) => state.stands.stands,
-  ).filter((stand) => stand.takenBy === user?.login); 
+  ).filter((stand) => stand.takenBy === user?.login);
 
-  const [logs, setLogs] = useState<{ [standId: number]: { [containerId: string]: string[] } }>({});
+  const [logs, setLogs] = useState<{
+    [standId: number]: { [containerId: string]: string[] };
+  }>({});
 
   useEffect(() => {
     dispatch(apiGetStands());
@@ -30,24 +41,31 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
 
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedContainer, setSelectedContainer] = useState<{ [standId: number]: string | null }>({});
+  const [selectedContainer, setSelectedContainer] = useState<{
+    [standId: number]: string | null;
+  }>({});
 
-  const updateLogs = useCallback(async (standId: number) => {
-    try {
-      const containers = await fetchContainers(user!.header, standId);
-    const logsData: { [name: string]: string[] } = {}; // Change here
-    await Promise.all(containers.map(async c => {
-      const containerLogs = await fetchLogs(standId, c.id, user!.header);
-      logsData[c.name as unknown as string] = containerLogs; // Change here
-      }));
-      setLogs(prevLogs => ({
-        ...prevLogs,
-        [standId]: logsData,
-      }));
-    } catch (error) {
-      console.error('Ошибка при загрузке логов:', error);
-    }
-  }, [user])
+  const updateLogs = useCallback(
+    async (standId: number) => {
+      try {
+        const containers = await fetchContainers(user!.header, standId);
+        const logsData: { [name: string]: string[] } = {}; // Change here
+        await Promise.all(
+          containers.map(async (c) => {
+            const containerLogs = await fetchLogs(standId, c.id, user!.header);
+            logsData[c.name as unknown as string] = containerLogs; // Change here
+          }),
+        );
+        setLogs((prevLogs) => ({
+          ...prevLogs,
+          [standId]: logsData,
+        }));
+      } catch (error) {
+        console.error('Ошибка при загрузке логов:', error);
+      }
+    },
+    [user],
+  );
 
   useEffect(() => {
     if (activeStand === null) return;
@@ -63,7 +81,7 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
     setActiveStand(activeStand === standId ? null : standId);
     setActiveTab(0);
     updateLogs(standId);
-    setSelectedContainer(prevState => ({
+    setSelectedContainer((prevState) => ({
       ...prevState,
       [standId]: null,
     }));
@@ -83,57 +101,70 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
           <ArrowDropUpOutlined />
         </IconButton>
       ) : (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton onClick={setIsVisible} sx={{ width: '48px' }}>
-            <ArrowDropDownOutlined />
-          </IconButton>
-          <Tabs
-            value={activeStand !== null ? activeStand : false}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            {ownStands.map((stand) => (
-              <Tab
-                key={stand.id}
-                value={stand.id}
-                label={stand.host}
-                onClick={() => handleStandClick(stand.id)}
-              />
-            ))}
-          </Tabs>
-          <FormControl size="small" sx={{ p: '10px', height: '50px', marginLeft: '10px' }}>
-            <Select
-              displayEmpty
-              value={selectedContainer[activeStand || 0] || ''}
-              onChange={(e) =>
-                setSelectedContainer((prevState) => ({
-                  ...prevState,
-                  [activeStand || 0]: e.target.value || null,
-                }))
-              }
-              sx={{
-                '& .MuiSelect-selectMenu': {
-                  fontSize: '0.9rem',
-                },
-                '& .MuiOutlinedInput-input': {
-                  fontSize: '0.9rem',
-                },
-                '& .MuiListItem-root': {
-                  fontSize: '0.8rem',
-                },
-              }}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'start' }}>
+            <IconButton onClick={setIsVisible}>
+              <ArrowDropDownOutlined />
+            </IconButton>
+            <Tabs
+              value={activeStand !== null ? activeStand : false}
+              indicatorColor="primary"
+              textColor="primary"
             >
-              <MenuItem disabled value="">
-                Выберите контейнер
-              </MenuItem>
-              {logs[activeStand || 0] &&
-                Object.keys(logs[activeStand || 0]).map((containerId) => (
-                  <MenuItem key={containerId} value={containerId}>
-                     {containerId}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
+              {ownStands.map((stand) => (
+                <Tab
+                  key={stand.id}
+                  value={stand.id}
+                  label={stand.host}
+                  onClick={() => handleStandClick(stand.id)}
+                />
+              ))}
+            </Tabs>
+          </Box>
+          {!!(activeStand && logs[activeStand]) && (
+            <FormControl
+              size="small"
+              sx={{ p: '10px', height: '50px', marginLeft: '10px' }}
+            >
+              <Select
+                displayEmpty
+                value={selectedContainer[activeStand || 0] || ''}
+                onChange={(e) =>
+                  setSelectedContainer((prevState) => ({
+                    ...prevState,
+                    [activeStand || 0]: e.target.value || null,
+                  }))
+                }
+                sx={{
+                  '& .MuiSelect-selectMenu': {
+                    fontSize: '0.9rem',
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    fontSize: '0.9rem',
+                  },
+                  '& .MuiListItem-root': {
+                    fontSize: '0.8rem',
+                  },
+                }}
+              >
+                <MenuItem disabled value="" sx={{ display: 'none' }}>
+                  Выберите контейнер
+                </MenuItem>
+                {logs[activeStand || 0] &&
+                  Object.keys(logs[activeStand || 0]).map((containerId) => (
+                    <MenuItem key={containerId} value={containerId}>
+                      {containerId}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          )}
         </Box>
       )}
 
@@ -155,23 +186,22 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
                 indicatorColor="primary"
                 textColor="primary"
                 orientation="vertical"
-                sx={{ marginTop: -5 }}
-              >
-              </Tabs>
+                sx={{ marginTop: -8 }}
+              ></Tabs>
               {activeTab === 0 && (
                 <>
                   {selectedContainer[stand.id] && (
                     <div>
-                      {logs[stand.id][selectedContainer[stand.id] as string].map(
-                        (line: string, index: number) => (
-                          <div
-                            key={index}
-                            style={{ fontSize: '0.8rem', marginTop: '1rem' }}
-                          >
-                            {line}
-                          </div>
-                        )
-                      )}
+                      {logs[stand.id][
+                        selectedContainer[stand.id] as string
+                      ].map((line: string, index: number) => (
+                        <div
+                          key={index}
+                          style={{ fontSize: '0.8rem', marginTop: '1rem' }}
+                        >
+                          {line}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </>

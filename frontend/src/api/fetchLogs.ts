@@ -13,7 +13,11 @@ export const fetchLogs = async (standId: number, containerId: string, user: stri
     );
   }
 
-  return (await response.text()).split('\n');
+  const data = await response.text();
+
+  return data.split('\n').map((line: string) => {
+    return line.slice(8);
+  });
 };
 
 export default fetchLogs;
