@@ -1,156 +1,190 @@
-import { FC, useEffect, useState } from 'react';
+import { FORM_ERROR, ValidationErrors } from 'final-form';
+import { ChangeEvent, FunctionComponent, useState } from 'react';
+import { Field, Form } from 'react-final-form';
 
-import { OpenInNew } from '@mui/icons-material';
-import { Box, Link, Typography, useTheme } from '@mui/material';
-import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
+import { LockOutlined } from '@mui/icons-material';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@mui/material';
 
-import api from '../../../api';
-import { useAppSelector } from '../../../hooks/useAppSelector';
-import { useAuthContext } from '../../../hooks/useAuthContext';
-import { Container, Stand } from '../../../types';
-import ElementStatus from '../../ElementStatus';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import { BASE_BACKEND_URL, routes } from '../../routes/routes';
+import { FormProps, LoginFormValues } from '../../types';
 
-const CONTAINER_ID_MAX_SYMBOLS = 8;
+const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
+  const [formData, setFormData] = useState<{ login: string; password: string }>(
+    { login: '', password: '' },
+  );
 
-const StandTable: FC<{ id: number }> = ({ id }) => {
-  const [containers, setContainers] = useState<Container[]>([]);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const { value, name } = event.target;
 
-  const { user } = useAuthContext();
-  const theme = useTheme();
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-  const stand = useAppSelector((state) => state.stands.stands).find(
-    (stand) => stand.id === id,
-  ) as Stand;
+  // состояние и обработка для Snackbar, всплывающего уведомления
 
-  useEffect(() => {
-    const header = user?.header;
-    if (!header) return;
-    const getStandContainer = async () => {
-      const fetchedContainers = await api.fetchContainers(header, id);
-      if (fetchedContainers.length !== containers.length) {
-        setContainers(fetchedContainers);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const { login } = useAuthContext();
+
+  const validate = async (): Promise<ValidationErrors | undefined> => {
+    // нативная функция конвертации в base64 не поддерживает кириллицу
+    const isCyrillic = (str: string): boolean => {
+      return /[а-яА-Я]/g.test(str);
+    };
+
+    const errors: LoginFormValues = {};
+
+    if (formData.login === '') {
+      errors.login = 'Поле не должно быть пустым';
+    } else if (isCyrillic(formData.login)) {
+      errors.login = 'Поле не должно содержать кириллицы';
+    }
+
+    if (formData.password === '') {
+      errors.password = 'Поле не должно быть пустым';
+    } else if (isCyrillic(formData.password)) {
+      errors.password = 'Поле не должно содержать кириллицы';
+    }
+
+    return errors;
+  };
+
+  const onSubmit = async () => {
+    try {
+      const convertUserData = btoa(`${formData.login}:${formData.password}`);
+
+      const response = await fetch(`${BASE_BACKEND_URL}${routes.api.login}`, {
+        headers: {
+          Authorization: `Basic ${convertUserData}`,
+        },
+      });
+
+      if (!response.ok) {
+        setOpen(true);
+        if (response.status === 401) {
+          return { [FORM_ERROR]: 'Неверные данные' };
+        } else {
+          return { [FORM_ERROR]: 'Произошла ошибка' };
+        }
+      } else {
+        login(formData.login, convertUserData);
       }
-    };
-
-    const interval: number = setInterval(getStandContainer, 500);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [user?.header, id, containers.length]);
-
-  const columns: GridColDef[] = [
-    {
-      field: 'id',
-      headerAlign: 'right',
-      align: 'right',
-      headerName: 'ID',
-      flex: 0.5,
-      renderCell: (params: GridCellParams) => {
-        const { id } = params.row;
-        return <Box>{id.slice(0, CONTAINER_ID_MAX_SYMBOLS)}</Box>;
-      },
-    },
-    {
-      field: 'name',
-      headerName: 'Имя',
-      headerAlign: 'right',
-      align: 'right',
-      flex: 1,
-    },
-    {
-      field: 'state',
-      headerName: 'Статус',
-      headerAlign: 'right',
-      align: 'right',
-      display: 'flex',
-      flex: 1,
-
-      renderCell: (params: GridCellParams) => {
-        const { state } = params.row;
-        return (
-          <Box>
-            {state}&nbsp;
-            <ElementStatus status={state} />
-          </Box>
-        );
-      },
-    },
-    {
-      field: 'ports',
-      headerName: 'Порты',
-      headerAlign: 'right',
-      align: 'right',
-      display: 'flex',
-      flex: 1,
-
-      renderCell: (params: GridCellParams) => {
-        const { ports } = params.row;
-        const { publicPort, privatePort } = ports[0];
-        return (
-          <Link href={`http://${stand.host}:${publicPort}`} target="_blank">
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <OpenInNew />
-              <Typography>
-                {publicPort}:{privatePort}
-              </Typography>
-            </Box>
-          </Link>
-        );
-      },
-    },
-    {
-      field: 'status',
-      headerName: 'Последний запуск',
-      headerAlign: 'right',
-      align: 'right',
-      flex: 1,
-    },
-  ];
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
-    <Box>
-      <Typography variant="h5" align="center" padding={2}>
-        Сервисы
-      </Typography>
-      {containers.length ? (
-        <DataGrid
-          autosizeOnMount
-          rows={containers}
-          columns={columns}
-          disableRowSelectionOnClick
-          hideFooterPagination
+    <Form
+      onSubmit={onSubmit}
+      validate={validate}
+      render={({ handleSubmit, submitError }) => (
+        <Box
           sx={{
-            scrollbarWidth: 'none',
-            overflow: 'auto',
-            '&::webkit-scrollbar': {
-              display: 'none',
-            },
-            border: 0,
-            height: '100%',
-            userSelect: 'none',
-            '&.MuiDataGrid-root .MuiDataGrid-cell, &.MuiDataGrid-root .MuiDataGrid-columnHeader':
-              {
-                outline: 'none',
-                backgroundColor: `${theme.palette.background.paper}!important`,
-              },
-            '& .MuiDataGrid-columnHeader *': {
-              color: theme.palette.text.secondary,
-            },
+            maxWidth: '500px',
+            border: '1px solid #9a9a9a',
+            borderRadius: '20px',
+            padding: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
-        />
-      ) : (
-        <Typography variant="h6" color="secondary">
-          Здесь пока ничего нет
-        </Typography>
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Вход
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <Field name="login">
+              {({ input, meta }) => (
+                <TextField
+                  {...input}
+                  onChange={handleChange}
+                  value={formData.login}
+                  margin="normal"
+                  error={!!meta.error && meta.touched}
+                  required
+                  fullWidth
+                  id="login"
+                  label={meta.error && meta.touched ? meta.error : 'Логин'}
+                  autoComplete="login"
+                  autoFocus
+                />
+              )}
+            </Field>
+            <Field name="password">
+              {({ input, meta }) => (
+                <TextField
+                  {...input}
+                  onChange={handleChange}
+                  value={formData.password}
+                  margin="normal"
+                  error={!!meta.error && meta.touched}
+                  required
+                  fullWidth
+                  name="password"
+                  label={meta.error && meta.touched ? meta.error : 'Пароль'}
+                  type="password"
+                  autoComplete="current-password"
+                />
+              )}
+            </Field>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Войти
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Typography
+                onClick={formSwitch}
+                sx={{
+                  color: '#9a9a9a',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+              >
+                Зарегистрироваться?
+              </Typography>
+            </Grid>
+          </Box>
+
+          <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+            <Alert variant="filled" severity={submitError && 'error'}>
+              {submitError}
+            </Alert>
+          </Snackbar>
+        </Box>
       )}
-    </Box>
+    />
   );
 };
-export default StandTable;
+
+export default LoginForm;
