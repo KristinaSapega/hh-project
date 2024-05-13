@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_MODIFIED;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -54,6 +55,10 @@ public class ContainerServiceImpl implements ContainerService {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> {
       throw new ResourceNotFoundException();
     });
+    Optional<ContainerDto> container = getContainerById(standId, containerId);
+    if (container.isEmpty()) {
+      throw new ResourceNotFoundException("No such container");
+    }
     ResponseEntity<String> response =
         restTemplate.exchange(
             String.format("http://%s:2376/containers/%s/logs?stderr=1&stdout=1", stand.getHost(), containerId),
@@ -61,10 +66,6 @@ public class ContainerServiceImpl implements ContainerService {
             null,
             new ParameterizedTypeReference<String>() {
             });
-    HttpStatus statusCode = (HttpStatus) response.getStatusCode();
-    if (statusCode == NOT_FOUND)
-      throw new ResourceNotFoundException("No such container");
-
     String logs = response.getBody();
     return logs;
   }
@@ -73,6 +74,10 @@ public class ContainerServiceImpl implements ContainerService {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> {
       throw new ResourceNotFoundException();
     });
+    Optional<ContainerDto> container = getContainerById(standId, containerId);
+    if (container.isEmpty()) {
+      throw new ResourceNotFoundException("No such container");
+    }
     ResponseEntity<String> response =
         restTemplate.exchange(
             String.format("http://%s:2376/containers/%s/stop", stand.getHost(), containerId),
@@ -81,22 +86,20 @@ public class ContainerServiceImpl implements ContainerService {
             new ParameterizedTypeReference<String>() {
             }
         );
-    HttpStatus statusCode = (HttpStatus) response.getStatusCode();
 
-    switch (statusCode) {
-      case NOT_FOUND:
-        throw new ResourceNotFoundException("No such container");
-      case NOT_MODIFIED:
-        throw new NotModifiedException("Container already stopped");
-      default:
-        break;
-    }
+    HttpStatusCode statusCode = response.getStatusCode();
+    if (statusCode.equals(NOT_MODIFIED))
+      throw new NotModifiedException("Container already stopped");
   }
 
     public void startContainer (Integer standId, String containerId){
       Stand stand = standRepository.findById(standId).orElseThrow(() -> {
         throw new ResourceNotFoundException();
       });
+      Optional<ContainerDto> container = getContainerById(standId, containerId);
+      if (container.isEmpty()) {
+        throw new ResourceNotFoundException("No such container");
+      }
       ResponseEntity<String> response =
           restTemplate.exchange(
               String.format("http://%s:2376/containers/%s/start", stand.getHost(), containerId),
@@ -106,16 +109,8 @@ public class ContainerServiceImpl implements ContainerService {
               }
           );
 
-      HttpStatus statusCode = (HttpStatus) response.getStatusCode();
-
-      switch (statusCode) {
-        case NOT_FOUND:
-          throw new ResourceNotFoundException("No such container");
-        case NOT_MODIFIED:
-          throw new NotModifiedException("Container already started");
-        default:
-          break;
-      }
-
+      HttpStatusCode statusCode = response.getStatusCode();
+      if (statusCode.equals(NOT_MODIFIED))
+        throw new NotModifiedException("Container already started");
     }
 }
