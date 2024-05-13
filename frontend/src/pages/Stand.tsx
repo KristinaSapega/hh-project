@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Box } from '@mui/material';
+import { Paper } from '@mui/material';
 
 import StandInfo from '../components/Stand/StandInfo';
 import StandTable from '../components/Stand/Table/StandTable';
@@ -40,10 +40,10 @@ const Stand = () => {
   }, [isUserStand, navigate]);
 
   return (
-    <Box>
+    <Paper>
       <StandInfo id={Number(id)} />
       <StandTable id={Number(id)} />
-    </Box>
+    </Paper>
   );
 };
 

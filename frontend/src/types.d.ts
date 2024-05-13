@@ -56,6 +56,12 @@ export interface Container {
   name: string;
   state: string;
   status: string;
+  ports: [{
+    ip: string;
+    privatePort: number;
+    publicPort: number;
+    type: string;
+  }]
 }
 
 // Login page components props types

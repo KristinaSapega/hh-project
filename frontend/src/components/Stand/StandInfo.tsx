@@ -1,91 +1,26 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FC } from 'react';
 
-import {
-  Box,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
-import api from '../../api';
-import { useAuthContext } from '../../hooks/useAuthContext';
-import { Row, Stand } from '../../types';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { Stand } from '../../types';
+import ElementStatus from '../ElementStatus';
 
-const StandInfo: FunctionComponent<{ id: number }> = ({ id }) => {
-  const [stand, setStand] = useState<Stand | null>(null);
-  const [rows, setRows] = useState<Row[]>([]);
+const StandInfo: FC<{ id: number }> = ({ id }) => {
+  const stand = useAppSelector((state) => state.stands.stands).find(
+    (stand) => stand.id === id,
+  ) as Stand;
 
-  const { user } = useAuthContext();
-
-  let header = null;
-  if (user) {
-    header = user.header;
-  }
-
-  useEffect(() => {
-    const getStand = async () => {
-      const stand = await api.fetchStand(header as string, id);
-      setStand(stand);
-    };
-
-    getStand();
-  }, [header, id]);
-
-  useEffect(() => {
-    if (stand) {
-      setRows([
-        {
-          option: 'Хост',
-          value: stand.host,
-        },
-        {
-          option: 'Статус',
-          value: stand.status,
-        },
-        {
-          option: 'Пользователь',
-          value: stand.takenBy !== null ? stand.takenBy : '',
-        },
-      ]);
-    }
-  }, [stand]);
+  const theme = useTheme();
 
   return (
-    <Paper sx={{ mt: 2, mb: 2, p: 2 }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Информация о стенде
-      </Typography>
-
-      <Table size="medium">
-        <TableBody>
-          {rows.map((row) => {
-            return (
-              <TableRow key={row.option}>
-                <TableCell sx={{ borderBottom: 'none', pl: 0 }}>
-                  {row.option}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    borderBottom: 'none',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  <Tooltip title={row.value}>
-                    <Box component="span">{row.value}</Box>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </Paper>
+    <Box sx={{ mt: 2, pb: 2, display: 'flex', justifyContent: 'end' }}>
+      {stand && (
+        <Box sx={{ color: theme.palette.text.secondary, fontSize: 12 }}>
+          {stand.host} {<ElementStatus status={stand.status} />}
+        </Box>
+      )}
+    </Box>
   );
 };
 
