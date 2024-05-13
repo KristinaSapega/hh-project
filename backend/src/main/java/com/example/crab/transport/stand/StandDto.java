@@ -16,7 +16,7 @@ public record StandDto(
 
   public static StandDto fromEntity(Stand stand) {
     if (stand.getTakenBy() == null)
-      return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), "");
+      return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), null);
     return new StandDto(stand.getId(), stand.getHost(), stand.getState().toString(), stand.getTakenBy().getEmail());
   }
 }
