@@ -19,7 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (user?.login) {
       navigate(routes.main);
     }
   }, [user, navigate]);

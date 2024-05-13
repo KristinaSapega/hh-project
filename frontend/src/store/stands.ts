@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import { fetchBookStand } from '../api/fetchBookStand';
 import { fetchReleaseStand } from '../api/fetchReleaseStand';
@@ -6,7 +6,7 @@ import fetchStands from '../api/fetchStands';
 import { Stand } from '../types';
 import { getUser } from './utils';
 
-export const apiGetStands = createAsyncThunk(
+export const apiGetStands = createAsyncThunk<Stand[], void>(
   'stands/apiGetStands',
   async () => {
     const { header } = getUser();
@@ -26,8 +26,8 @@ export const apiLeaveStand = createAsyncThunk(
 export const apiTakeStand = createAsyncThunk(
   'stands/apiTakeStand',
   async (standId: number) => {
-    const { header } = getUser();
-    return header && (await fetchBookStand(standId, 'admin@test.ru', header));
+    const { header, login } = getUser();
+    return header && (await fetchBookStand(standId, login, header));
   },
 );
 

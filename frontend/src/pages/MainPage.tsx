@@ -15,7 +15,7 @@ const Main: FC = () => {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   
-  let login = null;
+  let login: string | null = null;
   if (user) {
     login = user.login;
   }

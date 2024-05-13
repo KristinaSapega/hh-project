@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
+import { TabPanelProps } from '../types';
 
-import { TabPanelProps } from '../../../types';
 
 const CustomTabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;

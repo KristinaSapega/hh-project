@@ -10,7 +10,6 @@ const useLocalStorage = (
       const data: User | null = JSON.parse(localStorage.getItem(key) ?? '');
       return data || null;
     } catch (error) {
-      console.log(error);
       return null;
     }
   });

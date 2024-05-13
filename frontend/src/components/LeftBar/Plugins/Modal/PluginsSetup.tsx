@@ -24,7 +24,7 @@ const buttonStyles = {
 const PluginsSetup: FC<{ closeModal: () => void }> = ({ closeModal }) => {
   const { user } = useAuthContext();
 
-  let header = null;
+  let header: string | null = null;
   if (user) {
     header = user.header;
   }

@@ -85,7 +85,7 @@ const Header: FunctionComponent<HeaderProps> = ({ toggleTheme, mode }) => {
               </Tooltip>
             </Box>
 
-            {pathname === '/' ? (
+            {pathname !== routes.login ? (
               <Box sx={{ flexGrow: 0, ml: '20px' }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
