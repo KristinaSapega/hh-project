@@ -16,12 +16,6 @@ const StandTable: FC<{ id: number }> = ({ id }) => {
   const [containers, setContainers] = useState<Container[]>([]);
 
   const { user } = useAuthContext();
-
-  let header = null;
-  if (user) {
-    header = user.header;
-  }
-
   const theme = useTheme();
 
   const stand = useAppSelector((state) => state.stands.stands).find(
@@ -29,8 +23,8 @@ const StandTable: FC<{ id: number }> = ({ id }) => {
   ) as Stand;
 
   useEffect(() => {
-    const header = user?.header
-    if (!header) return
+    const header = user?.header;
+    if (!header) return;
     const getStandContainer = async () => {
       const fetchedContainers = await api.fetchContainers(header, id);
       if (fetchedContainers.length !== containers.length) {
@@ -125,7 +119,7 @@ const StandTable: FC<{ id: number }> = ({ id }) => {
       <Typography variant="h5" align="center" padding={2}>
         Сервисы
       </Typography>
-      {!!containers.length && (
+      {containers.length ? (
         <DataGrid
           autosizeOnMount
           rows={containers}
@@ -151,6 +145,10 @@ const StandTable: FC<{ id: number }> = ({ id }) => {
             },
           }}
         />
+      ) : (
+        <Typography variant="h6" color="secondary">
+          Здесь пока ничего нет
+        </Typography>
       )}
     </Box>
   );
