@@ -1,6 +1,7 @@
 package com.example.crab.service;
 
 import com.example.crab.entity.Stand;
+import com.example.crab.exception.controller.NotModifiedException;
 import com.example.crab.exception.controller.ResourceNotFoundException;
 import com.example.crab.persistence.StandRepository;
 import com.example.crab.transport.container.ContainerDto;
@@ -8,7 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_MODIFIED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -51,10 +54,6 @@ public class ContainerServiceImpl implements ContainerService {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> {
       throw new ResourceNotFoundException();
     });
-    Optional<ContainerDto> container = getContainerById(standId, containerId);
-    if (container.isEmpty()) {
-      throw new ResourceNotFoundException();
-    }
     ResponseEntity<String> response =
         restTemplate.exchange(
             String.format("http://%s:2376/containers/%s/logs?stderr=1&stdout=1", stand.getHost(), containerId),
@@ -62,6 +61,9 @@ public class ContainerServiceImpl implements ContainerService {
             null,
             new ParameterizedTypeReference<String>() {
             });
+    HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+    if (statusCode == NOT_FOUND)
+      throw new ResourceNotFoundException("No such container");
 
     String logs = response.getBody();
     return logs;
@@ -71,35 +73,49 @@ public class ContainerServiceImpl implements ContainerService {
     Stand stand = standRepository.findById(standId).orElseThrow(() -> {
       throw new ResourceNotFoundException();
     });
-    Optional<ContainerDto> container = getContainerById(standId, containerId);
-    if (container.isEmpty()) {
-      throw new ResourceNotFoundException();
-    }
     ResponseEntity<String> response =
         restTemplate.exchange(
             String.format("http://%s:2376/containers/%s/stop", stand.getHost(), containerId),
             HttpMethod.POST,
             null,
             new ParameterizedTypeReference<String>() {
-            });
-  }
+            }
+        );
+    HttpStatus statusCode = (HttpStatus) response.getStatusCode();
 
-  public void startContainer(Integer standId, String containerId) {
-    Stand stand = standRepository.findById(standId).orElseThrow(() -> {
-      throw new ResourceNotFoundException();
-    });
-    Optional<ContainerDto> container = getContainerById(standId, containerId);
-    if (container.isEmpty()) {
-      throw new ResourceNotFoundException();
+    switch (statusCode) {
+      case NOT_FOUND:
+        throw new ResourceNotFoundException("No such container");
+      case NOT_MODIFIED:
+        throw new NotModifiedException("Container already stopped");
+      default:
+        break;
     }
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            String.format("http://%s:2376/containers/%s/restart", stand.getHost(), containerId),
-            HttpMethod.POST,
-            null,
-            new ParameterizedTypeReference<String>() {
-            });
-
   }
 
+    public void startContainer (Integer standId, String containerId){
+      Stand stand = standRepository.findById(standId).orElseThrow(() -> {
+        throw new ResourceNotFoundException();
+      });
+      ResponseEntity<String> response =
+          restTemplate.exchange(
+              String.format("http://%s:2376/containers/%s/start", stand.getHost(), containerId),
+              HttpMethod.POST,
+              null,
+              new ParameterizedTypeReference<String>() {
+              }
+          );
+
+      HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+
+      switch (statusCode) {
+        case NOT_FOUND:
+          throw new ResourceNotFoundException("No such container");
+        case NOT_MODIFIED:
+          throw new NotModifiedException("Container already started");
+        default:
+          break;
+      }
+
+    }
 }
