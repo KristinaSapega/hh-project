@@ -1,21 +1,19 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Slice, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { fetchPlugins } from '../api/fetchPlugins';
 import { Plugin } from '../types';
-import { getUser } from './utils';
 
 export const apiGetPlugins = createAsyncThunk(
   'plugins/apiGetPlugins',
-  async () => {
-    const { header } = getUser();
-    return header ? await fetchPlugins(header) : [];
+  async (header: string) => {
+    return await fetchPlugins(header);
   },
 );
 
 //export const apiSavePlugin = createAsyncThunk() ??сохранение изменений плагина
 //export const apiCreatePlugin = createAsyncThunk() ??создание нового плагина
 
-const pluginsSlice = createSlice({
+const pluginsSlice: Slice<{ plugins: Plugin[] }> = createSlice({
   name: 'plugins',
   initialState: {
     plugins: [] as Plugin[],
@@ -31,7 +29,8 @@ const pluginsSlice = createSlice({
         state.plugins = action.payload;
       })
       .addCase(apiGetPlugins.rejected, (_state, action) => {
-        alert(action.error.message);
+        console.log(action.error.message);
+        // alert(action.error.message);
       });
   },
 });
