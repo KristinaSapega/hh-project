@@ -38,8 +38,8 @@ const App = () => {
   useEffect(() => {
     // чтобы не делать запросов, когда пользователь не авторизован
     if (user) {
-      dispatch(apiGetStands());
-      dispatch(apiGetPlugins());
+      dispatch(apiGetStands(user.header));
+      dispatch(apiGetPlugins(user.header));
     }
   }, [dispatch, user]);
 

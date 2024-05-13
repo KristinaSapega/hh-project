@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import { Slice, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { fetchBookStand } from '../api/fetchBookStand';
 import { fetchReleaseStand } from '../api/fetchReleaseStand';
@@ -6,32 +6,31 @@ import fetchStands from '../api/fetchStands';
 import { Stand } from '../types';
 import { getUser } from './utils';
 
-export const apiGetStands = createAsyncThunk<Stand[], void>(
+export const apiGetStands = createAsyncThunk<Stand[], string>(
   'stands/apiGetStands',
-  async () => {
-    const { header } = getUser();
-    return header ? await fetchStands(header) : [];
+  async (header: string) => {
+    return await fetchStands(header);
   },
 );
 
 export const apiLeaveStand = createAsyncThunk(
   'stands/apiLeaveStand',
   async (standId: number) => {
-    const { header } = getUser();
-    await fetchReleaseStand(standId, header);
-    return header && standId;
+    const user = getUser();
+    user && (await fetchReleaseStand(standId, user.header));
+    return user && standId;
   },
 );
 
 export const apiTakeStand = createAsyncThunk(
   'stands/apiTakeStand',
   async (standId: number) => {
-    const { header, login } = getUser();
-    return header && (await fetchBookStand(standId, login, header));
+    const user = getUser();
+    return user && (await fetchBookStand(standId, user.login, user.header));
   },
 );
 
-const slice = createSlice({
+const slice: Slice<{ stands: Stand[] }> = createSlice({
   name: 'stands',
   initialState: {
     stands: [] as Stand[],
@@ -55,10 +54,10 @@ const slice = createSlice({
         alert(action.error.message);
       })
       .addCase(apiTakeStand.fulfilled, (state, action) => {
-        const id = action.payload.standId;
+        const id = action.payload?.standId;
         const stand = state.stands.find((s) => s.id === id);
         if (!stand) return;
-        stand.takenBy = action.payload.email;
+        stand.takenBy = action.payload?.email as string;
       })
       .addCase(apiTakeStand.rejected, (_state, action) => {
         alert(action.error.message);
