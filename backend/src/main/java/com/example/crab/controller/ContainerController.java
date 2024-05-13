@@ -91,7 +91,7 @@ public class ContainerController {
   @ApiResponse(responseCode = "404", description = "Не найден standId или containersId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId или containersId", content = @Content)
   @ResponseStatus(HttpStatus.OK)
-  @PostMapping("/api/stands/{standId}/containers/{containersId}/pause")
+  @PostMapping("/api/stands/{standId}/containers/{containersId}/stop")
   public void postStopContainer(@PathVariable Integer standId, @PathVariable String containersId) {
     dockerAPIService.stopContainer(standId, containersId);
   }
@@ -106,7 +106,7 @@ public class ContainerController {
   @ApiResponse(responseCode = "404", description = "Не найден standId или containersId", content = @Content)
   @ApiResponse(responseCode = "400", description = "Ошибка в standId или containersId", content = @Content)
   @ResponseStatus(HttpStatus.OK)
-  @PostMapping("/api/stands/{standId}/containers/{containersId}/unpause")
+  @PostMapping("/api/stands/{standId}/containers/{containersId}/restart")
   public void postStartContainer(@PathVariable Integer standId, @PathVariable String containersId) {
     dockerAPIService.startContainer(standId, containersId);
   }

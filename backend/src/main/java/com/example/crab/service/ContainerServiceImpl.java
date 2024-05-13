@@ -30,7 +30,7 @@ public class ContainerServiceImpl implements ContainerService {
     });
     ResponseEntity<List<ContainerDto>> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/json?all=1",
+            String.format("http://%s:2376/containers/json?all=1", stand.getHost()),
             HttpMethod.GET,
             null,
             new ParameterizedTypeReference<List<ContainerDto>>() {
@@ -57,7 +57,7 @@ public class ContainerServiceImpl implements ContainerService {
     }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/logs?stderr=1&stdout=1",
+            String.format("http://%s:2376/containers/%s/logs?stderr=1&stdout=1", stand.getHost(), containerId),
             HttpMethod.GET,
             null,
             new ParameterizedTypeReference<String>() {
@@ -77,7 +77,7 @@ public class ContainerServiceImpl implements ContainerService {
     }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/stop",
+            String.format("http://%s:2376/containers/%s/stop", stand.getHost(), containerId),
             HttpMethod.POST,
             null,
             new ParameterizedTypeReference<String>() {
@@ -94,7 +94,7 @@ public class ContainerServiceImpl implements ContainerService {
     }
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "http://" + stand.getHost() + ":2376/containers/" + containerId +"/restart",
+            String.format("http://%s:2376/containers/%s/restart", stand.getHost(), containerId),
             HttpMethod.POST,
             null,
             new ParameterizedTypeReference<String>() {
