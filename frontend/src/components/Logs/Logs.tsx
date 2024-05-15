@@ -21,7 +21,6 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { RootState } from '../../store';
-import { apiGetStands } from '../../store/stands';
 import { LogsProps } from '../../types';
 
 const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
@@ -34,12 +33,6 @@ const Logging: FC<LogsProps> = ({ isVisible, setIsVisible }) => {
   const [logs, setLogs] = useState<{
     [standId: number]: { [containerId: string]: string[] };
   }>({});
-
-  useEffect(() => {
-    if (user) {
-      dispatch(apiGetStands(user.header));
-    }
-  }, [user, dispatch]);
 
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState(0);
