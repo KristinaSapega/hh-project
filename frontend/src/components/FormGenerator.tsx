@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { AddOutlined } from '@mui/icons-material';
+import { AddOutlined, Close } from '@mui/icons-material';
 import {
   Box, // Checkbox,
   // FormControlLabel,
@@ -38,6 +38,18 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
     paramsSchema &&
     Object.entries(paramsSchema.properties.services.items.properties);
   const [formsCount, setFormsCount] = useState<number>(1);
+
+  const handleRemoveForm = (index: number) => () => {
+    setFormsData((prevData) => {
+      const updatedFormData = [...prevData[id]];
+      updatedFormData.splice(index, 1); // Удаляем форму с указанным индексом
+      return {
+        ...prevData,
+        [id]: updatedFormData,
+      };
+    });
+    setFormsCount((prev) => prev - 1); // Уменьшаем счетчик форм
+  };
 
   const handleInputChange =
     (formId: number) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +122,15 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
                 border: '1px solid rgba(255, 255, 255, 0.7)',
               }}
             >
+              {formsCount !== 1 && (
+                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                  <Tooltip title='Закрыть'>
+                    <IconButton size="small" onClick={handleRemoveForm(index)}>
+                      <Close />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              )}
               {fields.map(([field, { type }]) => {
                 switch (type) {
                   case 'string':
@@ -173,7 +194,7 @@ const FormGenerator: FunctionComponent<FormGeneratorProps> = ({
               })}
             </Box>
           ))}
-          <Tooltip title="Добавить еще одну таску">
+          <Tooltip title="Добавить еще одну задачу">
             <IconButton onClick={() => setFormsCount((prev) => prev + 1)}>
               <AddOutlined />
             </IconButton>
