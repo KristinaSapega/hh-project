@@ -40,15 +40,17 @@ export interface Plugin {
           };
         };
       };
-    }
+    };
   } | null;
 }
 
 export interface Task {
   name: string;
-  parameters: {
-    services: Record<string, string | boolean>[];
-  } | object;
+  parameters:
+    | {
+        services: Record<string, string | boolean>[];
+      }
+    | object;
 }
 
 export interface Container {
@@ -56,12 +58,14 @@ export interface Container {
   name: string;
   state: string;
   status: string;
-  ports: [{
-    ip: string;
-    privatePort: number;
-    publicPort: number;
-    type: string;
-  }]
+  ports: [
+    {
+      ip: string;
+      privatePort: number;
+      publicPort: number;
+      type: string;
+    },
+  ];
 }
 
 // Login page components props types
@@ -213,6 +217,30 @@ export interface ResetStandsAction {
   type: string;
   payload: undefined;
 }
+
+// Notifications slice
+
+export interface INotification {
+  type: 'success' | 'error' | 'warning' | undefined;
+  message: string | undefined;
+}
+
+export interface INotificatonsState {
+  notifications: Array<INotification>;
+}
+
+export type AddErrorNotificationAction = PayloadAction<
+  unknown,
+  string,
+  {
+    arg: number | string;
+    requestId: string;
+    requestStatus: 'rejected';
+    aborted: boolean;
+    condition: boolean;
+  } & ({ rejectedWithValue: true } | ({ rejectedWithValue: false } & object)),
+  SerializedError
+>;
 
 // Logs
 
