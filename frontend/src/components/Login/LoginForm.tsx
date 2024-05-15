@@ -4,18 +4,18 @@ import { Field, Form } from 'react-final-form';
 
 import { LockOutlined } from '@mui/icons-material';
 import {
-  Alert,
   Avatar,
   Box,
   Button,
   Grid,
-  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
 
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { BASE_BACKEND_URL, routes } from '../../routes/routes';
+import { addNotification } from '../../store/notifications';
 import { FormProps, LoginFormValues } from '../../types';
 
 const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
@@ -32,21 +32,7 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
     }));
   };
 
-  // состояние и обработка для Snackbar, всплывающего уведомления
-
-  const [open, setOpen] = useState<boolean>(false);
-
-  const handleClose = (
-    _event: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
+  const dispatch = useAppDispatch();
   const { login } = useAuthContext();
 
   const validate = async (): Promise<ValidationErrors | undefined> => {
@@ -83,17 +69,37 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
       });
 
       if (!response.ok) {
-        setOpen(true);
         if (response.status === 401) {
+          dispatch(
+            addNotification({
+              type: 'error',
+              message: 'Неверный логин или пароль',
+            }),
+            1,
+          );
           return { [FORM_ERROR]: 'Неверные данные' };
         } else {
-          return { [FORM_ERROR]: 'Произошла ошибка' };
+          throw Error(response.statusText);
         }
       } else {
         login(formData.login, convertUserData);
       }
     } catch (error) {
-      alert(error);
+      if (error instanceof TypeError) {
+        dispatch(
+          addNotification({
+            type: 'error',
+            message: 'Ошибка сети',
+          }),
+        );
+      } else {
+        dispatch(
+          addNotification({
+            type: 'error',
+            message: 'Неизвестная ошибка',
+          }),
+        );
+      }
     }
   };
 
@@ -101,7 +107,7 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
     <Form
       onSubmit={onSubmit}
       validate={validate}
-      render={({ handleSubmit, submitError }) => (
+      render={({ handleSubmit }) => (
         <Box
           sx={{
             maxWidth: '500px',
@@ -175,12 +181,6 @@ const LoginForm: FunctionComponent<FormProps> = ({ formSwitch }) => {
               </Typography>
             </Grid>
           </Box>
-
-          <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-            <Alert variant="filled" severity={submitError && 'error'}>
-              {submitError}
-            </Alert>
-          </Snackbar>
         </Box>
       )}
     />
