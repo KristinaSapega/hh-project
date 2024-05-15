@@ -28,10 +28,6 @@ const pluginsSlice: Slice<{ plugins: Plugin[] }> = createSlice({
       .addCase(apiGetPlugins.fulfilled, (state, action) => {
         state.plugins = action.payload;
       })
-      .addCase(apiGetPlugins.rejected, (_state, action) => {
-        console.log(action.error.message);
-        // alert(action.error.message);
-      });
   },
 });
 
