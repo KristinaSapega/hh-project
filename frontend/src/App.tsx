@@ -8,6 +8,7 @@ import { ruRU } from '@mui/material/locale';
 import AppLayout from './components/AppLayout/AppLayout';
 import Header from './components/Header';
 import Plugins from './components/LeftBar/Plugins/Plugins';
+import Notification from './components/Notification';
 import { useAppDispatch } from './hooks/useAppDispatch';
 import { useAuthContext } from './hooks/useAuthContext';
 import Login from './pages/Login';
@@ -87,6 +88,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </Box>
+      <Notification mode={mode} />
     </ThemeProvider>
   );
 };
