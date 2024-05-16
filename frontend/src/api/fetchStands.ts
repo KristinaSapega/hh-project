@@ -19,13 +19,13 @@ export const fetchStands = async (user: string): Promise<Stand[]> => {
     const data: Stand[] = (await response.json()).stands;
     return data;
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof TypeError) {
       throw Error('Ошибка сети при запросе стендов');
     }
     if (error instanceof Error) {
       throw Error(error.message);
     }
-    throw Error('Ошибка при запросе плагинов');
+    throw Error('Неизвестная ошибка');
   }
 };
 

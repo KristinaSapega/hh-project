@@ -20,13 +20,13 @@ export const fetchPlugins = async (user: string): Promise<Plugin[]> => {
     const data: Plugin[] = (await response.json()).taskTemplates;
     return data;
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof TypeError) {
       throw Error('Ошибка сети при запросе плагинов');
     }
     if (error instanceof Error) {
       throw Error(error.message);
     }
-    throw Error('Ошибка при запросе плагинов');
+    throw Error('Неизвестная ошибка');
   }
 };
 
