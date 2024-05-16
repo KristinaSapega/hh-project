@@ -41,26 +41,17 @@ const slice: Slice<{ stands: Stand[] }> = createSlice({
       .addCase(apiGetStands.fulfilled, (state, action) => {
         state.stands = action.payload;
       })
-      .addCase(apiGetStands.rejected, (_state, action) => {
-        alert(action.error.message);
-      })
       .addCase(apiLeaveStand.fulfilled, (state, action) => {
         const id = action.payload;
         const stand = state.stands.find((s) => s.id === id);
         if (!stand) return;
         stand.takenBy = null;
       })
-      .addCase(apiLeaveStand.rejected, (_state, action) => {
-        alert(action.error.message);
-      })
       .addCase(apiTakeStand.fulfilled, (state, action) => {
         const id = action.payload?.standId;
         const stand = state.stands.find((s) => s.id === id);
         if (!stand) return;
         stand.takenBy = action.payload?.email as string;
-      })
-      .addCase(apiTakeStand.rejected, (_state, action) => {
-        alert(action.error.message);
       });
   },
 });
